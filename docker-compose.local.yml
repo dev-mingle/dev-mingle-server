@@ -7,7 +7,7 @@ volumes:
 services:
   postgres:
     container_name: dev_talk_postgres
-    image: postgres:latest
+    image: postgres:15.3-alpine
     platform: linux/amd64
     ports:
       - "5432:5432"
