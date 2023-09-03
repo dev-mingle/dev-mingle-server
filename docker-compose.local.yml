@@ -1,0 +1,37 @@
+version: '3.8'
+
+volumes:
+  db-data:
+    external: false
+
+services:
+  postgres:
+    container_name: dev_talk_postgres
+    image: postgres:latest
+    platform: linux/amd64
+    ports:
+      - "5432:5432"
+    env_file: .env
+    environment:
+      POSTGRES_DB: dev_talk
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      LANG: C.UTF-8
+      TZ: Asia/Seoul
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: always
+
+  api:
+    container_name: dev_talk_api
+    depends_on:
+      - postgres
+    restart: always
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SPRING_PROFILE: ${SPRING_PROFILE}
+    env_file: .env
