@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: database
+    include: datasource
 
   output:
     ansi:
