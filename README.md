@@ -2,6 +2,98 @@
 위치기반 개발자 커뮤니티(임시이름: dev-talk)
 
 ## 1. 프로젝트 디렉터리 구조
+```bash
+.
+├── build
+│   ├── classes
+│   │   └── java
+│   │       └── main
+│   ├── generated
+│   │   └── sources
+│   │       ├── annotationProcessor
+│   │       │   └── java
+│   │       │       └── main
+│   │       └── headers
+│   │           └── java
+│   │               └── main
+│   ├── libs
+│   │   └── dev-talk-0.0.1-SNAPSHOT.jar
+│   ├── resolvedMainClassName
+│   ├── resources
+│   │   └── main
+│   │       ├── application-database.yml
+│   │       ├── application-dev.yml
+│   │       ├── application-local.yml
+│   │       ├── application-prod.yml
+│   │       ├── application.yml
+│   │       └── db
+│   │           └── migration
+│   │               └── V1__init_db.sql
+│   └── tmp
+│       ├── bootJar
+│       │   └── MANIFEST.MF
+│       └── compileJava
+│           └── previous-compilation-data.bin
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── com
+│   │   │       └── example
+│   │   │           └── devtalk
+│   │   │               ├── DevTalkApplication.java
+│   │   │               ├── controller
+│   │   │               │   ├── BaseController.java
+│   │   │               │   └── CommonController.java
+│   │   │               ├── dto
+│   │   │               │   ├── ApiResponse.java
+│   │   │               │   └── ErrorResponse.java
+│   │   │               ├── entity
+│   │   │               │   └── BaseTimeEntity.java
+│   │   │               ├── exception
+│   │   │               │   ├── ApiResultStatus.java
+│   │   │               │   ├── BadRequestException.java
+│   │   │               │   ├── BusinessException.java
+│   │   │               │   ├── ForbiddenException.java
+│   │   │               │   ├── GlobalExceptionHandler.java
+│   │   │               │   └── UnauthorizedException.java
+│   │   │               ├── repository
+│   │   │               ├── security
+│   │   │               │   ├── CustomEntryPoint.java
+│   │   │               │   └── SecurityConfig.java
+│   │   │               ├── service
+│   │   │               └── util
+│   │   │                   └── TxidGenerator.java
+│   │   └── resources
+│   │       ├── application-datasource.yml
+│   │       ├── application-dev.yml
+│   │       ├── application-local.yml
+│   │       ├── application-prod.yml
+│   │       ├── application.yml
+│   │       └── db
+│   │           └── migration
+│   │               └── V1__init_db.sql
+│   └── test
+│       └── java
+│           └── com
+│               └── example
+│                   └── devtalk
+│                       └── DevTalkApplicationTests.java
+├── build.gradle
+├── docker-compose.local.yml
+├── docker-compose.yml
+├── Dockerfile
+├── gradlew
+├── gradlew.bat
+├── HELP.md
+├── README.md
+├── settings.gradle
+├── start-server.sh
+└── stop-server.sh
+```
 
 ## 2. 서버 구성
 ## 2-1. 개발 환경
