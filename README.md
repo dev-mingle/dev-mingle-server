@@ -1,4 +1,4 @@
-# dev-talk
+# DevMingle
 위치기반 개발자 커뮤니티(임시이름: dev-talk)
 
 ## 1. 프로젝트 디렉터리 구조
