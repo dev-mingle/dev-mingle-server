@@ -6,7 +6,7 @@ volumes:
 
 services:
   postgres:
-    container_name: dev_talk_postgres
+    container_name: dev_mingle_postgres
     image: postgres:15.3-alpine
     platform: linux/amd64
     ports:
@@ -23,7 +23,7 @@ services:
     restart: always
 
   api:
-    container_name: dev_talk_api
+    container_name: dev_mingle_api
     depends_on:
       - postgres
     restart: always

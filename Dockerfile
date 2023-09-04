@@ -11,7 +11,7 @@ ARG SPRING_PROFILE
 
 # local -> docker
 ARG BUILD_JAR=build/libs/*.jar
-COPY ${BUILD_JAR} ./dev-talk.jar
+COPY ${BUILD_JAR} ./dev-mingle.jar
 
 # docker run
-ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILE}", "-jar", "./dev-talk.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILE}", "-jar", "./dev-mingle.jar"]

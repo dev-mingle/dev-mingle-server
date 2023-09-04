@@ -6,7 +6,7 @@ volumes:
 
 services:
   api:
-    container_name: dev_talk_api
+    container_name: dev_mingle_api
     restart: always
     ports:
       - "8080:8080"
