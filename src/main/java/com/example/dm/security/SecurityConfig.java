@@ -1,4 +1,4 @@
-package com.example.devtalk.security;
+package com.example.dm.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

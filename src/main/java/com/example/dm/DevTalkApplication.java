@@ -1,4 +1,4 @@
-package com.example.devtalk;
+package com.example.dm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

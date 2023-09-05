@@ -1,4 +1,4 @@
-package com.example.devtalk.dto;
+package com.example.dm.dto;
 
 import lombok.Builder;
 import lombok.Data;

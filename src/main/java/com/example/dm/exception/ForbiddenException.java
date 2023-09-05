@@ -1,36 +1,36 @@
-package com.example.devtalk.exception;
+package com.example.dm.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class UnauthorizedException extends RuntimeException {
+public class ForbiddenException extends RuntimeException {
     private String code;
     private String message;
     private String description;
     private HttpStatus httpStatus;
 
-    public UnauthorizedException() {
+    public ForbiddenException() {
     }
 
-    public UnauthorizedException(String message) {
+    public ForbiddenException(String message) {
         super(message);
     }
 
-    public UnauthorizedException(ApiResultStatus apiResultStatus) {
+    public ForbiddenException(ApiResultStatus apiResultStatus) {
         this.code = apiResultStatus.getCode();
         this.message = apiResultStatus.getMessage();
         this.httpStatus = apiResultStatus.getHttpStatus();
     }
 
-    public UnauthorizedException(ApiResultStatus apiResultStatus, String description) {
+    public ForbiddenException(ApiResultStatus apiResultStatus, String description) {
         this.code = apiResultStatus.getCode();
         this.message = apiResultStatus.getMessage();
         this.description = description;
         this.httpStatus = apiResultStatus.getHttpStatus();
     }
 
-    public UnauthorizedException(String message, Throwable cause) {
+    public ForbiddenException(String message, Throwable cause) {
         super(message, cause);
     }
 }

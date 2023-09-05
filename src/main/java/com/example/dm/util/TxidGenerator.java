@@ -1,4 +1,4 @@
-package com.example.devtalk.util;
+package com.example.dm.util;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;

@@ -1,8 +1,8 @@
-package com.example.devtalk.security;
+package com.example.dm.security;
 
-import com.example.devtalk.exception.ApiResultStatus;
-import com.example.devtalk.exception.ForbiddenException;
-import com.example.devtalk.exception.UnauthorizedException;
+import com.example.dm.exception.ApiResultStatus;
+import com.example.dm.exception.ForbiddenException;
+import com.example.dm.exception.UnauthorizedException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

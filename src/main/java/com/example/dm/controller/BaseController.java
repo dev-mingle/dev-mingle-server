@@ -1,8 +1,8 @@
-package com.example.devtalk.controller;
+package com.example.dm.controller;
 
-import com.example.devtalk.dto.ApiResponse;
-import com.example.devtalk.exception.ApiResultStatus;
-import com.example.devtalk.util.TxidGenerator;
+import com.example.dm.dto.ApiResponse;
+import com.example.dm.exception.ApiResultStatus;
+import com.example.dm.util.TxidGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

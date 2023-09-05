@@ -1,7 +1,7 @@
-package com.example.devtalk.exception;
+package com.example.dm.exception;
 
-import com.example.devtalk.dto.ApiResponse;
-import com.example.devtalk.util.TxidGenerator;
+import com.example.dm.dto.ApiResponse;
+import com.example.dm.util.TxidGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

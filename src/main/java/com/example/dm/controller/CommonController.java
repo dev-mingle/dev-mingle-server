@@ -1,6 +1,6 @@
-package com.example.devtalk.controller;
+package com.example.dm.controller;
 
-import com.example.devtalk.dto.ApiResponse;
+import com.example.dm.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
