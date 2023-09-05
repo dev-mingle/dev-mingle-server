@@ -53,9 +53,6 @@ CREATE TABLE user_profiles
     is_deleted BOOLEAN DEFAULT false, -- 삭제여부 true/false
     deleted_at TIMESTAMP              -- 삭제일자
 );
-ALTER TABLE user_profiles
-    ADD CONSTRAINT fk_user_profiles_users FOREIGN KEY (user_id) REFERENCES users (id),
-    ADD CONSTRAINT fk_user_profiles_images FOREIGN KEY (image_id) REFERENCES images (id);
 
 
 -- 유저 설정 정보
@@ -73,8 +70,6 @@ CREATE TABLE user_settings
     is_deleted  BOOLEAN DEFAULT false, -- 삭제여부 true/false
     deleted_at  TIMESTAMP              -- 삭제일자
 );
-ALTER TABLE user_settings
-    ADD CONSTRAINT fk_user_setting_users FOREIGN KEY (user_id) REFERENCES users (id);
 
 
 -- 유저 정책 정보
@@ -90,8 +85,6 @@ CREATE TABLE user_policies
     is_deleted          BOOLEAN DEFAULT false, -- 삭제여부 true/false
     deleted_at          TIMESTAMP              -- 삭제일자
 );
-ALTER TABLE user_policies
-    ADD CONSTRAINT fk_user_policies_users FOREIGN KEY (user_id) REFERENCES users (id);
 
 
 -- 유저 로그인 히스토리
@@ -105,8 +98,6 @@ CREATE TABLE user_login_histories
     created_at TIMESTAMP,                    -- 생성일자
     updated_at TIMESTAMP                     -- 수정일자
 );
-ALTER TABLE user_login_histories
-    ADD CONSTRAINT fk_user_login_histories_users FOREIGN KEY (user_id) REFERENCES users (id);
 
 
 -- 팔로우 정보
@@ -120,9 +111,6 @@ CREATE TABLE follows
     is_deleted             BOOLEAN DEFAULT false, -- 삭제여부 true/false
     deleted_at             TIMESTAMP              -- 삭제일자
 );
-ALTER TABLE follows
-    ADD CONSTRAINT fk_follows_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id),
-    ADD CONSTRAINT fk_follows_user_profiles FOREIGN KEY (target_user_profile_id) REFERENCES user_profiles (id);
 
 
 -- 카테고리 정보
@@ -157,9 +145,6 @@ CREATE TABLE posts
     is_deleted      BOOLEAN DEFAULT false, -- 삭제 여부 true/false
     deleted_at      TIMESTAMP              -- 삭제일자
 );
-ALTER TABLE posts
-    ADD CONSTRAINT fk_posts_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id),
-    ADD CONSTRAINT fk_posts_categories FOREIGN KEY (category_id) REFERENCES categories (id);
 
 
 -- 좋아요 정보
@@ -170,8 +155,6 @@ CREATE TABLE likes
     type            VARCHAR(20) NOT NULL, -- 좋아요 대상 Entity 타입: Posts / ...
     reference_id    BIGINT      NOT NULL  -- 좋아요 대상 Entity PK
 );
-ALTER TABLE likes
-    ADD CONSTRAINT fk_likes_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id);
 
 
 -- 이미지 정보
@@ -203,3 +186,27 @@ CREATE TABLE vendor_request_histories
     created_at           TIMESTAMP,                   -- 생성일자
     updated_at           TIMESTAMP                    -- 수정일자
 );
+
+ALTER TABLE user_profiles
+    ADD CONSTRAINT fk_user_profiles_users FOREIGN KEY (user_id) REFERENCES users (id),
+    ADD CONSTRAINT fk_user_profiles_images FOREIGN KEY (image_id) REFERENCES images (id);
+
+ALTER TABLE user_settings
+    ADD CONSTRAINT fk_user_setting_users FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE user_policies
+    ADD CONSTRAINT fk_user_policies_users FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE user_login_histories
+    ADD CONSTRAINT fk_user_login_histories_users FOREIGN KEY (user_id) REFERENCES users (id);
+
+ALTER TABLE follows
+    ADD CONSTRAINT fk_follows_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id),
+    ADD CONSTRAINT fk_follows_target_user_profiles FOREIGN KEY (target_user_profile_id) REFERENCES user_profiles (id);
+
+ALTER TABLE posts
+    ADD CONSTRAINT fk_posts_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id),
+    ADD CONSTRAINT fk_posts_categories FOREIGN KEY (category_id) REFERENCES categories (id);
+
+ALTER TABLE likes
+    ADD CONSTRAINT fk_likes_user_profiles FOREIGN KEY (user_profile_id) REFERENCES user_profiles (id);
