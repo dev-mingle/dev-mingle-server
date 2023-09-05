@@ -16,10 +16,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("com.example")
 @ServletComponentScan("com.example")
 @SpringBootApplication
-public class DevTalkApplication {
+public class DevMingleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DevTalkApplication.class, args);
+        SpringApplication.run(DevMingleApplication.class, args);
     }
 
 }
