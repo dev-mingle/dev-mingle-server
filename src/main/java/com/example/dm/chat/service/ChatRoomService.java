@@ -7,11 +7,9 @@ import com.example.dm.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
 
@@ -30,5 +28,7 @@ public class ChatService {
     private ChatRoom verifyRoom(Long roomId) {
         return chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }
+
+    // todo: user 기반 room 조회
 
 }
