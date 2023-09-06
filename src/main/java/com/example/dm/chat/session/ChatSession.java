@@ -1,7 +1,8 @@
 package com.example.dm.chat.session;
 
 import com.example.dm.chat.dto.ChatDto;
-import com.example.dm.chat.service.ChatService;
+import com.example.dm.chat.service.ChatRoomService;
+import com.example.dm.chat.service.ChatSocketService;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashSet;
@@ -11,7 +12,7 @@ public class ChatSession {
 
     private Set<WebSocketSession> sessions = new HashSet<>();
 
-    public void handleSession(WebSocketSession session, ChatDto message, ChatService chatService) {
+    public void handleSession(WebSocketSession session, ChatDto message, ChatSocketService chatSocketService) {
 
         // todo: 입장문 Message DB에 저장?
         if (message.getType().equals(ChatDto.MessageType.ENTER)) {
@@ -24,11 +25,11 @@ public class ChatSession {
             message.setMessage(message.getMessage());
         }
 
-        sendMessage(message, chatService);
+        sendMessage(message, chatSocketService);
 
     }
 
-    public <T> void sendMessage(T message, ChatService chatService) {
-        sessions.parallelStream().forEach(session -> chatService.sendMessage(session, message));
+    public <T> void sendMessage(T message, ChatSocketService chatSocketService) {
+        sessions.parallelStream().forEach(session -> chatSocketService.sendMessage(session, message));
     }
 }
