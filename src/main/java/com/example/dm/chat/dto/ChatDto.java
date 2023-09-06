@@ -1,8 +1,10 @@
 package com.example.dm.chat.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ChatDto {
 
     private String roomId;
@@ -15,7 +17,7 @@ public class ChatDto {
 
     private MessageType type;
 
-    private enum MessageType{
+    public enum MessageType{
         ENTER, SEND
     }
 }
