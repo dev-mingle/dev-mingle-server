@@ -22,10 +22,9 @@ public class Images extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-
-  String url;
-  ImageType type;
-  Long reference_id;
+  private String url;
+  private ImageType type;
+  private Long reference_id;
   @ColumnDefault("false")
   private boolean is_deleted = false;
   private LocalDateTime deleted_at;
