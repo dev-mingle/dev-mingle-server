@@ -31,7 +31,10 @@ public enum ApiResultStatus {
     LOGIN_FAILED("E4014", "로그인 정보가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("E4041", "유저 정보가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     POST_NOT_FOUND("E4042", "존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
-    NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+
+    // 채팅 에러
+    ROOM_NOT_FOUND("40410", "채팅방이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
