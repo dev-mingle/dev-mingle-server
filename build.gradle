@@ -29,8 +29,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     // flyway
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
+//    implementation 'org.flywaydb:flyway-core'
+//    implementation 'org.flywaydb:flyway-mysql'
 
     // auth
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -40,6 +40,9 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // socket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
