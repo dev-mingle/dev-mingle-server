@@ -11,14 +11,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @Setter
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfiles extends BaseTimeEntity {
   @Id
@@ -49,7 +51,7 @@ public class UserProfiles extends BaseTimeEntity {
   @Column(length = 50)
   private String url_name;
 
-  @Builder.Default
+  @ColumnDefault("false")
   private boolean is_deleted = false;
   private LocalDateTime deleted_at;
 

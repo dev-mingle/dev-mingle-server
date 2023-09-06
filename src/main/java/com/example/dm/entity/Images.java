@@ -7,14 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @Setter
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Images extends BaseTimeEntity {
   @Id
@@ -24,7 +26,7 @@ public class Images extends BaseTimeEntity {
   String url;
   ImageType type;
   Long reference_id;
-  @Builder.Default
+  @ColumnDefault("false")
   private boolean is_deleted = false;
   private LocalDateTime deleted_at;
 
