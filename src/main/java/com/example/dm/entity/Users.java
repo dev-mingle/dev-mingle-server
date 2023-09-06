@@ -31,33 +31,33 @@ public class Users extends BaseTimeEntity {
   private String password;
   
   private String provider;
-  private String provider_id;
+  private String providerId;
   
   @Column(length = 20)
   private String role;
 
   @ColumnDefault("true")
-  private boolean is_verificated;
+  private boolean isVerificated;
   @ColumnDefault("false")
-  private boolean is_blocked = false;
+  private boolean isBlocked = false;
   @ColumnDefault("false")
-  private boolean is_inactivated = false;
+  private boolean isInactivated = false;
   @ColumnDefault("false")
-  private boolean is_deleted = false;
+  private boolean isDeleted = false;
 
-  private LocalDateTime deleted_at;
-  private LocalDateTime password_changed_at;
+  private LocalDateTime deletedAt;
+  private LocalDateTime passwordChangedAt;
 
   @JsonIgnore
   @OneToOne(mappedBy = "users", cascade = CascadeType.ALL)
   private UserProfiles userProfiles;
 
-  public static Users create(String email, String password, String provider, String provider_id){
+  public static Users create(String email, String password, String provider, String providerId){
     Users users = new Users();
     users.setEmail(email);
     users.setPassword(password);
     users.setProvider(provider);
-    users.setProvider_id(provider_id);
+    users.setProviderId(providerId);
     users.setRole("USER");
     return users;
   }

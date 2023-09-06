@@ -31,7 +31,7 @@ public class UserProfiles extends BaseTimeEntity {
   @JoinColumn(name="id")
   private Users users;
 
-  private Long image_id;
+  private Long imageId;
 
   @Column(length = 20)
   private String nickname;
@@ -49,11 +49,11 @@ public class UserProfiles extends BaseTimeEntity {
   private String introduce;
   private String url;
   @Column(length = 50)
-  private String url_name;
+  private String urlName;
 
   @ColumnDefault("false")
-  private boolean is_deleted = false;
-  private LocalDateTime deleted_at;
+  private boolean isDeleted = false;
+  private LocalDateTime deletedAt;
 
   public static UserProfiles create(Users users, SignupForm signupForm){
     UserProfiles userProfiles = new UserProfiles();
@@ -66,7 +66,7 @@ public class UserProfiles extends BaseTimeEntity {
     userProfiles.setLongitude(signupForm.getLongitude());
     userProfiles.setIntroduce(signupForm.getIntroduce());
     userProfiles.setUrl(signupForm.getUrl());
-    userProfiles.setUrl_name(signupForm.getUrl_name());
+    userProfiles.setUrlName(signupForm.getUrlName());
     return userProfiles;
   }
 }

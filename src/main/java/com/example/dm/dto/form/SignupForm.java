@@ -38,5 +38,5 @@ public class SignupForm {
     private Double longitude;
     private String introduce;
     private String url;
-    private String url_name;
+    private String urlName;
 }

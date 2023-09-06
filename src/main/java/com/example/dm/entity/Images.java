@@ -24,16 +24,16 @@ public class Images extends BaseTimeEntity {
   private Long id;
   private String url;
   private ImageType type;
-  private Long reference_id;
+  private Long referenceId;
   @ColumnDefault("false")
-  private boolean is_deleted = false;
-  private LocalDateTime deleted_at;
+  private boolean isDeleted = false;
+  private LocalDateTime deletedAt;
 
-  public static Images create(String url, ImageType type, Long reference_id){
+  public static Images create(String url, ImageType type, Long referenceId){
     Images images = new Images();
     images.setUrl(url);
     images.setType(type);
-    images.setReference_id(reference_id);
+    images.setReferenceId(referenceId);
     return images;
   }
 }
