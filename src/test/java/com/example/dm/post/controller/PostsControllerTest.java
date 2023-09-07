@@ -42,10 +42,10 @@ class PostsControllerTest {
         String size = "20";
         String sort = "createdAt,desc";
         PageRequest pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "createdAt"));
-        given(postsService.findAll(anyString(), any(), any(), any())).willReturn(Page.empty(pageable));
+        given(postsService.findAll(anyLong(), anyString(), any(), any(), any())).willReturn(Page.empty(pageable));
 
         // when
-        mockMvc.perform(get("/api/v1/posts")
+        mockMvc.perform(get("/api/v1/posts/{categoryId}", 1)
                         .param("search", search)
                         .param("conditions", conditions)
                         .param("location", location)
@@ -64,7 +64,7 @@ class PostsControllerTest {
 
 
         //then
-        then(postsService).should().findAll(eq("backend"),
+        then(postsService).should().findAll(eq(1L), eq("backend"),
                 eq(new String[]{"title", "content"}) ,
                 eq(new String[]{"cl", "37.619774", "127.060926"}),
                 eq(pageable));
