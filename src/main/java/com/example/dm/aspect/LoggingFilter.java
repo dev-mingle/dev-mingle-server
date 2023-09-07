@@ -25,8 +25,8 @@ public class LoggingFilter implements Filter {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        // requestId 및 IP 셋팅
-        initRequestId((HttpServletRequest) request);
+        // txid 및 IP 셋팅
+        initTxid((HttpServletRequest) request);
         initPublicIp((HttpServletRequest) request);
 
         CustomRequestWrapper requestWrapper = new CustomRequestWrapper((HttpServletRequest) request);
@@ -43,7 +43,7 @@ public class LoggingFilter implements Filter {
      * 메소드 실행 후 Response 로그 작성
      */
     private void writeResponseLogs(HttpServletRequest request, HttpServletResponse response, String responseBody, StopWatch stopWatch) {
-        String requestId = (String) request.getAttribute("requestId");
+        String txid = (String) request.getAttribute("txid");
         String requestMethod = request.getMethod();
         String servletPath = request.getServletPath();
         String queryString = !Strings.isEmpty(request.getQueryString()) ? "?" + request.getQueryString() : "";
@@ -51,26 +51,26 @@ public class LoggingFilter implements Filter {
 
         if (statusCode >= 400) { // 오류
             log.error("-------------------------------------");
-            log.error("[Response] => {}", requestId);
-            log.error("{} [Exception] {} {} {}", requestId, statusCode, requestMethod, servletPath + queryString);
-            log.error("{} response body=[{}]", requestId, responseBody);
+            log.error("[Response] => {}", txid);
+            log.error("{} [Exception] {} {} {}", txid, statusCode, requestMethod, servletPath + queryString);
+            log.error("{} response body=[{}]", txid, responseBody);
 
         } else { // 성공
             log.info("-------------------------------------");
-            log.info("[Response] => {}", requestId);
-            log.info("{} [Success] {} {} {}", requestId, statusCode, requestMethod, servletPath + queryString);
-            log.info("{} response body=[{}]", requestId, responseBody);
+            log.info("[Response] => {}", txid);
+            log.info("{} [Success] {} {} {}", txid, statusCode, requestMethod, servletPath + queryString);
+            log.info("{} response body=[{}]", txid, responseBody);
         }
 
         stopWatch.stop();
         long durationMs = stopWatch.getTotalTimeMillis();
 
-        log.info("{} duration time:{}ms", requestId, durationMs);
+        log.info("{} duration time:{}ms", txid, durationMs);
         log.info("-------------------------------------");
     }
 
-    private void initRequestId(HttpServletRequest request) {
-        request.setAttribute("requestId", txidGenerator.getTxid());
+    private void initTxid(HttpServletRequest request) {
+        request.setAttribute("txid", txidGenerator.getTxid());
     }
 
     private void initPublicIp(HttpServletRequest request) {
