@@ -1,9 +1,9 @@
 package com.example.dm.post.entity;
 
+import com.example.dm.category.entity.Categories;
 import com.example.dm.entity.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.dm.entity.UserProfiles;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +19,15 @@ public class Posts extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
-//    private UserProfile userProfile;
-//    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_id")
+    private UserProfiles userProfile;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Categories category;
+
     private String title;
     private String contents;
     private double latitude;
@@ -29,7 +36,10 @@ public class Posts extends BaseTimeEntity {
     private int hits;
     private int likes;
     private boolean hasChat;
+    @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Builder
