@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostsService {
 
-    Page<Posts> findAll(String search, String[] conditions, String[] location, Pageable pageable);
+    Page<Posts> findAll(Long categoryId, String search, String[] conditions, String[] location, Pageable pageable);
 }
