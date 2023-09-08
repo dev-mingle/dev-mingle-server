@@ -1,20 +1,18 @@
 package com.example.dm.category.entity;
 
-import com.example.dm.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
+import com.example.dm.entity.DeletedEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Categories extends BaseTimeEntity {
+public class Categories extends DeletedEntity {
 
     @Id
     @GeneratedValue
@@ -23,9 +21,10 @@ public class Categories extends BaseTimeEntity {
     private String name;
     private String creator;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    @Builder
+    public Categories(Long id, String name, String creator) {
+        this.id = id;
+        this.name = name;
+        this.creator = creator;
+    }
 }

@@ -1,7 +1,7 @@
 package com.example.dm.post.entity;
 
 import com.example.dm.category.entity.Categories;
-import com.example.dm.entity.BaseTimeEntity;
+import com.example.dm.entity.DeletedEntity;
 import com.example.dm.entity.UserProfiles;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,12 +9,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Posts extends BaseTimeEntity {
+public class Posts extends DeletedEntity {
 
     @Id
     @GeneratedValue
@@ -36,15 +34,13 @@ public class Posts extends BaseTimeEntity {
     private int hits;
     private int likes;
     private boolean hasChat;
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 
     @Builder
-    public Posts(LocalDateTime createdAt, LocalDateTime updatedAt, String title, String contents, double latitude, double longitude, double displayRadius, int hits, int likes, boolean hasChat, boolean isDeleted, LocalDateTime deletedAt) {
-        super(createdAt, updatedAt);
+    public Posts(Long id, UserProfiles userProfile, Categories category, String title, String contents,
+                 double latitude, double longitude, double displayRadius, int hits, int likes, boolean hasChat) {
+        this.id = id;
+        this.userProfile = userProfile;
+        this.category = category;
         this.title = title;
         this.contents = contents;
         this.latitude = latitude;
@@ -53,7 +49,5 @@ public class Posts extends BaseTimeEntity {
         this.hits = hits;
         this.likes = likes;
         this.hasChat = hasChat;
-        this.isDeleted = isDeleted;
-        this.deletedAt = deletedAt;
     }
 }
