@@ -28,14 +28,14 @@ public class FollowService {
      * 팔로우 등록
      */
     @Transactional
-    public FollowInfoDto addFollows(FollowAddDto inputDto, UserProfiles currentUserProfiles) {
+    public FollowInfoDto addFollow(FollowAddDto inputDto, UserProfiles currentUserProfiles) {
 
         // 1. 자기 자신을 팔로우하는지 확인
         if (currentUserProfiles.getId().equals(inputDto.getTargetUserProfileId())) {
-            throw new FollowException(ApiResultStatus.NOT_FOLLOW_MYSELP); // 자기 자신을 팔로우하는 경우 에러
+            throw new FollowException(ApiResultStatus.CANNOT_FOLLOW_MYSELP); // 자기 자신을 팔로우하는 경우 에러
         }
 
-        // 2. targetUserProfilesId가 존재하는지 확인
+        // 2. targetUserProfilesId 가 존재하는지 확인
         UserProfiles targetUserProfiles = userProfileRepository.findByIdAndIsDeletedIsFalse(inputDto.getTargetUserProfileId())
                 .orElseThrow(() -> new FollowException(ApiResultStatus.USER_NOT_FOUND)); // 존재하지 않는 유저인 경우 에러
 
