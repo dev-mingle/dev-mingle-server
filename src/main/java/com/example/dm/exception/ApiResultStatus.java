@@ -33,7 +33,8 @@ public enum ApiResultStatus {
     POST_NOT_FOUND("E4042", "존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
     NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
     FOLLOW_ALREADY_EXIST("E4092", "이미 팔로우한 유저입니다.", HttpStatus.CONFLICT),
-    NOT_FOLLOW_MYSELP("E4221", "자기 자신은 팔로우 할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY);
+    NOT_FOLLOW_MYSELP("E4221", "자기 자신은 팔로우 할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
+    INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다. [%s]", HttpStatus.BAD_REQUEST);
 
     private final String code;
     private final String message;
