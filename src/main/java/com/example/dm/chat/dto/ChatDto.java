@@ -13,11 +13,9 @@ public class ChatDto {
 
     private String message;
 
-    private String createdAt;
-
     private MessageType type;
 
     public enum MessageType{
-        ENTER, SEND
+        JOIN, SEND
     }
 }
