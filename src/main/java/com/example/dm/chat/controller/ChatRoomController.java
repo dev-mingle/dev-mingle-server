@@ -11,15 +11,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/v1/chats")
 @RequiredArgsConstructor
-public class ChatRoomController {
+public class ChatRoomController extends BaseController {
 
     private final ChatRoomService chatRoomService;
+
+    private final ChatMessageService chatMessageService;
 
     @PostMapping
     public ResponseEntity<ApiResponse> createRoom(@RequestBody ChatRoomDto chatRoomDto) {
 
         return responseBuilder(chatRoomService.createRoom(chatRoomDto), HttpStatus.CREATED);
     }
+    @GetMapping("/{roomId}")
+    public ResponseEntity<ApiResponse> getRoomMessage(@PathVariable Long roomId) {
+        return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId), HttpStatus.OK);
+    }
+
 }
