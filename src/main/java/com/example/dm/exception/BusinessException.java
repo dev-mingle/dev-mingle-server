@@ -27,7 +27,7 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(ApiResultStatus apiResultStatus, String message) {
         this(apiResultStatus);
-        this.message = message;
+        this.message = String.format(apiResultStatus.getMessage(), message);
     }
 
 }
