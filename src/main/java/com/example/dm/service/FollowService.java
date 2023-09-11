@@ -78,4 +78,22 @@ public class FollowService {
         return follows.map(FollowInfoDto::convertFollows);
     }
 
+    /**
+     * 팔로우 취소
+     */
+    @Transactional
+    public FollowInfoDto cancelFollow(Long followId, UserProfiles currentUserProfiles) {
+
+        // 1. followId 가 자신이 팔로우한 정보인지 확인
+        Follows follows = followRepository.findByIdAndUserProfiles_IdAndIsDeletedIsFalse(followId, currentUserProfiles.getId())
+                .orElseThrow(() -> new FollowException(ApiResultStatus.FOLLOW_NOT_FOUND)); // 존재하지 않는 팔로우 정보인 경우 or 자신의 팔로우 정보가 아닌 경우 에러
+
+        // 2. 팔로우 취소
+        follows.delete();
+        followRepository.save(follows);
+
+        // 3. 팔로우 취소 후 팔로우 정보 리턴
+        return FollowInfoDto.convertFollows(follows);
+    }
+
 }

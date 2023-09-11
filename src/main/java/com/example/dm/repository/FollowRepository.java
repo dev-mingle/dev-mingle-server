@@ -17,4 +17,6 @@ public interface FollowRepository extends JpaRepository<Follows, Long> {
 
     Page<Follows> findByUserProfiles_IdAndIsDeletedIsFalseOrderByTargetUserProfiles_NicknameAsc(Long userProfileId, Pageable pageable);
 
+    Optional<Follows> findByIdAndUserProfiles_IdAndIsDeletedIsFalse(Long followId, Long userProfileId);
+
 }

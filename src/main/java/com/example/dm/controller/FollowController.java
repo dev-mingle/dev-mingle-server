@@ -37,4 +37,13 @@ public class FollowController extends BaseController {
         return responseBuilder(followInfoDtoList, HttpStatus.OK);
     }
 
+    /**
+     * 팔로우 취소 API
+     */
+    @DeleteMapping("/{followId}")
+    public ResponseEntity<ApiResponse> cancelFollow(@PathVariable Long followId) {
+        FollowInfoDto followInfoDto = followService.cancelFollow(followId, getCurrentUserProfiles());
+        return responseBuilder(followInfoDto, HttpStatus.OK);
+    }
+
 }
