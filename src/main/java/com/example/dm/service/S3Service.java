@@ -98,7 +98,7 @@ public class S3Service {
                 throw new MimeTypeException(mimeType);
 
             } else {
-                ext = type.getExtension(); // ex: png
+                ext = type.getExtension(); // ex: .png
             }
 
         } catch (MimeTypeException e) {
