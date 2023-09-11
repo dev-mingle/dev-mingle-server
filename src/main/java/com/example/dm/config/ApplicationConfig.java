@@ -1,4 +1,4 @@
-package com.example.dm;
+package com.example.dm.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
