@@ -27,7 +27,7 @@ public class FollowException extends BusinessException {
 
     public FollowException(ApiResultStatus apiResultStatus, String message) {
         this(apiResultStatus);
-        this.message = message;
+        this.message = String.format(apiResultStatus.getMessage(), message);
     }
 
 }
