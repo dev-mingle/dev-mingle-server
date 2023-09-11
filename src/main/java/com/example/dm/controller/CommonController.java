@@ -6,7 +6,10 @@ import com.example.dm.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,14 +28,6 @@ public class CommonController extends BaseController {
 
         List<PreSignedUrlDto.OutputDto> outputDtoList = s3Service.getPreSignedUrls(inputDto);
         return responseBuilder(outputDtoList, HttpStatus.OK);
-    }
-
-    /**
-     * 테스트 API
-     */
-    @GetMapping("/test")
-    public ResponseEntity<ApiResponse> test() {
-        return responseBuilder(true, HttpStatus.OK);
     }
 
 }
