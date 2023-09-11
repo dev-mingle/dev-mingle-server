@@ -42,6 +42,14 @@ public class UserProfiles extends DeletedEntity {
     @Column(length = 50)
     private String urlName;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "userProfiles", cascade = CascadeType.ALL)
+    private List<Follows> followsByUsers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "targetUserProfiles", cascade = CascadeType.ALL)
+    private List<Follows> followsByTargetUsers;
+
     public static UserProfiles create(Users users, SignupForm signupForm) {
         UserProfiles userProfiles = new UserProfiles();
         userProfiles.setUsers(users);
