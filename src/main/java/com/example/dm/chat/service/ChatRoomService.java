@@ -1,5 +1,6 @@
 package com.example.dm.chat.service;
 
+import com.example.dm.chat.dto.ChatRoomDto;
 import com.example.dm.chat.entity.ChatRoom;
 import com.example.dm.chat.repository.ChatRoomRepository;
 import com.example.dm.exception.ApiResultStatus;
@@ -13,9 +14,9 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    public ChatRoom createRoom(String name) {
+    public ChatRoom createRoom(ChatRoomDto chatRoomDto) {
         ChatRoom room = ChatRoom.builder()
-                .name(name)
+                .name(chatRoomDto.getName())
                 .build();
 
         return chatRoomRepository.save(room);
