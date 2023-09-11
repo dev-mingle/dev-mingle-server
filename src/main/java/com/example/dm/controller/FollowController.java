@@ -5,12 +5,11 @@ import com.example.dm.dto.follows.FollowAddDto;
 import com.example.dm.dto.follows.FollowInfoDto;
 import com.example.dm.service.FollowService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +25,16 @@ public class FollowController extends BaseController {
     public ResponseEntity<ApiResponse> addFollow(@RequestBody FollowAddDto inputDto) {
         FollowInfoDto followInfoDto = followService.addFollows(inputDto, getCurrentUserProfiles());
         return responseBuilder(followInfoDto, HttpStatus.CREATED);
+    }
+
+    /**
+     * 팔로우 리스트 조회 API
+     */
+    @GetMapping("")
+    public ResponseEntity<ApiResponse> showFollowList(@RequestParam(defaultValue = "latest") String order,
+                                                      Pageable pageable) {
+        Page<FollowInfoDto> followInfoDtoList = followService.showFollowList(order, getCurrentUserProfiles(), pageable);
+        return responseBuilder(followInfoDtoList, HttpStatus.OK);
     }
 
 }
