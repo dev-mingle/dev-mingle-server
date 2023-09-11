@@ -31,7 +31,9 @@ public enum ApiResultStatus {
     LOGIN_FAILED("E4014", "로그인 정보가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("E4041", "유저 정보가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     POST_NOT_FOUND("E4042", "존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
-    NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN);
+    NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    FOLLOW_ALREADY_EXIST("E4092", "이미 팔로우한 유저입니다.", HttpStatus.CONFLICT),
+    NOT_FOLLOW_MYSELP("E4221", "자기 자신은 팔로우 할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY);
 
     private final String code;
     private final String message;
