@@ -41,3 +41,6 @@ out/
 
 ### log file ###
 *.log
+
+### query dsl ###
+**/src/main/**/Q*.java
