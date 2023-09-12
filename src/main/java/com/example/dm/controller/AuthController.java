@@ -65,20 +65,20 @@ public class AuthController extends BaseController {
     UserProfiles userProfiles = UserProfiles.create(users, signupForm);
     userProfilesRepository.save(userProfiles);
 
+    SignupUserProfilesData signupUserProfilesData = SignupUserProfilesData.builder()
+        .nickname(userProfiles.getNickname())
+        .city(userProfiles.getCity())
+        .state(userProfiles.getState())
+        .street(userProfiles.getStreet())
+        .introduce(userProfiles.getIntroduce())
+        .url(userProfiles.getUrl())
+        .urlName(userProfiles.getUrlName())
+        .build();
+
     SignupUserData signupUserData = SignupUserData.builder()
         .email(users.getEmail())
-        .created_at(users.getCreatedAt())
-        .user_profile(
-            SignupUserProfilesData.builder()
-                .nickname(userProfiles.getNickname())
-                .city(userProfiles.getCity())
-                .state(userProfiles.getState())
-                .street(userProfiles.getStreet())
-                .introduce(userProfiles.getIntroduce())
-                .url(userProfiles.getUrl())
-                .url_name(userProfiles.getUrlName())
-                .build()
-        )
+        .createdAt(users.getCreatedAt())
+        .userProfile(signupUserProfilesData)
         .build();
 
     return responseBuilder(signupUserData, HttpStatus.OK);
