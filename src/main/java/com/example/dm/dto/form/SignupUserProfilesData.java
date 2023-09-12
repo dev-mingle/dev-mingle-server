@@ -2,9 +2,9 @@ package com.example.dm.dto.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.ToString;
+import lombok.Data;
 
-@ToString
+@Data
 @Builder
 @AllArgsConstructor
 public class SignupUserProfilesData {
@@ -14,5 +14,5 @@ public class SignupUserProfilesData {
     private String street;
     private String introduce;
     private String url;
-    private String url_name;
+    private String urlName;
 }
