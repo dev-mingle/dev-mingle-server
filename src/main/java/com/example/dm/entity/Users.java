@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users extends DeletedEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 50, unique = true)
@@ -32,7 +32,7 @@ public class Users extends DeletedEntity {
     private String role;
 
     @ColumnDefault("true")
-    private boolean isVerificated;
+    private boolean isVerified;
     @ColumnDefault("false")
     private boolean isBlocked = false;
     @ColumnDefault("false")
