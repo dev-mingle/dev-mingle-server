@@ -7,7 +7,7 @@ volumes:
 services:
   postgres:
     container_name: dev_mingle_postgres
-    image: postgres:15.3-alpine
+    image: postgis/postgis
     platform: linux/amd64
     ports:
       - "5432:5432"
