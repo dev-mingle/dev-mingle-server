@@ -10,6 +10,9 @@ import com.example.dm.repository.FollowRepository;
 import com.example.dm.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,9 @@ public class FollowService {
     private final UserProfileRepository userProfileRepository;
     private final FollowRepository followRepository;
 
+    /**
+     * 팔로우 등록
+     */
     @Transactional
     public FollowInfoDto addFollows(FollowAddDto inputDto, UserProfiles currentUserProfiles) {
 
@@ -48,6 +54,23 @@ public class FollowService {
 
         // 5. 팔로우 등록 후 팔로우 정보 리턴
         return FollowInfoDto.convertFollows(follows);
+    }
+
+    /**
+     * 팔로우 리스트 조회
+     */
+    @Transactional(readOnly = true)
+    public Page<FollowInfoDto> showFollowList(UserProfiles currentUserProfiles, Pageable pageable) {
+        try {
+            // 1. 현재 유저 팔로우 리스트 조회
+            Page<Follows> follows = followRepository.findByUserProfiles_IdAndIsDeletedIsFalse(currentUserProfiles.getId(), pageable);
+
+            // 2. 팔로우 리스트 객체 return
+            return follows.map(FollowInfoDto::convertFollows);
+
+        } catch (PropertyReferenceException e) {
+            throw new FollowException(ApiResultStatus.INVALID_ORDER_TYPE); // 유효하지 않은 정렬 타입인 경우 에러
+        }
     }
 
 }
