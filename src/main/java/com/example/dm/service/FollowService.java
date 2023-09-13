@@ -4,7 +4,6 @@ import com.example.dm.dto.follows.FollowAddDto;
 import com.example.dm.dto.follows.FollowInfoDto;
 import com.example.dm.entity.Follows;
 import com.example.dm.entity.UserProfiles;
-import com.example.dm.enums.OrderType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.FollowException;
 import com.example.dm.repository.FollowRepository;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,22 +60,17 @@ public class FollowService {
      * 팔로우 리스트 조회
      */
     @Transactional(readOnly = true)
-    public Page<FollowInfoDto> showFollowList(String order, UserProfiles currentUserProfiles, Pageable pageable) {
-        Page<Follows> follows = null;
+    public Page<FollowInfoDto> showFollowList(UserProfiles currentUserProfiles, Pageable pageable) {
+        try {
+            // 1. 현재 유저 팔로우 리스트 조회
+            Page<Follows> follows = followRepository.findByUserProfiles_IdAndIsDeletedIsFalse(currentUserProfiles.getId(), pageable);
 
-        // 1. 현재 유저 팔로우 리스트 조회
-        if (order.equals(OrderType.latest.name())) { // 최신순 (createdAt desc)
-            follows = followRepository.findByUserProfiles_IdAndIsDeletedIsFalseOrderByCreatedAtDesc(currentUserProfiles.getId(), pageable);
+            // 2. 팔로우 리스트 객체 return
+            return follows.map(FollowInfoDto::convertFollows);
 
-        } else if (order.equals(OrderType.nickname.name())) { // 닉네임순 (nickname asc)
-            follows = followRepository.findByUserProfiles_IdAndIsDeletedIsFalseOrderByTargetUserProfiles_NicknameAsc(currentUserProfiles.getId(), pageable);
-
-        } else {
-            throw new FollowException(ApiResultStatus.INVALID_ORDER_TYPE, order); // 유효하지 않은 정렬 타입인 경우 에러
+        } catch (PropertyReferenceException e) {
+            throw new FollowException(ApiResultStatus.INVALID_ORDER_TYPE); // 유효하지 않은 정렬 타입인 경우 에러
         }
-
-        // 2. 팔로우 리스트 객체 return
-        return follows.map(FollowInfoDto::convertFollows);
     }
 
 }
