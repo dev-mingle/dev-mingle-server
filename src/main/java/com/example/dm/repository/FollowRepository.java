@@ -11,8 +11,10 @@ import java.util.Optional;
 @Repository
 public interface FollowRepository extends JpaRepository<Follows, Long> {
 
-    Optional<Follows> findByUserProfiles_IdAndTargetUserProfiles_IdAndIsDeletedIsFalse(Long userProfilesId, Long targetUserProfilesId);
+    Optional<Follows> findByUserProfiles_IdAndTargetUserProfiles_IdAndIsDeletedIsFalse(Long userProfileId, Long targetUserProfileId);
 
     Page<Follows> findByUserProfiles_IdAndIsDeletedIsFalse(Long userProfilesId, Pageable pageable);
+
+    Optional<Follows> findByIdAndUserProfiles_IdAndIsDeletedIsFalse(Long followId, Long userProfileId);
 
 }

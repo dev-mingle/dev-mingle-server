@@ -25,7 +25,7 @@ public class FollowController extends BaseController {
      */
     @PostMapping("")
     public ResponseEntity<ApiResponse> addFollow(@RequestBody FollowAddDto inputDto) {
-        FollowInfoDto followInfoDto = followService.addFollows(inputDto, getCurrentUserProfiles());
+        FollowInfoDto followInfoDto = followService.addFollow(inputDto, getCurrentUserProfiles());
         return responseBuilder(followInfoDto, HttpStatus.CREATED);
     }
 
@@ -36,6 +36,15 @@ public class FollowController extends BaseController {
     public ResponseEntity<ApiResponse> showFollowList(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<FollowInfoDto> followInfoDtoList = followService.showFollowList(getCurrentUserProfiles(), pageable);
         return responseBuilder(followInfoDtoList, HttpStatus.OK);
+    }
+
+    /**
+     * 팔로우 취소 API
+     */
+    @DeleteMapping("/{followId}")
+    public ResponseEntity<ApiResponse> cancelFollow(@PathVariable Long followId) {
+        FollowInfoDto followInfoDto = followService.cancelFollow(followId, getCurrentUserProfiles());
+        return responseBuilder(followInfoDto, HttpStatus.OK);
     }
 
 }

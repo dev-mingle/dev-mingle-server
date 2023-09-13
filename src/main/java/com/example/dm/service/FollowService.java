@@ -28,14 +28,14 @@ public class FollowService {
      * 팔로우 등록
      */
     @Transactional
-    public FollowInfoDto addFollows(FollowAddDto inputDto, UserProfiles currentUserProfiles) {
+    public FollowInfoDto addFollow(FollowAddDto inputDto, UserProfiles currentUserProfiles) {
 
         // 1. 자기 자신을 팔로우하는지 확인
         if (currentUserProfiles.getId().equals(inputDto.getTargetUserProfileId())) {
-            throw new FollowException(ApiResultStatus.NOT_FOLLOW_MYSELP); // 자기 자신을 팔로우하는 경우 에러
+            throw new FollowException(ApiResultStatus.CANNOT_FOLLOW_MYSELP); // 자기 자신을 팔로우하는 경우 에러
         }
 
-        // 2. targetUserProfilesId가 존재하는지 확인
+        // 2. targetUserProfilesId 가 존재하는지 확인
         UserProfiles targetUserProfiles = userProfileRepository.findByIdAndIsDeletedIsFalse(inputDto.getTargetUserProfileId())
                 .orElseThrow(() -> new FollowException(ApiResultStatus.USER_NOT_FOUND)); // 존재하지 않는 유저인 경우 에러
 
@@ -71,6 +71,24 @@ public class FollowService {
         } catch (PropertyReferenceException e) {
             throw new FollowException(ApiResultStatus.INVALID_ORDER_TYPE); // 유효하지 않은 정렬 타입인 경우 에러
         }
+    }
+
+    /**
+     * 팔로우 취소
+     */
+    @Transactional
+    public FollowInfoDto cancelFollow(Long followId, UserProfiles currentUserProfiles) {
+
+        // 1. followId 가 자신이 팔로우한 정보인지 확인
+        Follows follows = followRepository.findByIdAndUserProfiles_IdAndIsDeletedIsFalse(followId, currentUserProfiles.getId())
+                .orElseThrow(() -> new FollowException(ApiResultStatus.FOLLOW_NOT_FOUND)); // 존재하지 않는 팔로우 정보인 경우 or 자신의 팔로우 정보가 아닌 경우 에러
+
+        // 2. 팔로우 취소
+        follows.delete();
+        followRepository.save(follows);
+
+        // 3. 팔로우 취소 후 팔로우 정보 리턴
+        return FollowInfoDto.convertFollows(follows);
     }
 
 }

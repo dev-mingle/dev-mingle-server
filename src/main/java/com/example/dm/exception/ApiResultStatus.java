@@ -27,15 +27,20 @@ public enum ApiResultStatus {
     INTERNAL_SERVER_ERROR("E9000", "서버에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     DATABASE_ACCESS_ERROR("E9100", "Database Access 중 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    // 커스텀 에러
+    // 유저 관련 에러
     ALREADY_SIGNED_UP("E4090", "이미 가입된 이메일입니다.", HttpStatus.CONFLICT),
     LOGIN_FAILED("E4014", "로그인 정보가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("E4041", "유저 정보가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+
+    // 게시글 관련 에러
     POST_NOT_FOUND("E4042", "존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
     NOT_MY_POST("E4031", "해당 게시물에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+
+    // 팔로우 관련 에러
     FOLLOW_ALREADY_EXIST("E4092", "이미 팔로우한 유저입니다.", HttpStatus.CONFLICT),
-    NOT_FOLLOW_MYSELP("E4221", "자기 자신은 팔로우 할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
-    INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다.", HttpStatus.BAD_REQUEST);
+    CANNOT_FOLLOW_MYSELP("E4221", "자기 자신을 지정할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
+    INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다.", HttpStatus.BAD_REQUEST),
+    FOLLOW_NOT_FOUND("E4043", "존재하지 않는 팔로우 정보입니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
