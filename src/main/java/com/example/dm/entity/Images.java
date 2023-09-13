@@ -1,10 +1,7 @@
 package com.example.dm.entity;
 
 import com.example.dm.enums.ImageType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
+@Table(name = "images")
 @Getter
 @Setter
 @DynamicInsert
@@ -21,6 +19,7 @@ public class Images extends DeletedEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String url;
+    @Enumerated(EnumType.STRING)
     private ImageType type;
     private Long referenceId;
 

@@ -1,6 +1,7 @@
 package com.example.dm.entity;
 
 import com.example.dm.dto.form.SignupForm;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,7 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.List;
+
 @Entity
+@Table(name = "user_profiles")
 @Getter
 @Setter
 @DynamicInsert
@@ -19,10 +23,12 @@ public class UserProfiles extends DeletedEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private Users users;
 
-    private Long imageId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
+    private Images images;
 
     @Column(length = 20)
     private String nickname;
@@ -41,6 +47,14 @@ public class UserProfiles extends DeletedEntity {
     private String url;
     @Column(length = 50)
     private String urlName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "userProfiles", cascade = CascadeType.ALL)
+    private List<Follows> followsByUsers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "targetUserProfiles", cascade = CascadeType.ALL)
+    private List<Follows> followsByTargetUsers;
 
     public static UserProfiles create(Users users, SignupForm signupForm) {
         UserProfiles userProfiles = new UserProfiles();
