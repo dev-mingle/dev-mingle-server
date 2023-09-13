@@ -15,6 +15,7 @@ public enum ApiResultStatus {
     FORBIDDEN("E4030", "해당 권한은 호출이 불가합니다.", HttpStatus.FORBIDDEN),
     NOT_FOUND("E4040", "해당 데이터 또는 경로를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INVALID_FORMAT("E4220", "잘못된 형식의 값입니다.", HttpStatus.UNPROCESSABLE_ENTITY),
+    INVALID_EXTENSIONS("E4001", "올바르지 않은 확장자입니다. [%s]", HttpStatus.BAD_REQUEST),
 
     // 토큰 관련
     TOKEN_NOT_FOUND("E4011", "토큰을 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED),
@@ -38,7 +39,7 @@ public enum ApiResultStatus {
     // 팔로우 관련 에러
     FOLLOW_ALREADY_EXIST("E4092", "이미 팔로우한 유저입니다.", HttpStatus.CONFLICT),
     CANNOT_FOLLOW_MYSELP("E4221", "자기 자신을 지정할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
-    INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다. [%s]", HttpStatus.BAD_REQUEST),
+    INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다.", HttpStatus.BAD_REQUEST),
     FOLLOW_NOT_FOUND("E4043", "존재하지 않는 팔로우 정보입니다.", HttpStatus.NOT_FOUND);
 
     private final String code;

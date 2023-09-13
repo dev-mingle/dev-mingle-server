@@ -15,3 +15,9 @@ api:
   jwt:
     secret: ${JWT_SECRET}
     expire: ${JWT_EXPIRE:600} # seconds
+
+# aws s3 file server
+aws-s3:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  bucket-name: ${AWS_BUCKET_NAME}

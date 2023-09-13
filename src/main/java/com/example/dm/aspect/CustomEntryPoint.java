@@ -1,4 +1,4 @@
-package com.example.dm.security;
+package com.example.dm.aspect;
 
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.ForbiddenException;

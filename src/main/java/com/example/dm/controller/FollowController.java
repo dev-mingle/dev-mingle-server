@@ -7,6 +7,8 @@ import com.example.dm.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,8 @@ public class FollowController extends BaseController {
      * 팔로우 리스트 조회 API
      */
     @GetMapping("")
-    public ResponseEntity<ApiResponse> showFollowList(@RequestParam(defaultValue = "latest") String order,
-                                                      Pageable pageable) {
-        Page<FollowInfoDto> followInfoDtoList = followService.showFollowList(order, getCurrentUserProfiles(), pageable);
+    public ResponseEntity<ApiResponse> showFollowList(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<FollowInfoDto> followInfoDtoList = followService.showFollowList(getCurrentUserProfiles(), pageable);
         return responseBuilder(followInfoDtoList, HttpStatus.OK);
     }
 
