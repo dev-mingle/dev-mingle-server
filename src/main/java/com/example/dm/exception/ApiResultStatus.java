@@ -15,6 +15,7 @@ public enum ApiResultStatus {
     FORBIDDEN("E4030", "해당 권한은 호출이 불가합니다.", HttpStatus.FORBIDDEN),
     NOT_FOUND("E4040", "해당 데이터 또는 경로를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INVALID_FORMAT("E4220", "잘못된 형식의 값입니다.", HttpStatus.UNPROCESSABLE_ENTITY),
+    INVALID_EXTENSIONS("E4001", "올바르지 않은 확장자입니다. [%s]", HttpStatus.BAD_REQUEST),
 
     // 토큰 관련
     TOKEN_NOT_FOUND("E4011", "토큰을 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED),
