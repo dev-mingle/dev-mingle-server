@@ -2,6 +2,8 @@ package com.example.dm.chat.dto;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class ChatMessageDto {
 
@@ -11,7 +13,8 @@ public class ChatMessageDto {
 
     private String message;
 
-    private String createdAt;
+    // todo: date format 수정
+    private LocalDateTime createdAt;
 
-    private String updatedAt;
+    private LocalDateTime updatedAt;
 }
