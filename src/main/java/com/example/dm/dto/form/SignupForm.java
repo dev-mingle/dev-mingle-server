@@ -39,4 +39,7 @@ public class SignupForm {
     private String introduce;
     private String url;
     private String urlName;
+
+    private String provider;
+    private String providerId;
 }

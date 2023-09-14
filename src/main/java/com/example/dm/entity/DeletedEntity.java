@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class DeletedEntity extends BaseTimeEntity {
 
+    @ColumnDefault("false")
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-    @ColumnDefault("false")
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
