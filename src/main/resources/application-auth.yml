@@ -1,0 +1,44 @@
+spring.config.activate.on-profiles: auth
+
+spring:
+  datasource:
+    column:
+      encrypt:
+        key: ${COLUMN_ENCRYPT}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+
+jwt:
+  header: Authorization
+  secretKey: ${JWT_SECRET}
+  access:
+    tokenValidTime: 3600
+    header: Authorization
+  refresh:
+    tokenValidTime: 2592000
+    header: Authorization-refresh
+
+# refresh token - 30일
+# access token - 1시간
+
+mail:
+  username: Dev_Mingle
+  email: devmingle11@gmail.com
+  password: ${MAIL_SECRET}
+  signupSubject: Dev_Mingle 회원가입 메일인증
+  signupLink: https://www.dev_mingle.site

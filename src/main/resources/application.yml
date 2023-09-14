@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: datasource
+    include: auth, datasource, local
 
   output:
     ansi:
@@ -12,6 +12,6 @@ spring:
 api:
   path:
     default: /api/v1
-  jwt:
-    secret: ${JWT_SECRET}
-    expire: ${JWT_EXPIRE:600} # seconds
+#  jwt:
+#    secret: ${JWT_SECRET}
+#    expire: ${JWT_EXPIRE:600} # seconds
