@@ -65,7 +65,7 @@ public class AuthController extends BaseController {
   /* 닉네임 체크 */
   @PostMapping("/nickname")
   public ResponseEntity<ApiResponse> checkNickname(@RequestParam("nickname") String nickname) {
-    boolean hasNickname = usersRepository.findByNickname(nickname)!=null? true:false;
+    boolean hasNickname = userProfilesRepository.hasNickname(nickname)!=0? true:false;
     if(hasNickname) throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);  // temp
     else return responseBuilder(nickname, HttpStatus.OK);
   }
