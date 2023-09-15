@@ -1,13 +1,12 @@
-package com.example.dm.post.entity;
+package com.example.dm.entity;
 
 import com.example.dm.category.entity.Categories;
-import com.example.dm.entity.DeletedEntity;
-import com.example.dm.entity.UserProfiles;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
@@ -28,24 +27,20 @@ public class Posts extends DeletedEntity {
 
     private String title;
     private String contents;
-    private double latitude;
-    private double longitude;
-    private double displayRadius;
+    private Point point;
     private int hits;
     private int likes;
     private boolean hasChat;
 
     @Builder
-    public Posts(Long id, UserProfiles userProfile, Categories category, String title, String contents,
-                 double latitude, double longitude, double displayRadius, int hits, int likes, boolean hasChat) {
+    public Posts(Long id, UserProfiles userProfile, Categories category, String title,
+                 String contents, Point point, int hits, int likes, boolean hasChat) {
         this.id = id;
         this.userProfile = userProfile;
         this.category = category;
         this.title = title;
         this.contents = contents;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.displayRadius = displayRadius;
+        this.point = point;
         this.hits = hits;
         this.likes = likes;
         this.hasChat = hasChat;
