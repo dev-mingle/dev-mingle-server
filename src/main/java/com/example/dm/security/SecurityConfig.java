@@ -1,10 +1,12 @@
 package com.example.dm.security;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,14 +17,14 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@Import(PermitUrlProperties.class)
 public class SecurityConfig {
-
     @Value("${api.path.default}")
     private String API_URL_PREFIX;
-
+    private final PermitUrlProperties urlProperties;
     private final CustomEntryPoint customEntryPoint;
 
     @Bean
@@ -36,16 +38,15 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(CsrfConfigurer::disable)
             .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .requestMatchers(API_URL_PREFIX+"/categories", API_URL_PREFIX+"/posts/**").permitAll()
-                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/login").permitAll()
-                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users").permitAll()
-                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/otp/**").permitAll()
-                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/nickname/**").permitAll()
-                .requestMatchers("/actuator/health").permitAll()
-                .anyRequest().authenticated()
-            )
+            .authorizeHttpRequests(auth -> {
+                for (String url : urlProperties.getGet()) {
+                    auth.requestMatchers("GET", url).permitAll();
+                }
+                for (String url : urlProperties.getPost()) {
+                    auth.requestMatchers("POST", url).permitAll();
+                }
+                auth.anyRequest().authenticated();
+            })
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(customEntryPoint)
                 .accessDeniedHandler(customEntryPoint)
