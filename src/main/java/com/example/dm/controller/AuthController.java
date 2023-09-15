@@ -4,12 +4,10 @@ import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.form.SignupForm;
 import com.example.dm.dto.form.SignupUserData;
 import com.example.dm.dto.form.SignupUserProfilesData;
-import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
-import com.example.dm.exception.BadRequestException;
 import com.example.dm.repository.UserProfilesRepository;
 import com.example.dm.repository.UsersRepository;
 import com.example.dm.security.jwt.TokenProvider;
@@ -19,8 +17,6 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +50,7 @@ public class AuthController extends BaseController {
   @PostMapping("/otp")
   public ResponseEntity<ApiResponse> sendOtp(@RequestBody String email) {
     if(!emailConfirm(email)){
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP.getMessage());
+      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
     }
 
     try {
@@ -71,7 +67,7 @@ public class AuthController extends BaseController {
   @PostMapping
   public ResponseEntity<ApiResponse> signup(HttpServletResponse response, @Valid @RequestBody SignupForm signupForm) {
     if(!emailConfirm(signupForm.getEmail())){
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP.getMessage());
+      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
     }
 
     Users user = Users.create(signupForm.getEmail(),
@@ -108,10 +104,10 @@ public class AuthController extends BaseController {
   public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestParam("email") String email, @RequestParam("password") String password) {
     Users user = usersRepository.findByEmail(email);
     if(user==null){
-      throw new AuthException(ApiResultStatus.USER_NOT_FOUND.getMessage());
+      throw new AuthException(ApiResultStatus.USER_NOT_FOUND);
     }
     if(!passwordEncoder.matches(password, user.getPassword())){
-      throw new AuthException(ApiResultStatus.WRONG_PASSWORD.getMessage());
+      throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
     setAuthentication(response, email);
     return responseBuilder(true, HttpStatus.OK);

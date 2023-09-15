@@ -5,7 +5,6 @@ import com.example.dm.exception.AuthException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.security.Key;
 import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +15,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
-@Component
+//@Component
 @RequiredArgsConstructor
 public class TokenFilter extends OncePerRequestFilter {
   private final TokenProvider tokenProvider;
-  private final Key key;
 
   @Value("${jwt.access.header}")
   private String accessHeader;
@@ -36,7 +34,7 @@ public class TokenFilter extends OncePerRequestFilter {
     String refreshToken = resolveToken(request.getHeader(refreshHeader));
 
     if(accessToken==null || refreshToken==null){
-      throw new AuthException(ApiResultStatus.TOKEN_NOT_FOUND.getMessage());
+      throw new AuthException(ApiResultStatus.TOKEN_NOT_FOUND);
     }
 
     tokenProvider.validateToken(accessToken);
