@@ -48,7 +48,7 @@ public class AuthController extends BaseController {
 
   /* 이메일 인증발급 */
   @PostMapping("/otp")
-  public ResponseEntity<ApiResponse> sendOtp(@RequestBody String email) {
+  public ResponseEntity<ApiResponse> sendOtp(@RequestParam("email") String email) {
     if(!emailConfirm(email)){
       throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
     }

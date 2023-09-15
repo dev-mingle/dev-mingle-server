@@ -9,10 +9,12 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+//@Slf4j
 @Component
 @RequestScope
 public class MailSender {
@@ -34,10 +36,11 @@ public class MailSender {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.socketFactory.fallback", "true");
         props.put("mail.smtp.auth", "true");
+        String id = email.substring(0, email.indexOf("@"));
 
         Session session = Session.getDefaultInstance(props, new jakarta.mail.Authenticator(){
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(id, password);
             }
         });
 
@@ -48,10 +51,10 @@ public class MailSender {
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
         message.setSubject(signupSubject, "utf-8");
 
-//            template 생성시
-//            Reader reader = new InputStreamReader(new ClassPathResource("/mailTemplate.html").getInputStream(), "utf-8");
-//            String template = FileCopyUtils.copyToString(reader);
-//            String mail = MessageFormat.format(template, );
+//        template 생성시
+//        Reader reader = new InputStreamReader(new ClassPathResource("/mailTemplate.html").getInputStream(), "utf-8");
+//        String template = FileCopyUtils.copyToString(reader);
+//        String mail = MessageFormat.format(template, );
 
         message.setContent(signupLink, "text/html; charset=utf-8");
         transport.send(message);
