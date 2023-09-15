@@ -1,9 +1,8 @@
-package com.example.dm.category.entity;
+package com.example.dm.entity;
 
 import com.example.dm.entity.DeletedEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.dm.entity.UserProfiles;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,10 +18,12 @@ public class Categories extends DeletedEntity {
     private Long id;
 
     private String name;
-    private String creator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private UserProfiles creator;
 
     @Builder
-    public Categories(Long id, String name, String creator) {
+    public Categories(Long id, String name, UserProfiles creator) {
         this.id = id;
         this.name = name;
         this.creator = creator;
