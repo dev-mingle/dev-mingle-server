@@ -1,8 +1,7 @@
-package com.example.dm.post.controller;
+package com.example.dm.controller;
 
-import com.example.dm.controller.BaseController;
 import com.example.dm.dto.ApiResponse;
-import com.example.dm.post.entity.Posts;
+import com.example.dm.entity.Posts;
 import com.example.dm.post.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
