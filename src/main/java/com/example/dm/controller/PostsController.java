@@ -2,7 +2,7 @@ package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
 import com.example.dm.entity.Posts;
-import com.example.dm.post.service.PostsService;
+import com.example.dm.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

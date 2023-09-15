@@ -1,6 +1,5 @@
 package com.example.dm.entity;
 
-import com.example.dm.category.entity.Categories;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
