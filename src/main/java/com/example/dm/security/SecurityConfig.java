@@ -39,9 +39,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers(API_URL_PREFIX+"/categories", API_URL_PREFIX+"/posts/**").permitAll()
-                .requestMatchers(API_URL_PREFIX+"/users/login").permitAll()
+                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/login").permitAll()
                 .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users").permitAll()
                 .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/otp/**").permitAll()
+                .requestMatchers(HttpMethod.POST, API_URL_PREFIX+"/users/nickname/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .anyRequest().authenticated()
             )

@@ -1,6 +1,7 @@
 package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
+import com.example.dm.dto.form.LoginForm;
 import com.example.dm.dto.form.SignupForm;
 import com.example.dm.dto.form.SignupUserData;
 import com.example.dm.dto.form.SignupUserProfilesData;
@@ -107,16 +108,16 @@ public class AuthController extends BaseController {
   }
 
   /* 로그인 */
-  @GetMapping("/login")
-  public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestParam("email") String email, @RequestParam("password") String password) {
-    Users user = usersRepository.findByEmail(email);
+  @PostMapping("/login")
+  public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestBody LoginForm loginForm) {
+    Users user = usersRepository.findByEmail(loginForm.getEmail());
     if(user==null){
       throw new AuthException(ApiResultStatus.USER_NOT_FOUND);
     }
-    if(!passwordEncoder.matches(password, user.getPassword())){
+    if(!passwordEncoder.matches(loginForm.getPassword(), user.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
-    setAuthentication(response, email);
+    setAuthentication(response, loginForm.getEmail());
     return responseBuilder(true, HttpStatus.OK);
   }
 
