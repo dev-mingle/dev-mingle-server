@@ -42,7 +42,7 @@ public class CustomRequestWrapper extends HttpServletRequestWrapper {
      * 공통 Request 로그 작성
      */
     private void writeRequestLogs(HttpServletRequest request, String requestBody) {
-        String requestId = (String) request.getAttribute("requestId");
+        String txid = (String) request.getAttribute("txid");
         String publicIp = (String) request.getAttribute("publicIp");
         String userAgent = request.getHeader("user-agent");
         String requestMethod = request.getMethod();
@@ -50,11 +50,11 @@ public class CustomRequestWrapper extends HttpServletRequestWrapper {
         String queryString = !Strings.isEmpty(request.getQueryString()) ? "?" + request.getQueryString() : "";
 
         log.info("-------------------------------------");
-        log.info("[Request] => {}", requestId);
-        log.info("{} {} {}", requestId, requestMethod, servletPath + queryString);
-        log.info("{} public ip:{}", requestId, publicIp);
-        log.info("{} user-agent:{}", requestId, userAgent);
-        log.info("{} request body=[{}]", requestId, requestBody);
+        log.info("[Request] => {}", txid);
+        log.info("{} {} {}", txid, requestMethod, servletPath + queryString);
+        log.info("{} public ip:{}", txid, publicIp);
+        log.info("{} user-agent:{}", txid, userAgent);
+        log.info("{} request body=[{}]", txid, requestBody);
     }
 
     @Override

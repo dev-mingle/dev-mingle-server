@@ -4,28 +4,28 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class BusinessException extends RuntimeException {
+public class FollowException extends BusinessException {
 
     private String code;
     private String message;
     private String description;
     private HttpStatus httpStatus;
 
-    public BusinessException() {
+    public FollowException() {
     }
 
-    public BusinessException(String message) {
+    public FollowException(String message) {
         super(message);
     }
 
-    public BusinessException(ApiResultStatus apiResultStatus) {
+    public FollowException(ApiResultStatus apiResultStatus) {
         this.code = apiResultStatus.getCode();
         this.message = apiResultStatus.getMessage();
         this.httpStatus = apiResultStatus.getHttpStatus();
         this.description = apiResultStatus.toString();
     }
 
-    public BusinessException(ApiResultStatus apiResultStatus, String message) {
+    public FollowException(ApiResultStatus apiResultStatus, String message) {
         this(apiResultStatus);
         this.message = String.format(apiResultStatus.getMessage(), message);
     }
