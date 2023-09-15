@@ -1,18 +1,16 @@
 package com.example.dm.exception;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@NoArgsConstructor
 public class AuthException extends BusinessException {
-
   private String code;
   private String message;
   private String description;
   private HttpStatus httpStatus;
-
-  public AuthException() {
-  }
 
   public AuthException(String message) {
     super(message);
