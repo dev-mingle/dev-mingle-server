@@ -1,6 +1,6 @@
-package com.example.dm.post.service;
+package com.example.dm.service;
 
-import com.example.dm.post.entity.Posts;
+import com.example.dm.entity.Posts;
 import com.example.dm.post.repository.PostsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class PostsServiceImpl implements PostsService{
+class PostsServiceImpl implements PostsService {
 
     private final PostsRepository postsRepository;
 

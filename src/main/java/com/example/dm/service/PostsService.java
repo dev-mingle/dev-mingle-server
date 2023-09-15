@@ -1,6 +1,6 @@
-package com.example.dm.post.service;
+package com.example.dm.service;
 
-import com.example.dm.post.entity.Posts;
+import com.example.dm.entity.Posts;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
