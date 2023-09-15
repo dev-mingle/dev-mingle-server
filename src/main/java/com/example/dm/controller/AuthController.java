@@ -52,15 +52,22 @@ public class AuthController extends BaseController {
     if(!emailConfirm(email)){
       throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
     }
-
     try {
       mailSender.sendOtp(email);
     } catch (MessagingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException(e);  // temp
     } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException(e);  // temp
     }
     return responseBuilder(email, HttpStatus.OK);
+  }
+
+  /* 닉네임 체크 */
+  @PostMapping("/nickname")
+  public ResponseEntity<ApiResponse> checkNickname(@RequestParam("nickname") String nickname) {
+    boolean hasNickname = usersRepository.findByNickname(nickname)!=null? true:false;
+    if(hasNickname) throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);  // temp
+    else return responseBuilder(nickname, HttpStatus.OK);
   }
 
   /* 회원가입 */
