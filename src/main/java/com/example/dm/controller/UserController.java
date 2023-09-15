@@ -25,6 +25,7 @@ public class UserController extends BaseController {
     String email = principal.getName();
     Users user = usersRepository.findByEmail(email);
     user.delete();
+    usersRepository.save(user);
     return responseBuilder(email, HttpStatus.OK);
   }
 }
