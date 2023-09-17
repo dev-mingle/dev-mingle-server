@@ -17,7 +17,7 @@ spring:
     host: ${REDIS_HOST:dev_mingle_redis}
     port: 6379
     password: ${REDIS_PASSWORD}
-    ssl: false
+    ssl: ${REDIS_SSL:false}
     cache-database: ${REDIS_DATABASE:0}
     jedis:
       pool:
