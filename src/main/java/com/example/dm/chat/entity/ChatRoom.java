@@ -25,7 +25,9 @@ public class ChatRoom extends BaseTimeEntity {
 
     private int userCount;
 
-    // todo: 방장 User
+    @ManyToOne
+    @JoinColumn(name = "admin_user")
+    private UserProfiles adminUser;
 
     // todo: User 목록 M:N
 

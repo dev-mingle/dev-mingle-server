@@ -17,7 +17,7 @@ public class ChatController {
 
     private final ChatMessageService chatMessageService;
 
-    private static final String SUBSCRIBE_URL = "/sub/v1/chats/";
+    public static final String SUBSCRIBE_URL = "/sub/v1/chats/";
 
     // todo: pathvariable로 roomId 받는 경우
     // todo: 각 room이 존재하는지 유효성, user가 채팅방에 속해있는지 유효
@@ -31,6 +31,12 @@ public class ChatController {
 
     @MessageMapping("/v1/chats/message")
     public void sendMessage(@Payload ChatDto chatDto) {
+        processMessage(chatDto);
+    }
+
+    @MessageMapping("/v1/chats/exit")
+    public void exitUser(@Payload ChatDto chatDto) {
+        chatDto.setMessage(chatDto.getSender() + " 님이 퇴장하셨습니다.");
         processMessage(chatDto);
     }
 
