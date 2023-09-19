@@ -1,14 +1,15 @@
 package com.example.dm.chat.entity;
 
 import com.example.dm.entity.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.dm.entity.UserProfiles;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,7 +30,9 @@ public class ChatRoom extends BaseTimeEntity {
     @JoinColumn(name = "admin_user")
     private UserProfiles adminUser;
 
-    // todo: User 목록 M:N
+    @Builder.Default
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoomUserProfiles> userProfiles = new ArrayList<>();
 
     public void plusUserCount() {
         this.userCount++;
@@ -37,6 +40,15 @@ public class ChatRoom extends BaseTimeEntity {
 
     public void minusUserCount() {
         this.userCount--;
+    }
+
+    public void addUser(ChatRoomUserProfiles chatRoomUserProfiles){
+        userProfiles.add(chatRoomUserProfiles);
+    }
+
+    public boolean removeUser(Long userProfileId) {
+        return this.getUserProfiles()
+                .removeIf(chatRoomUserProfiles -> chatRoomUserProfiles.getUserProfiles().getId().equals(userProfileId));
     }
 
 }
