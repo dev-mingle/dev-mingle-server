@@ -40,7 +40,11 @@ public enum ApiResultStatus {
     FOLLOW_ALREADY_EXIST("E4092", "이미 팔로우한 유저입니다.", HttpStatus.CONFLICT),
     CANNOT_FOLLOW_MYSELP("E4221", "자기 자신을 지정할 수 없습니다.", HttpStatus.UNPROCESSABLE_ENTITY),
     INVALID_ORDER_TYPE("E4002", "잘못된 정렬 조건 입니다.", HttpStatus.BAD_REQUEST),
-    FOLLOW_NOT_FOUND("E4043", "존재하지 않는 팔로우 정보입니다.", HttpStatus.NOT_FOUND);
+    FOLLOW_NOT_FOUND("E4043", "존재하지 않는 팔로우 정보입니다.", HttpStatus.NOT_FOUND),
+
+    // 채팅 관련 에러
+    ROOM_NOT_FOUND("40410", "채팅방이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    USER_NOT_EXIST_ROOM("40411", "채팅방에 존재하지 않은 유저입니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
