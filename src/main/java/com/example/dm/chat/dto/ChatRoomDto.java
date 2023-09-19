@@ -1,11 +1,17 @@
 package com.example.dm.chat.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ChatRoomDto {
 
-    private String name;
+    private Long roomId;
 
-    private Long adminUserId;
+    private String roomName;
+
+    private Long userProfileId;
+
+    private String nickname;
 }
