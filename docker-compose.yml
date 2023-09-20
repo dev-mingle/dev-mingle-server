@@ -1,9 +1,5 @@
 version: '3.8'
 
-volumes:
-  db-data:
-    external: false
-
 services:
   api:
     container_name: dev_mingle_api

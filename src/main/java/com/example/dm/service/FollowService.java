@@ -45,11 +45,7 @@ public class FollowService {
         }
 
         // 4. 팔로우 등록
-        Follows follows = Follows.builder()
-                .userProfiles(currentUserProfiles)
-                .targetUserProfiles(targetUserProfiles)
-                .build();
-
+        Follows follows = Follows.create(currentUserProfiles, targetUserProfiles);
         followRepository.save(follows);
 
         // 5. 팔로우 등록 후 팔로우 정보 리턴
