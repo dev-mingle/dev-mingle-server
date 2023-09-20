@@ -86,7 +86,7 @@ jobs:
         script_stop: true
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api:latest
-          docker run -e SPRING_PROFILE=${{ secrets.SPRING_PROFILE }} -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api
+          docker run -d --restart=always --env-file=.env -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api
 
     # 7. Github Actions IP 를 EC2 보안그룹에서 삭제
     - name: Remove Github Actions IP From Security Group
