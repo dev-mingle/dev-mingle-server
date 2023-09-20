@@ -13,7 +13,6 @@ public class ChatMessageDto {
 
     private String message;
 
-    // todo: date format 수정
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

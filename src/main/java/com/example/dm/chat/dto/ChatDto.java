@@ -1,10 +1,12 @@
 package com.example.dm.chat.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class ChatDto {
 
     private Long roomId;
@@ -13,9 +15,4 @@ public class ChatDto {
 
     private String message;
 
-    private MessageType type;
-
-    public enum MessageType{
-        JOIN, SEND
-    }
 }
