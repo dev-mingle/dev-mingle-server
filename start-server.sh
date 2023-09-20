@@ -1,5 +1,5 @@
 # start-server.sh
-./gradlew clean bootJar &&  # 1. build jar
+./gradlew clean build &&  # 1. build & unit test
 docker compose -f docker-compose.local.yml down &&  # 2. 기존 컨테이너 종료 및 삭제
 docker compose -f docker-compose.local.yml build --no-cache &&  # 3. 새로운 이미지 빌드
 docker compose -f docker-compose.local.yml up -d  # 4. 컨테이너 실행

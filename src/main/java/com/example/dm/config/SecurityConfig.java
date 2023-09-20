@@ -1,6 +1,7 @@
 package com.example.dm.config;
 
 import com.example.dm.aspect.CustomEntryPoint;
+import com.example.dm.security.PermitUrlProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     @Value("${api.path.default}")
     private String API_URL_PREFIX;
 
+    private final PermitUrlProperties urlProperties;
     private final CustomEntryPoint customEntryPoint;
 
     @Bean
@@ -36,11 +38,15 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/**").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    for (String url : urlProperties.getGet()) {
+                        auth.requestMatchers("GET", url).permitAll();
+                    }
+                    for (String url : urlProperties.getPost()) {
+                        auth.requestMatchers("POST", url).permitAll();
+                    }
+                    auth.anyRequest().authenticated();
+                })
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(customEntryPoint)
                         .accessDeniedHandler(customEntryPoint)

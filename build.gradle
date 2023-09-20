@@ -31,8 +31,14 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     // flyway
-//    implementation 'org.flywaydb:flyway-core'
-//    implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-core'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // serialization
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     // auth
     implementation 'org.springframework.boot:spring-boot-starter-security'

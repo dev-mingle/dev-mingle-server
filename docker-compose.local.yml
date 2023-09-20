@@ -3,6 +3,8 @@ version: '3.8'
 volumes:
   db-data:
     external: false
+  redis-data:
+    external: false
 
 services:
   postgres:
@@ -23,11 +25,22 @@ services:
       - db-data:/var/lib/postgresql/data
     restart: always
 
+  redis:
+    container_name: dev_mingle_redis
+    image: redis:6.2.6-alpine3.15
+    ports:
+      - "6379:6379"
+    env_file: .env
+    volumes:
+      - redis-data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: always
+
   api:
     container_name: dev_mingle_api
     depends_on:
       - postgres
-    restart: always
+      - redis
     ports:
       - "8080:8080"
     build:
@@ -36,3 +49,4 @@ services:
       args:
         SPRING_PROFILE: ${SPRING_PROFILE}
     env_file: .env
+    restart: always
