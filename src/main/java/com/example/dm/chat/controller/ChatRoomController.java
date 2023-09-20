@@ -26,6 +26,24 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatRoomService.createRoom(chatRoomCreateDto), HttpStatus.CREATED);
     }
 
+    /**
+     * todo: JOIN 메시지 전송 / mongodb
+     *  todo: @AuthenticationPrincipal 사용고려
+     */
+    @PostMapping("/{roomId}/join/{userProfileId}")
+    public ResponseEntity<ApiResponse> joinRoom(@PathVariable Long roomId,
+                                                @PathVariable Long userProfileId) {
+        ChatRoomDto chatRoomDto = chatRoomService.enterRoomUser(roomId, userProfileId);
+
+        ChatDto chatDto = ChatDto.builder()
+                .message(chatRoomDto.getNickname() + "님이 참여하였습니다.")
+                .roomId(roomId)
+                .sender(chatRoomDto.getNickname())
+                .build();
+        template.convertAndSend(SUBSCRIBE_URL + roomId, chatDto);
+
+        return responseBuilder(chatRoomDto, HttpStatus.OK);
+    }
 
     @GetMapping("/user/{userProfileId}/rooms")
     public ResponseEntity<ApiResponse> getRoomsByUserProfileId(@PathVariable Long userProfileId) {
