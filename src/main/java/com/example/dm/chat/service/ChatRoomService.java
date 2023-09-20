@@ -13,13 +13,31 @@ import org.springframework.stereotype.Service;
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final UserProfileRepository userProfileRepository;
 
-    public ChatRoom createRoom(ChatRoomDto chatRoomDto) {
+    public ChatRoomGetDto createRoom(ChatRoomCreateDto chatRoomCreateDto) {
+        UserProfiles userProfiles = verifyUserProfile(chatRoomCreateDto.getAdminUserId());
+
         ChatRoom room = ChatRoom.builder()
-                .name(chatRoomDto.getName())
+                .name(chatRoomCreateDto.getName())
+                .adminUser(userProfiles)
+                .userCount(1)
                 .build();
 
-        return chatRoomRepository.save(room);
+        ChatRoomUserProfiles chatRoomUserProfiles = ChatRoomUserProfiles.builder()
+                .userProfiles(userProfiles)
+                .chatRoom(room)
+                .build();
+
+        room.addUser(chatRoomUserProfiles);
+
+        ChatRoom chatRoom = chatRoomRepository.save(room);
+
+        return ChatRoomGetDto.builder()
+                .roomId(chatRoom.getRoomId())
+                .name(chatRoom.getName())
+                .userCount(chatRoom.getUserCount())
+                .build();
     }
 
     public ChatRoom findRoomById(Long roomId) {
@@ -30,6 +48,7 @@ public class ChatRoomService {
         return chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }
 
-    // todo: user 기반 room 조회
-
+    private UserProfiles verifyUserProfile(Long userProfileId) {
+        return userProfileRepository.findById(userProfileId).orElseThrow(() -> new BusinessException(ApiResultStatus.USER_NOT_FOUND));
+    }
 }
