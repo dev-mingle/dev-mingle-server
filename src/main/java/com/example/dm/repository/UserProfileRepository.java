@@ -13,4 +13,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfiles, Long>
 
     Optional<UserProfiles> findByUsers_IdAndIsDeletedIsFalse(Long usersId);
 
+    Integer countByNicknameAndIsDeletedIsFalse(String nickname);
+
 }
