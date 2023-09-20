@@ -1,15 +1,26 @@
 package com.example.dm.chat.service;
 
+import com.example.dm.chat.dto.ChatRoomCreateDto;
+import com.example.dm.chat.dto.ChatRoomGetDto;
 import com.example.dm.chat.dto.ChatRoomDto;
+import com.example.dm.chat.dto.UserProfileDto;
 import com.example.dm.chat.entity.ChatRoom;
+import com.example.dm.chat.entity.ChatRoomUserProfiles;
 import com.example.dm.chat.repository.ChatRoomRepository;
+import com.example.dm.entity.UserProfiles;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.BusinessException;
+import com.example.dm.repository.UserProfileRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -93,6 +104,14 @@ public class ChatRoomService {
                 .userProfileId(userProfileId)
 //                .nickname(userProfiles.getNickname())
                 .build();
+    }
+
+    public List<UserProfileDto> getRoomUserList(Long roomId) {
+        ChatRoom chatRoom = verifyRoom(roomId);
+
+        return chatRoom.getUserProfiles().stream()
+                .map(chatRoomUserProfiles -> UserProfileDto.from(chatRoomUserProfiles.getUserProfiles()))
+                .collect(Collectors.toList());
     }
 
     private ChatRoom verifyRoom(Long roomId) {
