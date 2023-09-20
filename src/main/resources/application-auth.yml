@@ -54,5 +54,5 @@ url:
     prefixPost:
       - /users/login
       - /users
-      - /users/otp/**
-      - /users/nickname/**
+      - /users/otp
+      - /users/nickname
