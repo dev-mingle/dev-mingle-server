@@ -23,6 +23,13 @@ public class ChatMembers {
     private UserProfiles userProfiles;
 
     @ManyToOne
-    @JoinColumn(name = "chat_room_id")
+    @JoinColumn(name = "chat_rooms_id")
     private ChatRooms chatRooms;
+
+    public static ChatMembers from(ChatRooms chatRooms, UserProfiles userProfiles) {
+        return ChatMembers.builder()
+                .userProfiles(userProfiles)
+                .chatRooms(chatRooms)
+                .build();
+    }
 }

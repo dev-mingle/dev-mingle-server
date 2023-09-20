@@ -1,5 +1,6 @@
 package com.example.dm.chat.entity;
 
+import com.example.dm.chat.dto.ChatRoomCreateDto;
 import com.example.dm.entity.BaseTimeEntity;
 import com.example.dm.entity.UserProfiles;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class ChatRooms extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    private Long id;
 
     private String name;
 
@@ -42,13 +43,21 @@ public class ChatRooms extends BaseTimeEntity {
         this.userCount--;
     }
 
-    public void addUser(ChatMembers chatMembers){
-        chatMembers.add(chatMembers);
+    public void addUser(ChatMembers chatMember){
+        chatMembers.add(chatMember);
     }
 
     public boolean removeUser(Long userProfileId) {
         return this.getChatMembers()
                 .removeIf(chatRoomUserProfiles -> chatRoomUserProfiles.getUserProfiles().getId().equals(userProfileId));
+    }
+
+    public static ChatRooms from(ChatRoomCreateDto chatRoomCreateDto, UserProfiles userProfiles) {
+        return ChatRooms.builder()
+                .name(chatRoomCreateDto.getName())
+                .adminUser(userProfiles)
+                .userCount(1)
+                .build();
     }
 
 }
