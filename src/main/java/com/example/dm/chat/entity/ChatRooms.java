@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatRoom extends BaseTimeEntity {
+public class ChatRooms extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +31,8 @@ public class ChatRoom extends BaseTimeEntity {
     private UserProfiles adminUser;
 
     @Builder.Default
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatRoomUserProfiles> userProfiles = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRooms", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMembers> chatMembers = new ArrayList<>();
 
     public void plusUserCount() {
         this.userCount++;
@@ -42,12 +42,12 @@ public class ChatRoom extends BaseTimeEntity {
         this.userCount--;
     }
 
-    public void addUser(ChatRoomUserProfiles chatRoomUserProfiles){
-        userProfiles.add(chatRoomUserProfiles);
+    public void addUser(ChatMembers chatMembers){
+        chatMembers.add(chatMembers);
     }
 
     public boolean removeUser(Long userProfileId) {
-        return this.getUserProfiles()
+        return this.getChatMembers()
                 .removeIf(chatRoomUserProfiles -> chatRoomUserProfiles.getUserProfiles().getId().equals(userProfileId));
     }
 

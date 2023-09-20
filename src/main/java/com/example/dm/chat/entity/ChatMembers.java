@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoomUserProfiles {
+public class ChatMembers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,5 @@ public class ChatRoomUserProfiles {
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    private ChatRooms chatRooms;
 }

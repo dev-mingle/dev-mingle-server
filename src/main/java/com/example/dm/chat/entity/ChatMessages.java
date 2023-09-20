@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @Getter
 @Builder
-public class ChatMessage extends BaseTimeEntity {
+public class ChatMessages extends BaseTimeEntity {
 
     @Id
     private String id;

@@ -2,7 +2,7 @@ package com.example.dm.chat.service;
 
 import com.example.dm.chat.dto.ChatDto;
 import com.example.dm.chat.dto.ChatMessageDto;
-import com.example.dm.chat.entity.ChatMessage;
+import com.example.dm.chat.entity.ChatMessages;
 import com.example.dm.chat.repository.ChatMessageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class ChatMessageService {
     }
 
     public void saveMessage(ChatDto chatDto) {
-        ChatMessage chatMessage = ChatMessage.builder()
+        ChatMessages chatMessages = ChatMessages.builder()
                 .message(chatDto.getMessage())
                 .sender(chatDto.getSender())
                 .roomId(chatDto.getRoomId())
                 .build();
 
-        chatMessageRepository.save(chatMessage);
+        chatMessageRepository.save(chatMessages);
     }
 }
