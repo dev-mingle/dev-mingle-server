@@ -22,8 +22,11 @@ public class ChatRoomController extends BaseController {
     @PostMapping
     public ResponseEntity<ApiResponse> createRoom(@RequestBody ChatRoomDto chatRoomDto) {
 
-        return responseBuilder(chatRoomService.createRoom(chatRoomDto), HttpStatus.CREATED);
+    @GetMapping("/user/{userProfileId}/rooms")
+    public ResponseEntity<ApiResponse> getRoomsByUserProfileId(@PathVariable Long userProfileId) {
+        return responseBuilder(chatRoomService.findRoomByUser(userProfileId), HttpStatus.OK);
     }
+
     @GetMapping("/{roomId}")
     public ResponseEntity<ApiResponse> getRoomMessage(@PathVariable Long roomId) {
         return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId), HttpStatus.OK);
