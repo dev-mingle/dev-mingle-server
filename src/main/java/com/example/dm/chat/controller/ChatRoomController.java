@@ -1,5 +1,7 @@
 package com.example.dm.chat.controller;
 
+import com.example.dm.chat.dto.ChatDto;
+import com.example.dm.chat.dto.ChatRoomCreateDto;
 import com.example.dm.chat.dto.ChatRoomDto;
 import com.example.dm.chat.service.ChatMessageService;
 import com.example.dm.chat.service.ChatRoomService;
@@ -8,7 +10,10 @@ import com.example.dm.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
+
+import static com.example.dm.chat.controller.ChatController.SUBSCRIBE_URL;
 
 @RestController
 @RequestMapping("/v1/chats")
@@ -69,5 +74,10 @@ public class ChatRoomController extends BaseController {
         template.convertAndSend(SUBSCRIBE_URL + roomId, chatDto);
 
         return responseBuilder(chatRoomDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{roomId}/userlist")
+    public ResponseEntity<ApiResponse> getUserList(@PathVariable Long roomId) {
+        return responseBuilder(chatRoomService.getRoomUserList(roomId), HttpStatus.OK);
     }
 }
