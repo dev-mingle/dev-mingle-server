@@ -44,6 +44,25 @@ public class ChatRoomService {
         return verifyRoom(roomId);
     }
 
+    public ChatRoomDto enterRoomUser(Long roomId, Long userProfileId) {
+        ChatRoom chatRoom = verifyRoom(roomId);
+        UserProfiles userProfiles = verifyUserProfile(userProfileId);
+
+        ChatRoomUserProfiles chatRoomUserProfiles = ChatRoomUserProfiles.builder()
+                .userProfiles(userProfiles)
+                .chatRoom(chatRoom)
+                .build();
+        chatRoom.addUser(chatRoomUserProfiles);
+        chatRoom.plusUserCount();
+
+        return ChatRoomDto.builder()
+                .roomId(chatRoom.getRoomId())
+                .roomName(chatRoom.getName())
+                .userProfileId(userProfiles.getId())
+                .nickname(userProfiles.getNickname())
+                .build();
+    }
+
     private ChatRoom verifyRoom(Long roomId) {
         return chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }
