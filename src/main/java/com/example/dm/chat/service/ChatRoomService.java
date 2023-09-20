@@ -44,6 +44,20 @@ public class ChatRoomService {
         return verifyRoom(roomId);
     }
 
+    // todo: 방장 표시
+    public List<ChatRoomGetDto> findRoomByUser(Long userProfileId) {
+        UserProfiles userProfiles = verifyUserProfile(userProfileId);
+
+        return userProfiles.getChatRooms().stream().map(chatRoomUser -> {
+            ChatRoom chatRoom = chatRoomUser.getChatRoom();
+            return ChatRoomGetDto.builder()
+                    .roomId(chatRoom.getRoomId())
+                    .name(chatRoom.getName())
+                    .userCount(chatRoom.getUserCount())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
     public ChatRoomDto enterRoomUser(Long roomId, Long userProfileId) {
         ChatRoom chatRoom = verifyRoom(roomId);
         UserProfiles userProfiles = verifyUserProfile(userProfileId);
