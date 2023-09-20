@@ -63,6 +63,24 @@ public class ChatRoomService {
                 .build();
     }
 
+    // todo: 방장이 퇴장할 경우
+    // todo: nickname 주석 authentication으로 처리
+    public ChatRoomDto exitRoomUser(Long roomId, Long userProfileId) {
+        ChatRoom chatRoom = verifyRoom(roomId);
+
+        if(!chatRoom.removeUser(userProfileId)) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
+        chatRoom.minusUserCount();
+
+        chatRoomRepository.save(chatRoom);
+
+        return ChatRoomDto.builder()
+                .roomId(chatRoom.getRoomId())
+                .roomName(chatRoom.getName())
+                .userProfileId(userProfileId)
+//                .nickname(userProfiles.getNickname())
+                .build();
+    }
+
     private ChatRoom verifyRoom(Long roomId) {
         return chatRoomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }
