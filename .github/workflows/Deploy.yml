@@ -10,16 +10,15 @@ name: Deploy
 on:
   push:
     branches:
-      - main
       - develop
   pull_request:
     branches:
-      - main
       - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: develop
     steps:
     - uses: actions/checkout@v3
     
@@ -89,4 +88,4 @@ jobs:
     # 6. Github Actions IP 를 EC2 보안그룹에서 삭제
     - name: Remove Github Actions IP From Security Group
       run: |
-        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        aws ec2 revoke-security-group-ingress --group-id ${{ secrets.EC2_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
