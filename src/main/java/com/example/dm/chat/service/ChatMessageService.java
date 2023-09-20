@@ -1,9 +1,9 @@
 package com.example.dm.chat.service;
 
-import com.example.dm.chat.dto.ChatDto;
-import com.example.dm.chat.dto.ChatMessageDto;
+import com.example.dm.chat.dto.ChatCreateDto;
+import com.example.dm.chat.dto.ChatMessageGetDto;
 import com.example.dm.chat.entity.ChatMessages;
-import com.example.dm.chat.repository.ChatMessageRepository;
+import com.example.dm.chat.repository.ChatMessagesRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -16,20 +16,17 @@ import java.util.List;
 @Transactional
 public class ChatMessageService {
 
-    private final ChatMessageRepository chatMessageRepository;
+    private final ChatMessagesRepository chatMessagesRepository;
 
     // todo: room별 저장?
-    public List<ChatMessageDto> findAllMessageByRoomId(Long roomId) {
-        return chatMessageRepository.findByRoomId(roomId, Sort.by(Sort.Direction.ASC, "createdAt"));
+    public List<ChatMessageGetDto> findAllMessageByRoomId(Long roomId) {
+        return chatMessagesRepository.findByRoomId(roomId, Sort.by(Sort.Direction.ASC, "createdAt"));
     }
 
-    public void saveMessage(ChatDto chatDto) {
-        ChatMessages chatMessages = ChatMessages.builder()
-                .message(chatDto.getMessage())
-                .sender(chatDto.getSender())
-                .roomId(chatDto.getRoomId())
-                .build();
+    public ChatMessageGetDto saveMessage(ChatCreateDto chatCreateDto) {
+        ChatMessages chatMessages = ChatMessages.from(chatCreateDto);
 
-        chatMessageRepository.save(chatMessages);
+        ChatMessages message = chatMessagesRepository.save(chatMessages);
+        return ChatMessageGetDto.from(message);
     }
 }

@@ -1,8 +1,9 @@
 package com.example.dm.chat.controller;
 
-import com.example.dm.chat.dto.ChatDto;
+import com.example.dm.chat.dto.ChatCreateDto;
+import com.example.dm.chat.dto.ChatMessageGetDto;
 import com.example.dm.chat.dto.ChatRoomCreateDto;
-import com.example.dm.chat.dto.ChatRoomDto;
+import com.example.dm.chat.dto.ChatRoomDetailDto;
 import com.example.dm.chat.service.ChatMessageService;
 import com.example.dm.chat.service.ChatRoomService;
 import com.example.dm.controller.BaseController;
@@ -13,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.dm.chat.controller.ChatController.SUBSCRIBE_URL;
+import static com.example.dm.chat.controller.ChatMessageController.SUBSCRIBE_URL;
 
 @RestController
 @RequestMapping("/v1/chats")
@@ -32,22 +33,17 @@ public class ChatRoomController extends BaseController {
     }
 
     /**
-     * todo: JOIN 메시지 전송 / mongodb
      *  todo: @AuthenticationPrincipal 사용고려
      */
     @PostMapping("/{roomId}/join/{userProfileId}")
     public ResponseEntity<ApiResponse> joinRoom(@PathVariable Long roomId,
                                                 @PathVariable Long userProfileId) {
-        ChatRoomDto chatRoomDto = chatRoomService.enterRoomUser(roomId, userProfileId);
+        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.enterRoomUser(roomId, userProfileId);
 
-        ChatDto chatDto = ChatDto.builder()
-                .message(chatRoomDto.getNickname() + "님이 참여하였습니다.")
-                .roomId(roomId)
-                .sender(chatRoomDto.getNickname())
-                .build();
-        template.convertAndSend(SUBSCRIBE_URL + roomId, chatDto);
+        String message = chatRoomDetailDto.getNickname() + "님이 입장하였습니다.";
+        processMessage(roomId, chatRoomDetailDto, message);
 
-        return responseBuilder(chatRoomDto, HttpStatus.OK);
+        return responseBuilder(chatRoomDetailDto, HttpStatus.OK);
     }
 
     @GetMapping("/user/{userProfileId}/rooms")
@@ -60,24 +56,24 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId), HttpStatus.OK);
     }
 
-    // todo: mongodb
     @DeleteMapping("/{roomId}/exit/{userProfileId}")
     public ResponseEntity<ApiResponse> exitRoom(@PathVariable Long roomId,
                                                 @PathVariable Long userProfileId) {
-        ChatRoomDto chatRoomDto = chatRoomService.exitRoomUser(roomId, userProfileId);
+        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.exitRoomUser(roomId, userProfileId);
 
-        ChatDto chatDto = ChatDto.builder()
-                .message(chatRoomDto.getNickname() + "님이 퇴장하였습니다.")
-                .roomId(roomId)
-                .sender(chatRoomDto.getNickname())
-                .build();
-        template.convertAndSend(SUBSCRIBE_URL + roomId, chatDto);
+        String message = chatRoomDetailDto.getNickname() + "님이 퇴장하였습니다.";
+        processMessage(roomId, chatRoomDetailDto, message);
 
-        return responseBuilder(chatRoomDto, HttpStatus.OK);
+        return responseBuilder(chatRoomDetailDto, HttpStatus.OK);
     }
-
     @GetMapping("/{roomId}/userlist")
     public ResponseEntity<ApiResponse> getUserList(@PathVariable Long roomId) {
         return responseBuilder(chatRoomService.getRoomUserList(roomId), HttpStatus.OK);
+    }
+
+    private void processMessage(Long roomId, ChatRoomDetailDto chatRoomDetailDto, String message) {
+        ChatCreateDto chatCreateDto = ChatCreateDto.from(chatRoomDetailDto, message);
+        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto);
+        template.convertAndSend(SUBSCRIBE_URL + roomId, chatMessageGetDto);
     }
 }
