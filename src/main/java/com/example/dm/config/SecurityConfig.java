@@ -1,6 +1,7 @@
 package com.example.dm.config;
 
 import com.example.dm.aspect.CustomEntryPoint;
+import com.example.dm.security.PermitUrlProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
