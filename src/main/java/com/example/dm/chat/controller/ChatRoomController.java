@@ -55,4 +55,19 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId), HttpStatus.OK);
     }
 
+    // todo: mongodb
+    @DeleteMapping("/{roomId}/exit/{userProfileId}")
+    public ResponseEntity<ApiResponse> exitRoom(@PathVariable Long roomId,
+                                                @PathVariable Long userProfileId) {
+        ChatRoomDto chatRoomDto = chatRoomService.exitRoomUser(roomId, userProfileId);
+
+        ChatDto chatDto = ChatDto.builder()
+                .message(chatRoomDto.getNickname() + "님이 퇴장하였습니다.")
+                .roomId(roomId)
+                .sender(chatRoomDto.getNickname())
+                .build();
+        template.convertAndSend(SUBSCRIBE_URL + roomId, chatDto);
+
+        return responseBuilder(chatRoomDto, HttpStatus.OK);
+    }
 }
