@@ -15,9 +15,9 @@ api:
   redis:
     key-prefix:
       default: "dm:"
-  jwt:
-    secret: ${JWT_SECRET}
-    expire: ${JWT_EXPIRE:600} # seconds
+#  jwt:
+#    secret: ${JWT_SECRET}
+#    expire: ${JWT_EXPIRE:600} # seconds
 
 # aws s3 file server
 aws-s3:
