@@ -9,7 +9,7 @@ import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
-import com.example.dm.repository.UserProfilesRepository;
+import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
 import com.example.dm.security.jwt.TokenProvider;
 import com.example.dm.service.AuthService;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController extends BaseController {
   private final AuthService authService;
   private final UsersRepository usersRepository;
-  private final UserProfilesRepository userProfilesRepository;
+  private final UserProfileRepository userProfileRepository;
   private final MailSender mailSender;
 
   @Autowired
@@ -49,9 +49,7 @@ public class AuthController extends BaseController {
   /* 이메일 인증발급 */
   @PostMapping("/otp")
   public ResponseEntity<ApiResponse> sendOtp(@RequestParam("email") String email) {
-    if(!emailConfirm(email)){
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
-    }
+    emailConfirm(email);
     try {
       mailSender.sendOtp(email);
     } catch (MessagingException e) {
@@ -65,17 +63,15 @@ public class AuthController extends BaseController {
   /* 닉네임 체크 */
   @PostMapping("/nickname")
   public ResponseEntity<ApiResponse> checkNickname(@RequestParam("nickname") String nickname) {
-    boolean hasNickname = userProfilesRepository.hasNickname(nickname)!=0? true:false;
-    if(hasNickname) throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);  // temp
-    else return responseBuilder(nickname, HttpStatus.OK);
+    nicknameConfirm(nickname);
+    return responseBuilder(nickname, HttpStatus.OK);
   }
 
   /* 회원가입 */
   @PostMapping
   public ResponseEntity<ApiResponse> signup(HttpServletResponse response, @Valid @RequestBody SignupForm signupForm) {
-    if(!emailConfirm(signupForm.getEmail())){
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
-    }
+    emailConfirm(signupForm.getEmail());
+    nicknameConfirm(signupForm.getNickname());
 
     Users user = Users.create(signupForm.getEmail(),
                           passwordEncoder.encode(signupForm.getPassword()),
@@ -84,7 +80,7 @@ public class AuthController extends BaseController {
     usersRepository.save(user);
 
     UserProfiles userProfiles = UserProfiles.create(user, signupForm);
-    userProfilesRepository.save(userProfiles);
+    userProfileRepository.save(userProfiles);
 
     SignupUserProfilesData signupUserProfilesData = SignupUserProfilesData.builder()
         .nickname(userProfiles.getNickname())
@@ -109,21 +105,27 @@ public class AuthController extends BaseController {
   /* 로그인 */
   @PostMapping("/login")
   public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestBody LoginForm loginForm) {
-    Users user = usersRepository.findByEmail(loginForm.getEmail());
-    if(user==null){
-      throw new AuthException(ApiResultStatus.USER_NOT_FOUND);
-    }
+    Users user = usersRepository.findByEmailAndIsDeletedIsFalse(loginForm.getEmail()).orElseThrow(
+        () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
+    );
     if(!passwordEncoder.matches(loginForm.getPassword(), user.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
     setAuthentication(response, loginForm.getEmail());
-    return responseBuilder(true, HttpStatus.OK);
+    return responseBuilder(loginForm.getEmail(), HttpStatus.OK);
   }
 
 
   /* 이메일 가입여부 */
-  public boolean emailConfirm(String email) {
-    return usersRepository.findByEmail(email)==null? true : false;
+  public void emailConfirm(String email) {
+    if(usersRepository.countByEmailAndIsDeletedIsFalse(email)!=0)
+      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
+  }
+
+  /* 닉네임 중복여부 */
+  public void nicknameConfirm(String nickname) {
+    if(userProfileRepository.countByNicknameAndIsDeletedIsFalse(nickname)!=0)
+      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP_NICKNAME);
   }
 
   /* token context 설정 */
