@@ -4,7 +4,6 @@ import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.form.LoginForm;
 import com.example.dm.dto.form.SignupForm;
 import com.example.dm.dto.form.SignupUserData;
-import com.example.dm.dto.form.SignupUserProfilesData;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -14,6 +13,7 @@ import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
 import com.example.dm.security.jwt.TokenProvider;
 import com.example.dm.service.AuthService;
+import com.example.dm.service.UserService;
 import com.example.dm.util.MailSender;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.path.default}/users")
 public class AuthController extends BaseController {
   private final AuthService authService;
+  private final UserService userService;
   private final UsersRepository usersRepository;
   private final UserProfileRepository userProfileRepository;
   private final MailSender mailSender;
@@ -81,22 +82,7 @@ public class AuthController extends BaseController {
     UserProfiles userProfiles = UserProfiles.create(user, signupForm);
     userProfileRepository.save(userProfiles);
 
-    SignupUserProfilesData signupUserProfilesData = SignupUserProfilesData.builder()
-        .nickname(userProfiles.getNickname())
-        .city(userProfiles.getCity())
-        .state(userProfiles.getState())
-        .street(userProfiles.getStreet())
-        .introduce(userProfiles.getIntroduce())
-        .url(userProfiles.getUrl())
-        .urlName(userProfiles.getUrlName())
-        .build();
-
-    SignupUserData signupUserData = SignupUserData.builder()
-        .email(user.getEmail())
-        .createdAt(user.getCreatedAt())
-        .userProfile(signupUserProfilesData)
-        .build();
-
+    SignupUserData signupUserData = userService.setUserData(userProfiles);
     setAuthentication(response, user.getEmail());
     return responseBuilder(signupUserData, HttpStatus.OK);
   }
