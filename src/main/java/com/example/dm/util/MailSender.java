@@ -1,16 +1,16 @@
 package com.example.dm.util;
 
-import com.example.dm.enums.MailType;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.NoSuchProviderException;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
+import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -32,7 +32,18 @@ public class MailSender {
     @Value("${mail.randomPwdSubject}")
     private String randomPwdSubject;
 
-    public void sendEmail(String toEmail, MailType mailType) throws MessagingException, UnsupportedEncodingException {
+    /* 이메일 인증 발송 */
+    public void sendEmailVerification(String toEmail) throws MessagingException, UnsupportedEncodingException {
+        sendMail(toEmail, signupSubject, signupLink);
+    }
+
+    /* 랜덤 비밀번호 발송 */
+    public void sendRandomPwd(String toEmail, String randomPassword) throws MessagingException, UnsupportedEncodingException {
+        sendMail(toEmail, randomPwdSubject, randomPassword);
+    }
+
+
+    public void sendMail(String toEmail, String subject, String contents) throws MessagingException, UnsupportedEncodingException {
         Properties props = System.getProperties();
         props.put("mail.smtp.port", 25);
         props.put("mail.smtp.host" , "smtp.gmail.com");
@@ -52,17 +63,8 @@ public class MailSender {
 
         message.setFrom(new InternetAddress(email, username, "utf-8"));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-
-        switch(mailType){
-            case EmailVerification:
-                message.setSubject(signupSubject, "utf-8");
-                message.setContent(signupLink, "text/html; charset=utf-8");
-                break;
-            case RandomPassword:
-                message.setSubject(randomPwdSubject, "utf-8");
-                message.setContent(PasswordGenerator.generatePassword(), "text/html; charset=utf-8");
-                break;
-        }
+        message.setSubject(subject, "utf-8");
+        message.setContent(contents, "text/html; charset=utf-8");
 
         transport.send(message);
         transport.close();

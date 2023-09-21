@@ -6,7 +6,6 @@ import com.example.dm.dto.form.SignupForm;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
-import com.example.dm.enums.MailType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
@@ -46,11 +45,11 @@ public class AuthController extends BaseController {
   public ResponseEntity<ApiResponse> sendOtp(@RequestParam("email") String email) {
     userService.emailConfirm(email);
     try {
-      mailSender.sendEmail(email, MailType.EmailVerification);
+      mailSender.sendEmailVerification(email);
     } catch (MessagingException e) {
-      throw new RuntimeException(e);  // temp
+      throw new AuthException(ApiResultStatus.SEND_MAIL_FAILED);
     } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);  // temp
+      throw new AuthException(ApiResultStatus.ENCODING_ISSUE);
     }
     return responseBuilder(email, HttpStatus.OK);
   }
@@ -69,9 +68,9 @@ public class AuthController extends BaseController {
     userService.nicknameConfirm(signupForm.getNickname());
 
     Users user = Users.create(signupForm.getEmail(),
-                          passwordEncoder.encode(signupForm.getPassword()),
-                          signupForm.getProvider()==null? "EMAIL":signupForm.getProvider(),
-                          signupForm.getProviderId()==null? "":signupForm.getProviderId());
+                              passwordEncoder.encode(signupForm.getPassword()),
+                              signupForm.getProvider()==null? "EMAIL":signupForm.getProvider(),
+                              signupForm.getProviderId()==null? "":signupForm.getProviderId());
     usersRepository.save(user);
 
     UserProfiles userProfiles = UserProfiles.create(user, signupForm);

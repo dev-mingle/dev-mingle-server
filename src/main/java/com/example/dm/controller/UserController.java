@@ -5,16 +5,17 @@ import com.example.dm.dto.form.MypageForm;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
-import com.example.dm.enums.MailType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
 import com.example.dm.service.UserService;
 import com.example.dm.util.MailSender;
+import com.example.dm.util.PasswordGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,7 @@ public class UserController extends BaseController {
     userProfiles.setIntroduce(mypageForm.getIntroduce());
     userProfiles.setUrl(mypageForm.getUrl());
     userProfiles.setNickname(mypageForm.getNickname());
+    userProfileRepository.save(userProfiles);
 
     return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
   }
@@ -78,13 +80,21 @@ public class UserController extends BaseController {
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
 
+    String randomPassword = PasswordGenerator.generatePassword();
+
     try {
-      mailSender.sendEmail(loginUser.getEmail(), MailType.RandomPassword);
+      mailSender.sendRandomPwd(loginUser.getEmail(), randomPassword);
     } catch (MessagingException e) {
-      throw new RuntimeException(e);  // temp
+      throw new AuthException(ApiResultStatus.SEND_MAIL_FAILED);
     } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);  // temp
+      throw new AuthException(ApiResultStatus.ENCODING_ISSUE);
     }
+
+    Users user = usersRepository.findById(loginUser.getId()).orElseThrow();
+    user.setPassword(passwordEncoder.encode(randomPassword));
+    user.setPasswordChangedAt(LocalDateTime.now());
+    usersRepository.save(user);
+
     return responseBuilder(loginUser.getEmail(), HttpStatus.OK);
   }
 
