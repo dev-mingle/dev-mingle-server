@@ -1,8 +1,8 @@
 package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
-import com.example.dm.dto.form.LoginForm;
-import com.example.dm.dto.form.SignupForm;
+import com.example.dm.dto.users.LoginDto;
+import com.example.dm.dto.users.SignupDto;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -10,7 +10,6 @@ import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
-import com.example.dm.security.jwt.TokenProvider;
 import com.example.dm.service.AuthService;
 import com.example.dm.service.UserService;
 import com.example.dm.util.MailSender;
@@ -62,36 +61,36 @@ public class AuthController extends BaseController {
 
   /* 회원가입 */
   @PostMapping
-  public ResponseEntity<ApiResponse> signup(HttpServletResponse response, @Valid @RequestBody SignupForm signupForm) {
-    userService.emailConfirm(signupForm.getEmail());
-    userService.nicknameConfirm(signupForm.getNickname());
+  public ResponseEntity<ApiResponse> signup(HttpServletResponse response, @Valid @RequestBody SignupDto signupDto) {
+    userService.emailConfirm(signupDto.getEmail());
+    userService.nicknameConfirm(signupDto.getNickname());
 
-    Users user = Users.create(signupForm.getEmail(),
-                              passwordEncoder.encode(signupForm.getPassword()),
-                              signupForm.getProvider()==null? "EMAIL":signupForm.getProvider(),
-                              signupForm.getProviderId()==null? "":signupForm.getProviderId());
+    Users user = Users.create(signupDto.getEmail(),
+                              passwordEncoder.encode(signupDto.getPassword()),
+                              signupDto.getProvider()==null? "EMAIL": signupDto.getProvider(),
+                              signupDto.getProviderId()==null? "": signupDto.getProviderId());
     usersRepository.save(user);
 
-    UserProfiles userProfiles = UserProfiles.create(user, signupForm);
+    UserProfiles userProfiles = UserProfiles.create(user, signupDto);
     userProfileRepository.save(userProfiles);
 
-    LoginUser loginUser = authService.loadUserByUsername(signupForm.getEmail());
+    LoginUser loginUser = authService.loadUserByUsername(signupDto.getEmail());
     authService.setAuthentication(response, loginUser);
     return responseBuilder(userService.setSignupUserData(userProfiles, user), HttpStatus.OK);
   }
 
   /* 로그인 */
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestBody LoginForm loginForm) {
-    Users user = usersRepository.findByEmailAndIsDeletedIsFalse(loginForm.getEmail()).orElseThrow(
+  public ResponseEntity<ApiResponse> login(HttpServletResponse response, @RequestBody LoginDto loginDto) {
+    Users user = usersRepository.findByEmailAndIsDeletedIsFalse(loginDto.getEmail()).orElseThrow(
         () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
     );
-    if(!passwordEncoder.matches(loginForm.getPassword(), user.getPassword())){
+    if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
 
-    LoginUser loginUser = authService.loadUserByUsername(loginForm.getEmail());
+    LoginUser loginUser = authService.loadUserByUsername(loginDto.getEmail());
     authService.setAuthentication(response, loginUser);
-    return responseBuilder(loginForm.getEmail(), HttpStatus.OK);
+    return responseBuilder(loginDto.getEmail(), HttpStatus.OK);
   }
 }

@@ -1,8 +1,8 @@
 package com.example.dm.service;
 
-import com.example.dm.dto.form.SignupUserData;
-import com.example.dm.dto.form.SignupUserProfilesData;
-import com.example.dm.dto.form.UserProfileData;
+import com.example.dm.dto.users.SignupUserResponse;
+import com.example.dm.dto.users.SignupUserProfilesResponse;
+import com.example.dm.dto.users.UserProfileResponse;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -32,27 +32,27 @@ public class UserService {
     if(userProfileRepository.countByNicknameAndIsDeletedIsFalse(nickname)!=0)
       throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP_NICKNAME);
   }
-  public SignupUserData setSignupUserData(UserProfiles userProfiles, Users users) {
-    SignupUserData signupUserData = SignupUserData.builder()
+  public SignupUserResponse setSignupUserData(UserProfiles userProfiles, Users users) {
+    SignupUserResponse signupUserResponse = SignupUserResponse.builder()
         .email(users.getEmail())
         .createdAt(users.getCreatedAt())
         .userProfile(setSignupUserProfilesData(userProfiles))
         .build();
-    return signupUserData;
+    return signupUserResponse;
   }
 
-  public UserProfileData setUserProfileData(UserProfiles userProfiles, LoginUser loginUser) {
-    UserProfileData userProfileData = UserProfileData.builder()
+  public UserProfileResponse setUserProfileData(UserProfiles userProfiles, LoginUser loginUser) {
+    UserProfileResponse userProfileResponse = UserProfileResponse.builder()
         .email(loginUser.getEmail())
         .createdAt(userProfiles.getCreatedAt())
         .updatedAt(userProfiles.getUpdatedAt())
         .userProfile(setSignupUserProfilesData(userProfiles))
         .build();
-    return userProfileData;
+    return userProfileResponse;
   }
 
-  public SignupUserProfilesData setSignupUserProfilesData(UserProfiles userProfiles) {
-    SignupUserProfilesData signupUserProfilesData = SignupUserProfilesData.builder()
+  public SignupUserProfilesResponse setSignupUserProfilesData(UserProfiles userProfiles) {
+    SignupUserProfilesResponse signupUserProfilesResponse = SignupUserProfilesResponse.builder()
         .nickname(userProfiles.getNickname())
         .city(userProfiles.getCity())
         .state(userProfiles.getState())
@@ -61,6 +61,6 @@ public class UserService {
         .url(userProfiles.getUrl())
         .urlName(userProfiles.getUrlName())
         .build();
-    return signupUserProfilesData;
+    return signupUserProfilesResponse;
   }
 }

@@ -1,4 +1,4 @@
-package com.example.dm.dto.form;
+package com.example.dm.dto.users;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class SignupForm {
+public class SignupDto {
     @NotBlank
     @Email
     private String email;

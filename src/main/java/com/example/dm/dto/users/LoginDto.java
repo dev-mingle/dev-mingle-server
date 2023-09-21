@@ -1,5 +1,6 @@
-package com.example.dm.dto.form;
+package com.example.dm.dto.users;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +11,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class ChangePwdForm {
-  @NotBlank
-  private String resetPassword;
+public class LoginDto {
+    @NotBlank
+    @Email
+    private String email;
 
-  @NotBlank
-  private String password;
-
+    @NotBlank
+    private String password;
 }

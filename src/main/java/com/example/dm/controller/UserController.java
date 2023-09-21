@@ -1,8 +1,8 @@
 package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
-import com.example.dm.dto.form.ChangePwdForm;
-import com.example.dm.dto.form.MypageForm;
+import com.example.dm.dto.users.ChangePwdDto;
+import com.example.dm.dto.users.MypageDto;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -56,25 +56,25 @@ public class UserController extends BaseController {
   /* 회원정보 수정 */
   @PutMapping("/profile")
   public ResponseEntity<ApiResponse> getProfiles(@AuthenticationPrincipal LoginUser loginUser,
-                                                 @RequestBody MypageForm mypageForm,
+                                                 @RequestBody MypageDto mypageDto,
                                                  HttpServletResponse response){
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(loginUser.getId()).orElseThrow(
         () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
     );
 
-    userService.nicknameConfirm(mypageForm.getNickname());
+    userService.nicknameConfirm(mypageDto.getNickname());
 
-    userProfiles.setCity(mypageForm.getCity());
-    userProfiles.setState(mypageForm.getState());
-    userProfiles.setStreet(mypageForm.getStreet());
-    userProfiles.setLatitude(mypageForm.getLatitude());
-    userProfiles.setLongitude(mypageForm.getLongitude());
-    userProfiles.setIntroduce(mypageForm.getIntroduce());
-    userProfiles.setUrl(mypageForm.getUrl());
-    userProfiles.setNickname(mypageForm.getNickname());
+    userProfiles.setCity(mypageDto.getCity());
+    userProfiles.setState(mypageDto.getState());
+    userProfiles.setStreet(mypageDto.getStreet());
+    userProfiles.setLatitude(mypageDto.getLatitude());
+    userProfiles.setLongitude(mypageDto.getLongitude());
+    userProfiles.setIntroduce(mypageDto.getIntroduce());
+    userProfiles.setUrl(mypageDto.getUrl());
+    userProfiles.setNickname(mypageDto.getNickname());
     userProfileRepository.save(userProfiles);
 
-    loginUser.setNickname(mypageForm.getNickname());
+    loginUser.setNickname(mypageDto.getNickname());
     authService.setAuthentication(response, loginUser);
     return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
   }
@@ -113,10 +113,10 @@ public class UserController extends BaseController {
   /* 비밀번호 변경 */
   @PostMapping("/password/change")
   public ResponseEntity<ApiResponse> changePassword(@AuthenticationPrincipal LoginUser loginUser,
-                                                    @RequestBody ChangePwdForm changePwdForm,
+                                                    @RequestBody ChangePwdDto changePwdDto,
                                                     HttpServletResponse response){
-    String resetPassword = changePwdForm.getResetPassword();
-    String newPassword = changePwdForm.getPassword();
+    String resetPassword = changePwdDto.getResetPassword();
+    String newPassword = changePwdDto.getPassword();
 
     if(!passwordEncoder.matches(resetPassword, loginUser.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);

@@ -1,4 +1,4 @@
-package com.example.dm.dto.form;
+package com.example.dm.dto.users;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class MypageForm {
+public class MypageDto {
     @NotBlank
     private Long id;
 
