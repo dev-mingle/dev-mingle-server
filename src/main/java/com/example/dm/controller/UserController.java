@@ -5,17 +5,24 @@ import com.example.dm.dto.form.MypageForm;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
+import com.example.dm.enums.MailType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
 import com.example.dm.service.UserService;
+import com.example.dm.util.MailSender;
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +35,8 @@ public class UserController extends BaseController {
   private final UserService userService;
   private final UsersRepository usersRepository;
   private final UserProfileRepository userProfileRepository;
+  private final MailSender mailSender;
+  private final PasswordEncoder passwordEncoder;
 
   /* 회원정보 조회 */
   @GetMapping("/profile")
@@ -59,6 +68,24 @@ public class UserController extends BaseController {
     userProfiles.setNickname(mypageForm.getNickname());
 
     return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
+  }
+
+  /* 비밀번호 초기화 */
+  @PostMapping("/password/reset")
+  public ResponseEntity<ApiResponse> resetPassword(@AuthenticationPrincipal LoginUser loginUser,
+                                                   @RequestBody JsonNode jsonNode){
+    if(!passwordEncoder.matches(jsonNode.get("password").asText(), loginUser.getPassword())){
+      throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
+    }
+
+    try {
+      mailSender.sendEmail(loginUser.getEmail(), MailType.RandomPassword);
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);  // temp
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);  // temp
+    }
+    return responseBuilder(loginUser.getEmail(), HttpStatus.OK);
   }
 
   /* 회원탈퇴 */

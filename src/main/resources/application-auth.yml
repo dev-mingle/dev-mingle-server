@@ -39,6 +39,7 @@ mail:
   password: ${MAIL_SECRET}
   signupSubject: Dev_Mingle 회원가입 메일인증
   signupLink: https://www.dev_mingle.site
+  randomPwdSubject: Dev_Mingle 랜덤 비밀번호 발송
 
 url:
   permit:

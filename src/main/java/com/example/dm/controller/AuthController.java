@@ -6,6 +6,7 @@ import com.example.dm.dto.form.SignupForm;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
+import com.example.dm.enums.MailType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
@@ -45,7 +46,7 @@ public class AuthController extends BaseController {
   public ResponseEntity<ApiResponse> sendOtp(@RequestParam("email") String email) {
     userService.emailConfirm(email);
     try {
-      mailSender.sendOtp(email);
+      mailSender.sendEmail(email, MailType.EmailVerification);
     } catch (MessagingException e) {
       throw new RuntimeException(e);  // temp
     } catch (UnsupportedEncodingException e) {

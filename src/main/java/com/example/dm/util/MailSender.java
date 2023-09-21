@@ -1,5 +1,6 @@
 package com.example.dm.util;
 
+import com.example.dm.enums.MailType;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -28,8 +29,10 @@ public class MailSender {
     private String signupSubject;
     @Value("${mail.signupLink}")
     private String signupLink;
+    @Value("${mail.randomPwdSubject}")
+    private String randomPwdSubject;
 
-    public void sendOtp(String toEmail) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmail(String toEmail, MailType mailType) throws MessagingException, UnsupportedEncodingException {
         Properties props = System.getProperties();
         props.put("mail.smtp.port", 25);
         props.put("mail.smtp.host" , "smtp.gmail.com");
@@ -49,14 +52,18 @@ public class MailSender {
 
         message.setFrom(new InternetAddress(email, username, "utf-8"));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-        message.setSubject(signupSubject, "utf-8");
 
-//        template 생성시
-//        Reader reader = new InputStreamReader(new ClassPathResource("/mailTemplate.html").getInputStream(), "utf-8");
-//        String template = FileCopyUtils.copyToString(reader);
-//        String mail = MessageFormat.format(template, );
+        switch(mailType){
+            case EmailVerification:
+                message.setSubject(signupSubject, "utf-8");
+                message.setContent(signupLink, "text/html; charset=utf-8");
+                break;
+            case RandomPassword:
+                message.setSubject(randomPwdSubject, "utf-8");
+                message.setContent(PasswordGenerator.generatePassword(), "text/html; charset=utf-8");
+                break;
+        }
 
-        message.setContent(signupLink, "text/html; charset=utf-8");
         transport.send(message);
         transport.close();
     }

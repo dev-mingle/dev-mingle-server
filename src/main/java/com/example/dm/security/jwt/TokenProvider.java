@@ -79,6 +79,7 @@ public class TokenProvider {
     Map<String,Object> extraClaims = new HashMap<>();
     Claims claims = parseClaims(token);
     extraClaims.put("id", extractClaim(token, (Function<Claims, String>) claims.get("id")));
+    extraClaims.put("password", extractClaim(token, (Function<Claims, String>) claims.get("password")));
     extraClaims.put("role", extractClaim(token, (Function<Claims, String>) claims.get("role")));
     extraClaims.put("nickname", extractClaim(token, (Function<Claims, String>) claims.get("nickname")));
     return extraClaims;
@@ -87,6 +88,7 @@ public class TokenProvider {
   public Map<String,Object> getExtraClaims(LoginUser loginUser){
     Map<String,Object> extraClaims = new HashMap<>();
     extraClaims.put("id", loginUser.getId());
+    extraClaims.put("password", loginUser.getPassword());
     extraClaims.put("role", loginUser.getRole());
     extraClaims.put("nickname", loginUser.getNickname());
     return extraClaims;
@@ -132,7 +134,7 @@ public class TokenProvider {
 
     // role 한 개로 적용
     LoginUser loginUser = LoginUser.create(
-        Long.parseLong(claims.get("id").toString()), claims.getSubject(), "",
+        Long.parseLong(claims.get("id").toString()), claims.getSubject(), claims.get("password").toString(),
         claims.get("role").toString(), claims.get("nickname").toString());
     return new UsernamePasswordAuthenticationToken(loginUser, "", authorities);
   }
