@@ -65,13 +65,15 @@ public class ChatRoomService {
     // todo: 방장이 퇴장할 경우
     public ChatRoomDetailDto exitRoomUser(Long roomId, Long userProfileId) {
         ChatRooms chatRooms = verifyRoom(roomId);
+        // todo: authenticationprincipal로 대체
+        UserProfiles userProfiles = verifyUserProfile(userProfileId);
 
         if(!chatRooms.removeUser(userProfileId)) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
         chatRooms.minusUserCount();
 
         chatRoomsRepository.save(chatRooms);
 
-        return ChatRoomDetailDto.from(chatRooms);
+        return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), userProfiles);
     }
 
     public List<UserProfileGetDto> getRoomUserList(Long roomId) {
