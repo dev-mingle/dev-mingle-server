@@ -39,12 +39,8 @@ public class AuthController extends BaseController {
   private final UsersRepository usersRepository;
   private final UserProfileRepository userProfileRepository;
   private final MailSender mailSender;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private TokenProvider tokenProvider;
+  private final PasswordEncoder passwordEncoder;
+  private final TokenProvider tokenProvider;
 
   /* 이메일 인증발급 */
   @PostMapping("/otp")
