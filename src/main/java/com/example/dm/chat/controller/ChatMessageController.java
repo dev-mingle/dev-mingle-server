@@ -3,6 +3,7 @@ package com.example.dm.chat.controller;
 import com.example.dm.chat.dto.ChatCreateDto;
 import com.example.dm.chat.dto.ChatMessageGetDto;
 import com.example.dm.chat.service.ChatMessageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -28,8 +29,9 @@ public class ChatMessageController {
         processMessage(chatCreateDto);
     }
 
+    // todo: 보낸 회원 검증
     @MessageMapping("/v1/chats/message")
-    public void sendMessage(@Payload ChatCreateDto chatCreateDto) {
+    public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto) {
         processMessage(chatCreateDto);
     }
 
