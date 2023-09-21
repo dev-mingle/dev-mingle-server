@@ -5,6 +5,7 @@ import com.example.dm.dto.form.LoginForm;
 import com.example.dm.dto.form.SignupForm;
 import com.example.dm.dto.form.SignupUserData;
 import com.example.dm.dto.form.SignupUserProfilesData;
+import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
 import com.example.dm.exception.ApiResultStatus;
@@ -22,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +44,6 @@ public class AuthController extends BaseController {
 
   @Autowired
   private TokenProvider tokenProvider;
-
 
   /* 이메일 인증발급 */
   @PostMapping("/otp")
@@ -132,12 +131,11 @@ public class AuthController extends BaseController {
   public void setAuthentication(HttpServletResponse response, String email) {
     String accessToken="", refreshToken="";
 
-    UserDetails loginUser = authService.loadUserByUsername(email);
+    LoginUser loginUser = authService.loadUserByUsername(email);
     if(loginUser!=null){
       accessToken = tokenProvider.generateAccessToken(loginUser);
       refreshToken = tokenProvider.generateRefreshToken(loginUser);
     }
     tokenProvider.setAuthenticationTokens(response, accessToken, refreshToken);
   }
-
 }
