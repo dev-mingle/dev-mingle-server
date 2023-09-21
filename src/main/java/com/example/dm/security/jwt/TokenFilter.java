@@ -8,7 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +67,30 @@ public class TokenFilter extends OncePerRequestFilter {
     boolean b = false;
     String method = request.getMethod();
     String url = request.getRequestURI();
-    if (("GET".equals(method) && urlProperties.getGet().contains(url))
-        || ("POST".equals(method) && urlProperties.getPost().contains(url))) {
+    if (("GET".equals(method) && matchUrl(urlProperties.getGet(), url))
+        || ("POST".equals(method) && matchUrl(urlProperties.getPost(), url))) {
       filterChain.doFilter(request, response);
       b=true;
     }
     return b;
+  }
+
+  private boolean matchUrl(List<String> list, String url) {
+    boolean match = false;
+    for (String str : list) {
+      if (str.endsWith("/**")) {
+        String regex = str.replaceAll("\\*\\*", ".+");
+        Pattern p = Pattern.compile(regex);
+        if (p.matcher(url).matches()) {
+          match = true;
+          break;
+        }
+      } else if (url.equals(str)) {
+        match = true;
+        break;
+      }
+    }
+    return match;
   }
 
   private String resolveToken(String bearerToken) {
