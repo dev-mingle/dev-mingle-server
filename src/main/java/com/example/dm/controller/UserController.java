@@ -2,7 +2,6 @@ package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.form.MypageForm;
-import com.example.dm.dto.form.SignupUserProfilesData;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -47,6 +46,8 @@ public class UserController extends BaseController {
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(loginUser.getId()).orElseThrow(
         () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
     );
+
+    userService.nicknameConfirm(mypageForm.getNickname());
 
     userProfiles.setCity(mypageForm.getCity());
     userProfiles.setState(mypageForm.getState());

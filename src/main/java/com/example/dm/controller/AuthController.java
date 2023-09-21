@@ -3,7 +3,6 @@ package com.example.dm.controller;
 import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.form.LoginForm;
 import com.example.dm.dto.form.SignupForm;
-import com.example.dm.dto.form.SignupUserData;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -20,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +43,7 @@ public class AuthController extends BaseController {
   /* 이메일 인증발급 */
   @PostMapping("/otp")
   public ResponseEntity<ApiResponse> sendOtp(@RequestParam("email") String email) {
-    emailConfirm(email);
+    userService.emailConfirm(email);
     try {
       mailSender.sendOtp(email);
     } catch (MessagingException e) {
@@ -59,15 +57,15 @@ public class AuthController extends BaseController {
   /* 닉네임 체크 */
   @PostMapping("/nickname")
   public ResponseEntity<ApiResponse> checkNickname(@RequestParam("nickname") String nickname) {
-    nicknameConfirm(nickname);
+    userService.nicknameConfirm(nickname);
     return responseBuilder(nickname, HttpStatus.OK);
   }
 
   /* 회원가입 */
   @PostMapping
   public ResponseEntity<ApiResponse> signup(HttpServletResponse response, @Valid @RequestBody SignupForm signupForm) {
-    emailConfirm(signupForm.getEmail());
-    nicknameConfirm(signupForm.getNickname());
+    userService.emailConfirm(signupForm.getEmail());
+    userService.nicknameConfirm(signupForm.getNickname());
 
     Users user = Users.create(signupForm.getEmail(),
                           passwordEncoder.encode(signupForm.getPassword()),
@@ -93,19 +91,6 @@ public class AuthController extends BaseController {
     }
     setAuthentication(response, loginForm.getEmail());
     return responseBuilder(loginForm.getEmail(), HttpStatus.OK);
-  }
-
-
-  /* 이메일 가입여부 */
-  public void emailConfirm(String email) {
-    if(usersRepository.countByEmailAndIsDeletedIsFalse(email)!=0)
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP);
-  }
-
-  /* 닉네임 중복여부 */
-  public void nicknameConfirm(String nickname) {
-    if(userProfileRepository.countByNicknameAndIsDeletedIsFalse(nickname)!=0)
-      throw new AuthException(ApiResultStatus.ALREADY_SIGNED_UP_NICKNAME);
   }
 
   /* token context 설정 */

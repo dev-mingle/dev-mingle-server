@@ -45,6 +45,8 @@ public class SecurityConfig {
                     for (String url : urlProperties.getPost()) {
                         auth.requestMatchers("POST", url).permitAll();
                     }
+                    auth.requestMatchers("GET", API_URL_PREFIX+"/users/profile").permitAll();
+                    auth.requestMatchers("PUT", API_URL_PREFIX+"/users/profile").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .exceptionHandling(exception -> exception
