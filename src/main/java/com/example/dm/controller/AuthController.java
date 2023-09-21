@@ -78,9 +78,8 @@ public class AuthController extends BaseController {
     UserProfiles userProfiles = UserProfiles.create(user, signupForm);
     userProfileRepository.save(userProfiles);
 
-    SignupUserData signupUserData = userService.setUserData(userProfiles);
     setAuthentication(response, user.getEmail());
-    return responseBuilder(signupUserData, HttpStatus.OK);
+    return responseBuilder(userService.setSignupUserData(userProfiles, user), HttpStatus.OK);
   }
 
   /* 로그인 */

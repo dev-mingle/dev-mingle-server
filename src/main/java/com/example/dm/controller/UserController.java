@@ -2,6 +2,7 @@ package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.form.MypageForm;
+import com.example.dm.dto.form.SignupUserProfilesData;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.entity.Users;
@@ -35,7 +36,8 @@ public class UserController extends BaseController {
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(loginUser.getId()).orElseThrow(
         () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
     );
-    return responseBuilder(userService.setUserData(userProfiles), HttpStatus.OK);
+
+    return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
   }
 
   /* 회원정보 수정 */
@@ -55,7 +57,7 @@ public class UserController extends BaseController {
     userProfiles.setUrl(mypageForm.getUrl());
     userProfiles.setNickname(mypageForm.getNickname());
 
-    return responseBuilder(userService.setUserData(userProfiles), HttpStatus.OK);
+    return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
   }
 
   /* 회원탈퇴 */

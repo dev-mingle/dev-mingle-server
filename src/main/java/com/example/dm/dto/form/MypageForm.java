@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MypageForm {
     @NotBlank
-    private Long userId;
+    private Long id;
 
     @NotBlank
     private String nickname;
@@ -31,7 +31,4 @@ public class MypageForm {
     private String introduce;
     private String url;
     private String urlName;
-
-    private String provider;
-    private String providerId;
 }

@@ -132,8 +132,8 @@ public class TokenProvider {
 
     // role 한 개로 적용
     LoginUser loginUser = LoginUser.create(
-        Long.parseLong(claims.get("id").toString()), claims.getSubject(),
-        "", claims.get("role").toString(), claims.get("nickname").toString());
+        Long.parseLong(claims.get("id").toString()), claims.getSubject(), "",
+        claims.get("role").toString(), claims.get("nickname").toString());
     return new UsernamePasswordAuthenticationToken(loginUser, "", authorities);
   }
 
