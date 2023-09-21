@@ -6,6 +6,7 @@ import com.example.dm.security.PermitUrlProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -67,31 +69,25 @@ public class TokenFilter extends OncePerRequestFilter {
     boolean b = false;
     String method = request.getMethod();
     String url = request.getRequestURI();
-    if (("GET".equals(method) && matchUrl(urlProperties.getGet(), url))
-        || ("POST".equals(method) && matchUrl(urlProperties.getPost(), url))) {
+    if (("GET".equals(method) && matchUrl(urlProperties.getGet(), request))
+        || ("POST".equals(method) && matchUrl(urlProperties.getPost(), request))) {
       filterChain.doFilter(request, response);
       b=true;
     }
     return b;
   }
 
-  private boolean matchUrl(List<String> list, String url) {
-    boolean match = false;
+  private boolean matchUrl(List<String> list, HttpServletRequest request) {
+    AntPathRequestMatcher matcher;
     for (String str : list) {
-      if (str.endsWith("/**")) {
-        String regex = str.replaceAll("\\*\\*", ".+");
-        Pattern p = Pattern.compile(regex);
-        if (p.matcher(url).matches()) {
-          match = true;
-          break;
-        }
-      } else if (url.equals(str)) {
-        match = true;
-        break;
+      matcher = new AntPathRequestMatcher(str);
+      if (matcher.matches(new HttpServletRequestWrapper(request))) {
+        return true;
       }
     }
-    return match;
+    return false;
   }
+
 
   private String resolveToken(String bearerToken) {
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
