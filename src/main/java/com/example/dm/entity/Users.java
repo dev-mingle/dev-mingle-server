@@ -21,7 +21,7 @@ public class Users extends DeletedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, unique = true)
+    @Column(length = 50)
     private String email;
     private String password;
 
