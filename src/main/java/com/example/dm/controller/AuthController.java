@@ -38,7 +38,6 @@ public class AuthController extends BaseController {
   private final UserProfileRepository userProfileRepository;
   private final MailSender mailSender;
   private final PasswordEncoder passwordEncoder;
-  private final TokenProvider tokenProvider;
 
   /* 이메일 인증발급 */
   @PostMapping("/otp")
@@ -76,7 +75,8 @@ public class AuthController extends BaseController {
     UserProfiles userProfiles = UserProfiles.create(user, signupForm);
     userProfileRepository.save(userProfiles);
 
-    setAuthentication(response, user.getEmail());
+    LoginUser loginUser = authService.loadUserByUsername(signupForm.getEmail());
+    authService.setAuthentication(response, loginUser);
     return responseBuilder(userService.setSignupUserData(userProfiles, user), HttpStatus.OK);
   }
 
@@ -89,19 +89,9 @@ public class AuthController extends BaseController {
     if(!passwordEncoder.matches(loginForm.getPassword(), user.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
-    setAuthentication(response, loginForm.getEmail());
+
+    LoginUser loginUser = authService.loadUserByUsername(loginForm.getEmail());
+    authService.setAuthentication(response, loginUser);
     return responseBuilder(loginForm.getEmail(), HttpStatus.OK);
-  }
-
-  /* token context 설정 */
-  public void setAuthentication(HttpServletResponse response, String email) {
-    String accessToken="", refreshToken="";
-
-    LoginUser loginUser = authService.loadUserByUsername(email);
-    if(loginUser!=null){
-      accessToken = tokenProvider.generateAccessToken(loginUser);
-      refreshToken = tokenProvider.generateRefreshToken(loginUser);
-    }
-    tokenProvider.setAuthenticationTokens(response, accessToken, refreshToken);
   }
 }

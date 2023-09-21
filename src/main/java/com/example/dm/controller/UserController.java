@@ -1,6 +1,7 @@
 package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
+import com.example.dm.dto.form.ChangePwdForm;
 import com.example.dm.dto.form.MypageForm;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
@@ -9,11 +10,13 @@ import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import com.example.dm.repository.UserProfileRepository;
 import com.example.dm.repository.UsersRepository;
+import com.example.dm.service.AuthService;
 import com.example.dm.service.UserService;
 import com.example.dm.util.MailSender;
 import com.example.dm.util.PasswordGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.path.default}/users")
 public class UserController extends BaseController {
   private final UserService userService;
+  private final AuthService authService;
   private final UsersRepository usersRepository;
   private final UserProfileRepository userProfileRepository;
   private final MailSender mailSender;
@@ -52,7 +56,8 @@ public class UserController extends BaseController {
   /* 회원정보 수정 */
   @PutMapping("/profile")
   public ResponseEntity<ApiResponse> getProfiles(@AuthenticationPrincipal LoginUser loginUser,
-                                                 @RequestBody MypageForm mypageForm){
+                                                 @RequestBody MypageForm mypageForm,
+                                                 HttpServletResponse response){
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(loginUser.getId()).orElseThrow(
         () -> new AuthException(ApiResultStatus.USER_NOT_FOUND)
     );
@@ -69,13 +74,16 @@ public class UserController extends BaseController {
     userProfiles.setNickname(mypageForm.getNickname());
     userProfileRepository.save(userProfiles);
 
+    loginUser.setNickname(mypageForm.getNickname());
+    authService.setAuthentication(response, loginUser);
     return responseBuilder(userService.setUserProfileData(userProfiles, loginUser), HttpStatus.OK);
   }
 
   /* 비밀번호 초기화 */
   @PostMapping("/password/reset")
   public ResponseEntity<ApiResponse> resetPassword(@AuthenticationPrincipal LoginUser loginUser,
-                                                   @RequestBody JsonNode jsonNode){
+                                                   @RequestBody JsonNode jsonNode,
+                                                   HttpServletResponse response){
     if(!passwordEncoder.matches(jsonNode.get("password").asText(), loginUser.getPassword())){
       throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
     }
@@ -91,11 +99,46 @@ public class UserController extends BaseController {
     }
 
     Users user = usersRepository.findById(loginUser.getId()).orElseThrow();
-    user.setPassword(passwordEncoder.encode(randomPassword));
+    String encodePassword = passwordEncoder.encode(randomPassword);
+    user.setPassword(encodePassword);
     user.setPasswordChangedAt(LocalDateTime.now());
+    user.setRandomPassword(true);
     usersRepository.save(user);
 
+    loginUser.setPassword(encodePassword);
+    authService.setAuthentication(response, loginUser);
     return responseBuilder(loginUser.getEmail(), HttpStatus.OK);
+  }
+
+  /* 비밀번호 변경 */
+  @PostMapping("/password/change")
+  public ResponseEntity<ApiResponse> changePassword(@AuthenticationPrincipal LoginUser loginUser,
+                                                    @RequestBody ChangePwdForm changePwdForm,
+                                                    HttpServletResponse response){
+    String resetPassword = changePwdForm.getResetPassword();
+    String newPassword = changePwdForm.getPassword();
+
+    if(!passwordEncoder.matches(resetPassword, loginUser.getPassword())){
+      throw new AuthException(ApiResultStatus.WRONG_PASSWORD);
+    }
+
+    Users user = usersRepository.findById(loginUser.getId()).orElseThrow();
+    String encodePassword = passwordEncoder.encode(newPassword);
+    user.setPassword(encodePassword);
+    user.setPasswordChangedAt(LocalDateTime.now());
+    user.setRandomPassword(false);
+    usersRepository.save(user);
+
+    loginUser.setPassword(encodePassword);
+    authService.setAuthentication(response, loginUser);
+    return responseBuilder(Boolean.TRUE, HttpStatus.OK);
+  }
+
+  /* 랜덤 비밀번호 발급여부 확인용 */
+  @PostMapping("/password/reset/confirm")
+  public ResponseEntity<ApiResponse> isRandomPassword(@AuthenticationPrincipal LoginUser loginUser){
+    boolean isRandomPassword = usersRepository.findIsRandomPasswordById(loginUser.getId());
+    return responseBuilder(isRandomPassword, HttpStatus.OK);
   }
 
   /* 회원탈퇴 */

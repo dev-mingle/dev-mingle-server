@@ -37,6 +37,8 @@ public class Users extends DeletedEntity {
     private boolean isBlocked;
     @ColumnDefault("false")
     private boolean isInactivated;
+    @ColumnDefault("false")
+    private boolean isRandomPassword;
 
     private LocalDateTime passwordChangedAt;
 
