@@ -2,6 +2,7 @@ package com.example.dm.config;
 
 import com.example.dm.aspect.CustomEntryPoint;
 import com.example.dm.security.PermitUrlProperties;
+import com.example.dm.security.jwt.TokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -26,6 +28,7 @@ public class SecurityConfig {
 
     private final PermitUrlProperties urlProperties;
     private final CustomEntryPoint customEntryPoint;
+    private final TokenFilter tokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,6 +41,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
                     for (String url : urlProperties.getGet()) {
                         auth.requestMatchers("GET", url).permitAll();

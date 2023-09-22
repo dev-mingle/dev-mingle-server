@@ -1,6 +1,6 @@
 package com.example.dm.entity;
 
-import com.example.dm.dto.form.SignupForm;
+import com.example.dm.dto.users.SignupDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -56,18 +56,18 @@ public class UserProfiles extends DeletedEntity {
     @OneToMany(mappedBy = "targetUserProfiles", cascade = CascadeType.ALL)
     private List<Follows> followsByTargetUsers;
 
-    public static UserProfiles create(Users users, SignupForm signupForm) {
+    public static UserProfiles create(Users users, SignupDto signupDto) {
         UserProfiles userProfiles = new UserProfiles();
         userProfiles.setUsers(users);
-        userProfiles.setNickname(signupForm.getNickname());
-        userProfiles.setCity(signupForm.getCity());
-        userProfiles.setState(signupForm.getState());
-        userProfiles.setStreet(signupForm.getStreet());
-        userProfiles.setLatitude(signupForm.getLatitude());
-        userProfiles.setLongitude(signupForm.getLongitude());
-        userProfiles.setIntroduce(signupForm.getIntroduce());
-        userProfiles.setUrl(signupForm.getUrl());
-        userProfiles.setUrlName(signupForm.getUrlName());
+        userProfiles.setNickname(signupDto.getNickname());
+        userProfiles.setCity(signupDto.getCity());
+        userProfiles.setState(signupDto.getState());
+        userProfiles.setStreet(signupDto.getStreet());
+        userProfiles.setLatitude(signupDto.getLatitude());
+        userProfiles.setLongitude(signupDto.getLongitude());
+        userProfiles.setIntroduce(signupDto.getIntroduce());
+        userProfiles.setUrl(signupDto.getUrl());
+        userProfiles.setUrlName(signupDto.getUrlName());
         return userProfiles;
     }
 }

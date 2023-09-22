@@ -1,4 +1,4 @@
-package com.example.dm.dto.form;
+package com.example.dm.dto.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class SignupUserData {
+public class SignupUserResponse {
     private String email;
     private LocalDateTime createdAt;
     @JsonProperty("userProfile")
-    private SignupUserProfilesData userProfile;
+    private SignupUserProfilesResponse userProfile;
 }

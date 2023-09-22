@@ -21,7 +21,7 @@ public class Users extends DeletedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, unique = true)
+    @Column(length = 50)
     private String email;
     private String password;
 
@@ -37,6 +37,8 @@ public class Users extends DeletedEntity {
     private boolean isBlocked;
     @ColumnDefault("false")
     private boolean isInactivated;
+    @ColumnDefault("false")
+    private boolean isRandomPassword;
 
     private LocalDateTime passwordChangedAt;
 
