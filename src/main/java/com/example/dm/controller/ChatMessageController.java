@@ -19,7 +19,7 @@ public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
 
-    public static final String SUBSCRIBE_URL = "/sub/v1/chats/";
+    public static final String SUBSCRIBE_URL = "/sub/api/v1/chats/";
 
     @MessageMapping("/v1/chats/join")
     public void enterUser(@Payload ChatCreateDto chatCreateDto, SimpMessageHeaderAccessor headerAccessor) {
@@ -30,7 +30,7 @@ public class ChatMessageController {
     }
 
     // todo: 보낸 회원 검증
-    @MessageMapping("/v1/chats/message")
+    @MessageMapping("/api/v1/chats/message")
     public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto) {
         processMessage(chatCreateDto);
     }

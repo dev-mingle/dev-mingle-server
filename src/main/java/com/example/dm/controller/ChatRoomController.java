@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.example.dm.controller.ChatMessageController.SUBSCRIBE_URL;
 
 @RestController
-@RequestMapping("/v1/chats")
+@RequestMapping("${api.path.default}/chats")
 @RequiredArgsConstructor
 public class ChatRoomController extends BaseController {
 
