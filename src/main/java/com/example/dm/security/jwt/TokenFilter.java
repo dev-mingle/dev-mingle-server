@@ -6,8 +6,10 @@ import com.example.dm.security.PermitUrlProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -65,13 +68,25 @@ public class TokenFilter extends OncePerRequestFilter {
     boolean b = false;
     String method = request.getMethod();
     String url = request.getRequestURI();
-    if (("GET".equals(method) && urlProperties.getGet().contains(url))
-        || ("POST".equals(method) && urlProperties.getPost().contains(url))) {
+    if (("GET".equals(method) && matchUrl(urlProperties.getGet(), request))
+        || ("POST".equals(method) && matchUrl(urlProperties.getPost(), request))) {
       filterChain.doFilter(request, response);
       b=true;
     }
     return b;
   }
+
+  private boolean matchUrl(List<String> list, HttpServletRequest request) {
+    AntPathRequestMatcher matcher;
+    for (String str : list) {
+      matcher = new AntPathRequestMatcher(str);
+      if (matcher.matches(new HttpServletRequestWrapper(request))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   private String resolveToken(String bearerToken) {
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {

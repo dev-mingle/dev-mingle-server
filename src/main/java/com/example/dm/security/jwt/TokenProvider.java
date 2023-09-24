@@ -1,5 +1,6 @@
 package com.example.dm.security.jwt;
 
+import com.example.dm.entity.LoginUser;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.AuthException;
 import io.jsonwebtoken.Claims;
@@ -25,8 +26,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -49,43 +48,56 @@ public class TokenProvider {
   @Value("${jwt.refresh.header}")
   private String refreshHeader;
 
+  Map<String,Object> extraClaims;
+
   public TokenProvider(@Value("${jwt.secretKey}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
   /* access token */
-  public String generateAccessToken(UserDetails userDetails){
-    Map<String,Object> extraClaims = new HashMap<>();
-    extraClaims.put("role", userDetails.getAuthorities());
-    return buildToken(extraClaims, userDetails.getUsername(), accessTokenValidTime);
+  public String generateAccessToken(String token){
+    return buildToken(getExtraClaims(token), extractUsername(token), accessTokenValidTime);
   }
 
-  public String generateAccessToken(Collection<? extends GrantedAuthority> roles, String username) {
-    Map<String,Object> extraClaims = new HashMap<>();
-    extraClaims.put("role", roles);
-    return buildToken(extraClaims, username, accessTokenValidTime);
+  public String generateAccessToken(LoginUser loginUser){
+    return buildToken(getExtraClaims(loginUser), loginUser.getUsername(), accessTokenValidTime);
   }
 
   /* refresh token */
-  public String generateRefreshToken(UserDetails userDetails){
-    Map<String,Object> extraClaims = new HashMap<>();
-    extraClaims.put("role", userDetails.getAuthorities());
-    return buildToken(extraClaims, userDetails.getUsername(), refreshTokenValidTime);
+  public String generateRefreshToken(String token){
+    return buildToken(getExtraClaims(token), extractUsername(token), refreshTokenValidTime);
   }
 
-  public String generateRefreshToken(Collection<? extends GrantedAuthority> roles, String username) {
-    Map<String,Object> extraClaims = new HashMap<>();
-    extraClaims.put("role", roles);
-    return buildToken(extraClaims, username, accessTokenValidTime);
+  public String generateRefreshToken(LoginUser loginUser){
+    return buildToken(getExtraClaims(loginUser), loginUser.getUsername(), accessTokenValidTime);
   }
+
+
+  /* getExtraClaims */
+  public Map<String,Object> getExtraClaims(String token){
+    Map<String,Object> extraClaims = new HashMap<>();
+    Claims claims = parseClaims(token);
+    extraClaims.put("id", extractClaim(token, (Function<Claims, String>) claims.get("id")));
+    extraClaims.put("password", extractClaim(token, (Function<Claims, String>) claims.get("password")));
+    extraClaims.put("role", extractClaim(token, (Function<Claims, String>) claims.get("role")));
+    extraClaims.put("nickname", extractClaim(token, (Function<Claims, String>) claims.get("nickname")));
+    return extraClaims;
+  }
+
+  public Map<String,Object> getExtraClaims(LoginUser loginUser){
+    Map<String,Object> extraClaims = new HashMap<>();
+    extraClaims.put("id", loginUser.getId());
+    extraClaims.put("password", loginUser.getPassword());
+    extraClaims.put("role", loginUser.getRole());
+    extraClaims.put("nickname", loginUser.getNickname());
+    return extraClaims;
+  }
+
 
   public Map<String,String> rebuildToken(String refreshToken) {
-    String username = extractUsername(refreshToken);
-    Collection<? extends GrantedAuthority> roles = extractRoles(refreshToken);
-
-    String accessToken = generateAccessToken(roles, username);
-    refreshToken = generateRefreshToken(roles, username);
+    String accessToken = generateAccessToken(refreshToken);
+    refreshToken = generateRefreshToken(refreshToken);
 
     Map<String,String> map = new HashMap<>();
     map.put("accessToken", accessToken);
@@ -109,7 +121,7 @@ public class TokenProvider {
   }
 
   public Authentication getAuthentication(String accessToken) {
-    Claims claims = parseClaims(accessToken);
+    Claims claims = extractAllClaims(accessToken);
 
     if (claims.get("role") == null) {
       throw new RuntimeException("권한 정보가 없는 토큰입니다.");
@@ -120,8 +132,11 @@ public class TokenProvider {
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
 
-    UserDetails principal = new User(claims.getSubject(), "", authorities);
-    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    // role 한 개로 적용
+    LoginUser loginUser = LoginUser.create(
+        Long.parseLong(claims.get("id").toString()), claims.getSubject(), claims.get("password").toString(),
+        claims.get("role").toString(), claims.get("nickname").toString());
+    return new UsernamePasswordAuthenticationToken(loginUser, "", authorities);
   }
 
   /* 토큰 만료여부 체크 */
@@ -154,17 +169,9 @@ public class TokenProvider {
     return true;
   }
 
-  private Date extractExpiration(String token) {
-    return extractClaim(token, Claims::getExpiration);
-  }
-
+  // email
   public String extractUsername(String token) {
     return extractClaim(token, Claims::getSubject);
-  }
-
-  public Collection<? extends GrantedAuthority> extractRoles(String token) {
-    Claims claims = parseClaims(token);
-    return extractClaim(token, (Function<Claims, Collection<? extends GrantedAuthority>>) claims.get("role"));
   }
 
   private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

@@ -29,10 +29,14 @@ public enum ApiResultStatus {
 
     // 유저 관련 에러
     ALREADY_SIGNED_UP("E4090", "이미 가입된 이메일입니다.", HttpStatus.CONFLICT),
+    ALREADY_SIGNED_UP_NICKNAME("E4090", "이미 가입된 닉네임입니다.", HttpStatus.CONFLICT),
     LOGIN_FAILED("E4014", "로그인 정보가 일치하지 않습니다.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("E4041", "유저 정보가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    WRONG_PASSWORD("E4045", "일치하지 않는 비밀번호입니다.", HttpStatus.FORBIDDEN),
 
-    WRONG_PASSWORD("E4041", "일치하지 않는 비밀번호입니다.", HttpStatus.FORBIDDEN),
+    // 메일 관련 에러
+    SEND_MAIL_FAILED("E4046", "메일 전송에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    ENCODING_ISSUE("E4047", "지원하지 않는 문자 인코딩입니다.", HttpStatus.BAD_REQUEST),
 
     // 게시글 관련 에러
     POST_NOT_FOUND("E4042", "존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),

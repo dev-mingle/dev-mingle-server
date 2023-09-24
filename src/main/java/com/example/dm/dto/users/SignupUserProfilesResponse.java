@@ -1,4 +1,4 @@
-package com.example.dm.dto.form;
+package com.example.dm.dto.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class SignupUserProfilesData {
+public class SignupUserProfilesResponse {
     private String nickname;
     private String city;
     private String state;

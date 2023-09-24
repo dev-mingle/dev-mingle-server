@@ -27,14 +27,11 @@ jwt:
   header: Authorization
   secretKey: ${JWT_SECRET}
   access:
-    tokenValidTime: 3600
+    tokenValidTime: 600000  # 10분
     header: Authorization
   refresh:
-    tokenValidTime: 2592000
+    tokenValidTime: 3600000 # 1시간
     header: Authorization-refresh
-
-# refresh token - 30일
-# access token - 1시간
 
 mail:
   username: Dev_Mingle
@@ -42,6 +39,7 @@ mail:
   password: ${MAIL_SECRET}
   signupSubject: Dev_Mingle 회원가입 메일인증
   signupLink: https://www.dev_mingle.site
+  randomPwdSubject: Dev_Mingle 랜덤 비밀번호 발송
 
 url:
   permit:
