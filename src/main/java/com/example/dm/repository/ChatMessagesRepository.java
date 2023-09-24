@@ -1,7 +1,7 @@
-package com.example.dm.chat.repository;
+package com.example.dm.repository;
 
-import com.example.dm.chat.dto.ChatMessageGetDto;
-import com.example.dm.chat.entity.ChatMessages;
+import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.entity.ChatMessages;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

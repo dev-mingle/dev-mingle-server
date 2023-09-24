@@ -1,6 +1,6 @@
-package com.example.dm.chat.dto;
+package com.example.dm.dto.chats;
 
-import com.example.dm.chat.entity.ChatRooms;
+import com.example.dm.entity.ChatRooms;
 import lombok.Builder;
 import lombok.Getter;
 

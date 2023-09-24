@@ -1,8 +1,8 @@
-package com.example.dm.chat.controller;
+package com.example.dm.controller;
 
-import com.example.dm.chat.dto.ChatCreateDto;
-import com.example.dm.chat.dto.ChatMessageGetDto;
-import com.example.dm.chat.service.ChatMessageService;
+import com.example.dm.dto.chats.ChatCreateDto;
+import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.service.ChatMessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;

@@ -1,6 +1,5 @@
-package com.example.dm.chat.entity;
+package com.example.dm.entity;
 
-import com.example.dm.entity.UserProfiles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

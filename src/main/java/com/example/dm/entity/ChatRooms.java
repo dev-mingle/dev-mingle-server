@@ -1,8 +1,6 @@
-package com.example.dm.chat.entity;
+package com.example.dm.entity;
 
-import com.example.dm.chat.dto.ChatRoomCreateDto;
-import com.example.dm.entity.BaseTimeEntity;
-import com.example.dm.entity.UserProfiles;
+import com.example.dm.dto.chats.ChatRoomCreateDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

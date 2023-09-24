@@ -1,12 +1,11 @@
-package com.example.dm.chat.controller;
+package com.example.dm.controller;
 
-import com.example.dm.chat.dto.ChatCreateDto;
-import com.example.dm.chat.dto.ChatMessageGetDto;
-import com.example.dm.chat.dto.ChatRoomCreateDto;
-import com.example.dm.chat.dto.ChatRoomDetailDto;
-import com.example.dm.chat.service.ChatMessageService;
-import com.example.dm.chat.service.ChatRoomService;
-import com.example.dm.controller.BaseController;
+import com.example.dm.dto.chats.ChatCreateDto;
+import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.dto.chats.ChatRoomCreateDto;
+import com.example.dm.dto.chats.ChatRoomDetailDto;
+import com.example.dm.service.ChatMessageService;
+import com.example.dm.service.ChatRoomService;
 import com.example.dm.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.dm.chat.controller.ChatMessageController.SUBSCRIBE_URL;
+import static com.example.dm.controller.ChatMessageController.SUBSCRIBE_URL;
 
 @RestController
 @RequestMapping("/v1/chats")

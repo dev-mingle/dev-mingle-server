@@ -1,9 +1,9 @@
-package com.example.dm.chat.service;
+package com.example.dm.service;
 
-import com.example.dm.chat.dto.ChatCreateDto;
-import com.example.dm.chat.dto.ChatMessageGetDto;
-import com.example.dm.chat.entity.ChatMessages;
-import com.example.dm.chat.repository.ChatMessagesRepository;
+import com.example.dm.dto.chats.ChatCreateDto;
+import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.entity.ChatMessages;
+import com.example.dm.repository.ChatMessagesRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

@@ -1,12 +1,12 @@
-package com.example.dm.chat.service;
+package com.example.dm.service;
 
-import com.example.dm.chat.dto.ChatRoomCreateDto;
-import com.example.dm.chat.dto.ChatRoomGetDto;
-import com.example.dm.chat.dto.ChatRoomDetailDto;
-import com.example.dm.chat.dto.UserProfileGetDto;
-import com.example.dm.chat.entity.ChatMembers;
-import com.example.dm.chat.entity.ChatRooms;
-import com.example.dm.chat.repository.ChatRoomsRepository;
+import com.example.dm.dto.chats.ChatRoomCreateDto;
+import com.example.dm.dto.chats.ChatRoomGetDto;
+import com.example.dm.dto.chats.ChatRoomDetailDto;
+import com.example.dm.dto.chats.UserProfileGetDto;
+import com.example.dm.entity.ChatMembers;
+import com.example.dm.entity.ChatRooms;
+import com.example.dm.repository.ChatRoomsRepository;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.BusinessException;
