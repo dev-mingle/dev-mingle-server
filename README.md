@@ -119,10 +119,24 @@ SPRING_PROFILE: local
 
 # DB 유저 정보
 DB_PASSWORD: yourpassword1234
+REDIS_PASSWORD: yourpassword1234
 
 # JWT 설정
 JWT_SECRET: yoursecretkey1234
 JWT_EXPIRE: 600
+
+# 인증 관련 설정
+COLUMN_ENCRYPT: your_column_encrypt
+
+GOOGLE_CLIENT_ID: your_client_id
+GOOGLE_CLIENT_SECRET: your_client_secret
+
+MAIL_SECRET: your_mail_secret
+
+# S3 설정
+S3_ACCESS_KEY: your_access_key
+S3_SECRET_KEY: your_secret_key
+S3_BUCKET_NAME: your_bucket_name
 ```
 
 ## 3-2. 프로젝트 루트 경로에서 build & run 진행
