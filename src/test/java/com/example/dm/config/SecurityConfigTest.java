@@ -1,5 +1,7 @@
 package com.example.dm.config;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,6 @@ class SecurityConfigTest {
   void passwordEncoder() {
     String testSentence = "비밀번호 암호화 테스트";
     String encodedSentence = securityConfig.passwordEncoder().encode(testSentence);
-    assert securityConfig.passwordEncoder().matches(testSentence, encodedSentence);
+    assertTrue(securityConfig.passwordEncoder().matches(testSentence, encodedSentence));
   }
 }

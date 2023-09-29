@@ -1,5 +1,7 @@
 package com.example.dm.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ class PasswordGeneratorTest {
   @Test
   @DisplayName("랜덤 생성된 패스워드는 길이가 일치하는가?")
   void checkPasswordLength() {
-    assert password1.length()==password2.length();
+    assertEquals(password1.length(), password2.length());
   }
 
   @Test

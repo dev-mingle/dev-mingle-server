@@ -76,10 +76,10 @@ public class TokenProvider {
   public Map<String,Object> getExtraClaims(String token){
     Map<String,Object> extraClaims = new HashMap<>();
     Claims claims = parseClaims(token);
-    extraClaims.put("id", extractClaim(token, (Function<Claims, String>) claims.get("id")));
-    extraClaims.put("password", extractClaim(token, (Function<Claims, String>) claims.get("password")));
-    extraClaims.put("role", extractClaim(token, (Function<Claims, String>) claims.get("role")));
-    extraClaims.put("nickname", extractClaim(token, (Function<Claims, String>) claims.get("nickname")));
+    extraClaims.put("id", claims.get("id"));
+    extraClaims.put("password", claims.get("password"));
+    extraClaims.put("role", claims.get("role"));
+    extraClaims.put("nickname", claims.get("nickname"));
     return extraClaims;
   }
 
