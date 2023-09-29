@@ -22,10 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Value("${api.path.default}")
-    private String API_URL_PREFIX;
-
     private final PermitUrlProperties urlProperties;
     private final CustomEntryPoint customEntryPoint;
     private final TokenFilter tokenFilter;

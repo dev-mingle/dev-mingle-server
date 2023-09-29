@@ -48,8 +48,6 @@ public class TokenProvider {
   @Value("${jwt.refresh.header}")
   private String refreshHeader;
 
-  Map<String,Object> extraClaims;
-
   public TokenProvider(@Value("${jwt.secretKey}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -154,17 +152,17 @@ public class TokenProvider {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+      log.info("유효하지 않은 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("Invalid JWT Token", e);
     } catch (ExpiredJwtException e) {
+      log.info("만료된 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_DATE_EXPIRED);
-      //log.info("Expired JWT Token", e);
     } catch (UnsupportedJwtException e) {
+      log.info("지원하지 않는 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("Unsupported JWT Token", e);
     } catch (IllegalArgumentException e) {
+      log.info("JWT 토큰 값(claims)가 없습니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("JWT claims string is empty.", e);
     }
     return true;
   }

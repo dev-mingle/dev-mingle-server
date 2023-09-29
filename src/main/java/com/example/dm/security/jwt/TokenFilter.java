@@ -67,7 +67,6 @@ public class TokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     boolean b = false;
     String method = request.getMethod();
-    String url = request.getRequestURI();
     if (("GET".equals(method) && matchUrl(urlProperties.getGet(), request))
         || ("POST".equals(method) && matchUrl(urlProperties.getPost(), request))) {
       filterChain.doFilter(request, response);
