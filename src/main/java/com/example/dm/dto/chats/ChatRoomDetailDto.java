@@ -1,6 +1,7 @@
 package com.example.dm.dto.chats;
 
 import com.example.dm.entity.ChatRooms;
+import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,15 +18,15 @@ public class ChatRoomDetailDto {
 
     private String adminNickname;
 
-    private String nickname; // todo: principaldetails 대체 예정
+    private String nickname;
 
-    public static ChatRoomDetailDto from(ChatRooms chatRooms, UserProfiles userProfiles, UserProfiles curUserProfiles) {
+    public static ChatRoomDetailDto from(ChatRooms chatRooms, UserProfiles userProfiles, LoginUser user) {
         return ChatRoomDetailDto.builder()
                 .roomId(chatRooms.getId())
                 .roomName(chatRooms.getName())
                 .adminId(userProfiles.getId())
                 .adminNickname(userProfiles.getNickname())
-                .nickname(curUserProfiles.getNickname())
+                .nickname(user.getNickname())
                 .build();
     }
 
