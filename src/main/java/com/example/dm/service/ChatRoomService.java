@@ -1,22 +1,22 @@
 package com.example.dm.service;
 
 import com.example.dm.dto.chats.ChatRoomCreateDto;
-import com.example.dm.dto.chats.ChatRoomGetDto;
 import com.example.dm.dto.chats.ChatRoomDetailDto;
+import com.example.dm.dto.chats.ChatRoomGetDto;
 import com.example.dm.dto.chats.UserProfileGetDto;
 import com.example.dm.entity.ChatMembers;
 import com.example.dm.entity.ChatRooms;
-import com.example.dm.repository.ChatRoomsRepository;
+import com.example.dm.entity.LoginUser;
 import com.example.dm.entity.UserProfiles;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.BusinessException;
+import com.example.dm.repository.ChatRoomsRepository;
 import com.example.dm.repository.UserProfileRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +26,8 @@ public class ChatRoomService {
     private final ChatRoomsRepository chatRoomsRepository;
     private final UserProfileRepository userProfileRepository;
 
-    public ChatRoomGetDto createRoom(ChatRoomCreateDto chatRoomCreateDto) {
-        UserProfiles userProfiles = verifyUserProfile(chatRoomCreateDto.getAdminUserId());
+    public ChatRoomGetDto createRoom(ChatRoomCreateDto chatRoomCreateDto, LoginUser user) {
+        UserProfiles userProfiles = verifyUserProfile(user.getId());
         ChatRooms chatRooms = ChatRooms.from(chatRoomCreateDto, userProfiles);
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
 
@@ -48,32 +48,28 @@ public class ChatRoomService {
         return userProfiles.getChatMembers().stream().map(chatRoomUser -> {
             ChatRooms chatRooms = chatRoomUser.getChatRooms();
             return ChatRoomGetDto.from(chatRooms);
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
-    public ChatRoomDetailDto enterRoomUser(Long roomId, Long userProfileId) {
+    public ChatRoomDetailDto enterRoomUser(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
-        UserProfiles userProfiles = verifyUserProfile(userProfileId);
+        UserProfiles userProfiles = verifyUserProfile(user.getId());
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
 
         chatRooms.addUser(chatMembers);
         chatRooms.plusUserCount();
 
-        return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), userProfiles);
+        return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), user);
     }
 
     // todo: 방장이 퇴장할 경우
-    public ChatRoomDetailDto exitRoomUser(Long roomId, Long userProfileId) {
+    public ChatRoomDetailDto exitRoomUser(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
-        // todo: authenticationprincipal로 대체
-        UserProfiles userProfiles = verifyUserProfile(userProfileId);
 
-        if(!chatRooms.removeUser(userProfileId)) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
+        if(!chatRooms.removeUser(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
         chatRooms.minusUserCount();
 
-        chatRoomsRepository.save(chatRooms);
-
-        return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), userProfiles);
+        return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), user);
     }
 
     public List<UserProfileGetDto> getRoomUserList(Long roomId) {
@@ -81,7 +77,7 @@ public class ChatRoomService {
 
         return chatRooms.getChatMembers().stream()
                 .map(chatRoomUserProfiles -> UserProfileGetDto.from(chatRoomUserProfiles.getUserProfiles()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private ChatRooms verifyRoom(Long roomId) {
