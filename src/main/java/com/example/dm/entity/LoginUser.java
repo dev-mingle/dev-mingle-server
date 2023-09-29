@@ -2,7 +2,6 @@ package com.example.dm.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.AccessLevel;
