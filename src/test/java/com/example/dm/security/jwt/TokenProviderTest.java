@@ -1,11 +1,11 @@
 package com.example.dm.security.jwt;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import com.example.dm.entity.LoginUser;
-import com.example.dm.exception.AuthException;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -39,10 +39,10 @@ class TokenProviderTest {
   @Mock
   private Key key;
 
-  private Map<String,Object> map;
+  Map<String,Object> map;
 
   private LoginUser loginUser;
-  private final Long ID = Long.valueOf(1l);
+  private final Long ID = 1L;
   private final String EMAIL = "token@test.com";
   private final String PASSWORD = "password";
   private final String ROLE = "USER";
@@ -102,7 +102,6 @@ class TokenProviderTest {
   @DisplayName("토큰 유효성 테스트")
   class validateToken {
     JwtParser jwtParser = jwts.parserBuilder().setSigningKey(key).build();
-    Exception exception;
 
     @Test
     @DisplayName("유효한 토큰 여부")

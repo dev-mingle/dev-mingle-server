@@ -38,7 +38,6 @@ class MailSenderTest {
   @Test
   @DisplayName("이메일 형식이 올바르지 않은 경우")
   void exceptionTest() {
-    assertThrows(SendFailedException.class, () -> {
-      mailSender.sendMail(EMAIL, "subject", "contents");});
+    assertThrows(SendFailedException.class, () -> mailSender.sendMail(EMAIL, "subject", "contents"));
   }
 }

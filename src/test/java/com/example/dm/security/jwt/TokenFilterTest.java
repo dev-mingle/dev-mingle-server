@@ -33,7 +33,7 @@ public class TokenFilterTest {
   @Autowired
   TokenFilter tokenFilter;
 
-  private TokenProvider tokenProvider;
+  TokenProvider tokenProvider;
   private String token;
 
   @BeforeEach
