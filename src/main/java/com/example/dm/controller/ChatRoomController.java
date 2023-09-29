@@ -4,6 +4,7 @@ import com.example.dm.dto.chats.ChatCreateDto;
 import com.example.dm.dto.chats.ChatMessageGetDto;
 import com.example.dm.dto.chats.ChatRoomCreateDto;
 import com.example.dm.dto.chats.ChatRoomDetailDto;
+import com.example.dm.entity.LoginUser;
 import com.example.dm.service.ChatMessageService;
 import com.example.dm.service.ChatRoomService;
 import com.example.dm.dto.ApiResponse;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.dm.controller.ChatMessageController.SUBSCRIBE_URL;
@@ -27,17 +29,15 @@ public class ChatRoomController extends BaseController {
     private final SimpMessageSendingOperations template;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createRoom(@RequestBody ChatRoomCreateDto chatRoomCreateDto) {
-        return responseBuilder(chatRoomService.createRoom(chatRoomCreateDto), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse> createRoom(@RequestBody ChatRoomCreateDto chatRoomCreateDto,
+                                                  @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatRoomService.createRoom(chatRoomCreateDto, user), HttpStatus.CREATED);
     }
 
-    /**
-     *  todo: @AuthenticationPrincipal 사용고려
-     */
-    @PostMapping("/{roomId}/join/{userProfileId}")
+    @PostMapping("/{roomId}/join")
     public ResponseEntity<ApiResponse> joinRoom(@PathVariable Long roomId,
-                                                @PathVariable Long userProfileId) {
-        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.enterRoomUser(roomId, userProfileId);
+                                                @AuthenticationPrincipal LoginUser user) {
+        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.enterRoomUser(roomId, user);
 
         String message = chatRoomDetailDto.getNickname() + "님이 입장하였습니다.";
         processMessage(roomId, chatRoomDetailDto, message);
@@ -45,20 +45,22 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatRoomDetailDto, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userProfileId}/rooms")
-    public ResponseEntity<ApiResponse> getRoomsByUserProfileId(@PathVariable Long userProfileId) {
-        return responseBuilder(chatRoomService.findRoomByUser(userProfileId), HttpStatus.OK);
+    @GetMapping("/user/rooms")
+    public ResponseEntity<ApiResponse> getRoomsByUserProfileId(@AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatRoomService.findRoomByUser(user.getId()), HttpStatus.OK);
     }
 
+    // todo: 권한 설정
     @GetMapping("/{roomId}")
-    public ResponseEntity<ApiResponse> getRoomMessage(@PathVariable Long roomId) {
-        return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId), HttpStatus.OK);
+    public ResponseEntity<ApiResponse> getRoomMessage(@PathVariable Long roomId,
+                                                      @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatMessageService.findAllMessageByRoomId(roomId, user), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{roomId}/exit/{userProfileId}")
+    @DeleteMapping("/{roomId}/exit")
     public ResponseEntity<ApiResponse> exitRoom(@PathVariable Long roomId,
-                                                @PathVariable Long userProfileId) {
-        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.exitRoomUser(roomId, userProfileId);
+                                                @AuthenticationPrincipal LoginUser user) {
+        ChatRoomDetailDto chatRoomDetailDto = chatRoomService.exitRoomUser(roomId, user);
 
         String message = chatRoomDetailDto.getNickname() + "님이 퇴장하였습니다.";
         processMessage(roomId, chatRoomDetailDto, message);
