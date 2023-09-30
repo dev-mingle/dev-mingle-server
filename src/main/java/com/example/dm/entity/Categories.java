@@ -1,7 +1,5 @@
 package com.example.dm.entity;
 
-import com.example.dm.entity.DeletedEntity;
-import com.example.dm.entity.UserProfiles;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,9 +12,10 @@ import lombok.NoArgsConstructor;
 public class Categories extends DeletedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")

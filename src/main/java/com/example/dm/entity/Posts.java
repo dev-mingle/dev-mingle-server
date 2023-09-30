@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -13,33 +13,42 @@ import org.locationtech.jts.geom.Point;
 public class Posts extends DeletedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_id")
+    @JoinColumn(name = "user_profile_id", nullable = false)
     private UserProfiles userProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Categories category;
 
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String contents;
-    private Point point;
+
+    private double latitude;
+    private double longitude;
+
+    @ColumnDefault("0")
     private int hits;
+    @ColumnDefault("0")
     private int likes;
+    @ColumnDefault("false")
+    @Column(name = "has_chat")
     private boolean hasChat;
 
     @Builder
-    public Posts(Long id, UserProfiles userProfile, Categories category, String title,
-                 String contents, Point point, int hits, int likes, boolean hasChat) {
+    public Posts(Long id, UserProfiles userProfile, Categories category, String title, String contents, double latitude, double longitude, int hits, int likes, boolean hasChat) {
         this.id = id;
         this.userProfile = userProfile;
         this.category = category;
         this.title = title;
         this.contents = contents;
-        this.point = point;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.hits = hits;
         this.likes = likes;
         this.hasChat = hasChat;
