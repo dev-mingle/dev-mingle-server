@@ -4,26 +4,43 @@ import com.example.dm.entity.Posts;
 import com.example.dm.repository.PostsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 class PostsServiceImpl implements PostsService {
 
     private final PostsRepository postsRepository;
 
+    // 0.01(degrees)는 약 1.11km(distance)
+    private static final double DISTANCE = 0.03;
+
+    private static final int MAX_PAGE_SIZE = 100;
+
+    private static final Pageable DEFAULT_PAGE = PageRequest.of(
+            0,
+            MAX_PAGE_SIZE,
+            Sort.by(Sort.Direction.DESC, "createdAt")
+    );
+
+    @Transactional(readOnly = true)
     @Override
-    public Page<Posts> findAll(Long categoryId, String search, String[] conditions, String[] location, Pageable pageable) {
-        if (location[0].equals("pl")) {
-            /*
-             * 유저 프로필에서 위도 경도 찾는 로직
-             * UserProfiles userProfiles = userProfilesService.findById(id);
-             * location[1] = String.valueOf(userProfiles.getLatitude());
-             * location[2] = String.valueOf(userProfiles.getLongitude());
-             */
+    public Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, Pageable pageable) {
+        if (pageable == null) {
+            pageable = DEFAULT_PAGE;
+        } else if (pageable.getSort().isEmpty()) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DEFAULT_PAGE.getSort());
         }
 
-        return postsRepository.findAll(categoryId, search, conditions, location, pageable);
+        if (pageable.getPageSize() > MAX_PAGE_SIZE) {
+            pageable = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, pageable.getSort());
+        }
+
+        return postsRepository.findAll(categoryId, search, conditions, location, DISTANCE, pageable);
     }
 }
