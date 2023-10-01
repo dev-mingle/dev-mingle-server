@@ -23,26 +23,30 @@ class PostsRepositoryImpl implements PostsRepository{
 
     @Override
     public Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, double distance, Pageable pageable) {
-        boolean haveSearch = false;
         double latitude = location[0];
         double longitude = location[1];
+        boolean haveSearch = false;
+        boolean hasCategory = categoryId >= 0;
 
         String jpql = """
                 select p
                 from Posts p
                 left join fetch p.userProfile u
-                where p.category.id = :categoryId
-                and p.isDeleted = false
+                where p.isDeleted = false
                 and st_dwithin(st_point(:latitude, :longitude, 4326), st_point(p.latitude, p.longitude, 4326), :distance) = true
                 """;
 
         String countJpql = """
                 select count(p)
                 from Posts p
-                where p.category.id = :categoryId
-                and p.isDeleted = false
+                where p.isDeleted = false
                 and st_dwithin(st_point(:latitude, :longitude, 4326), st_point(p.latitude, p.longitude, 4326), :distance) = true
                 """;
+
+        if (hasCategory) {
+            jpql += "and p.category.id = :categoryId\n";
+            countJpql += "and p.category.id = :categoryId\n";
+        }
 
         if (StringUtils.hasText(search) && conditions != null) {
             for (String condition : conditions) {
@@ -62,23 +66,29 @@ class PostsRepositoryImpl implements PostsRepository{
         }
 
         jpql += "order by";
+        boolean comma = false;
         for (Sort.Order order : pageable.getSort()) {
             String property = order.getProperty();
             String direction = order.getDirection().name();
-            jpql += "\n\tp." + property + " " + direction;
+            if (comma) jpql += ",";
+            jpql += " p." + property + " " + direction;
+            comma = true;
         }
 
         TypedQuery<Posts> query = em.createQuery(jpql, Posts.class)
-                .setParameter("categoryId", categoryId)
                 .setParameter("latitude", latitude)
                 .setParameter("longitude", longitude)
                 .setParameter("distance", distance);
 
         TypedQuery<Long> countQuery = em.createQuery(countJpql, Long.class)
-                .setParameter("categoryId", categoryId)
                 .setParameter("latitude", latitude)
                 .setParameter("longitude", longitude)
                 .setParameter("distance", distance);
+
+        if (hasCategory) {
+            query.setParameter("categoryId", categoryId);
+            countQuery.setParameter("categoryId", categoryId);
+        }
 
         if (haveSearch) {
             query.setParameter("search", search);
