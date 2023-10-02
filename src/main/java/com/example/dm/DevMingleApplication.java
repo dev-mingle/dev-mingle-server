@@ -8,7 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DevMingleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DevMingleApplication.class, args);
+        try {
+            SpringApplication.run(DevMingleApplication.class, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
