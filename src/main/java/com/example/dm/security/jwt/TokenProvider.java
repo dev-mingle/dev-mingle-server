@@ -77,6 +77,7 @@ public class TokenProvider {
     Map<String,Object> extraClaims = new HashMap<>();
     Claims claims = parseClaims(token);
     extraClaims.put("id", claims.get("id"));
+    extraClaims.put("userProfileId", claims.get("userProfileId"));
     extraClaims.put("password", claims.get("password"));
     extraClaims.put("role", claims.get("role"));
     extraClaims.put("nickname", claims.get("nickname"));
@@ -86,6 +87,7 @@ public class TokenProvider {
   public Map<String,Object> getExtraClaims(LoginUser loginUser){
     Map<String,Object> extraClaims = new HashMap<>();
     extraClaims.put("id", loginUser.getId());
+    extraClaims.put("userProfileId", loginUser.getUserProfileId());
     extraClaims.put("password", loginUser.getPassword());
     extraClaims.put("role", loginUser.getRole());
     extraClaims.put("nickname", loginUser.getNickname());
@@ -132,8 +134,8 @@ public class TokenProvider {
 
     // role 한 개로 적용
     LoginUser loginUser = LoginUser.create(
-        Long.parseLong(claims.get("id").toString()), claims.getSubject(), claims.get("password").toString(),
-        claims.get("role").toString(), claims.get("nickname").toString());
+        Long.parseLong(claims.get("id").toString()), Long.parseLong(claims.get("userProfileId").toString()),
+        claims.getSubject(), claims.get("password").toString(), claims.get("role").toString(), claims.get("nickname").toString());
     return new UsernamePasswordAuthenticationToken(loginUser, "", authorities);
   }
 
