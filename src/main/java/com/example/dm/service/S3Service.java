@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class S3Service {
 
     @Value("${aws-s3.bucket-name}")
-    private String bucketName;
+    private String BUCKET_NAME;
 
     private final AmazonS3 amazonS3Client;
 
@@ -64,7 +64,7 @@ public class S3Service {
             // Generate the pre-signed URL.
             log.debug("Generating pre-signed URL.");
 
-            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, objectKey).withMethod(HttpMethod.PUT).withExpiration(expiration);
+            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(BUCKET_NAME, objectKey).withMethod(HttpMethod.PUT).withExpiration(expiration);
 
             preSignedUrl = amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
 
