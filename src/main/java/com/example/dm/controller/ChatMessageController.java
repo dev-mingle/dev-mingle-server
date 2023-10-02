@@ -46,4 +46,19 @@ public class ChatMessageController {
         template.convertAndSend(SUBSCRIBE_URL + chatCreateDto.getRoomId(), chatMessageGetDto);
 
     }
+
+    @MessageExceptionHandler(MethodArgumentNotValidException.class)
+    @SendTo("/sub/api/v1/chats/error/{roomId}")
+    public StringBuilder handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
+                                                               @Header("Room-id") @DestinationVariable String roomId) {
+        StringBuilder errorMessages = new StringBuilder();
+
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            errorMessages.append(fieldError.getField()).append(":");
+            errorMessages.append(fieldError.getDefaultMessage());
+            errorMessages.append(" ");
+        }
+
+        return errorMessages;
+    }
 }

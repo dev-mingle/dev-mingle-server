@@ -7,7 +7,7 @@ import com.example.dm.dto.chats.ChatRoomDetailDto;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.service.ChatMessageService;
 import com.example.dm.service.ChatRoomService;
-import com.example.dm.dto.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class ChatRoomController extends BaseController {
     private final SimpMessageSendingOperations template;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createRoom(@RequestBody ChatRoomCreateDto chatRoomCreateDto,
+    public ResponseEntity<ApiResponse> createRoom(@RequestBody @Valid ChatRoomCreateDto chatRoomCreateDto,
                                                   @AuthenticationPrincipal LoginUser user) {
         return responseBuilder(chatRoomService.createRoom(chatRoomCreateDto, user), HttpStatus.CREATED);
     }
