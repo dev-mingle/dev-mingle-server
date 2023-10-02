@@ -1,5 +1,6 @@
 package com.example.dm.controller;
 
+import com.example.dm.dto.posts.PostDetailInfoDto;
 import com.example.dm.security.jwt.TokenFilter;
 import com.example.dm.service.PostsService;
 import org.junit.jupiter.api.DisplayName;
@@ -137,4 +138,20 @@ class PostsControllerTest {
                 .andExpect(jsonPath("$.status").value("422"))
                 .andDo(print());
     }
+
+    @Test
+    void findById() throws Exception{
+        // given
+        PostDetailInfoDto dto = PostDetailInfoDto.builder().build();
+        given(postsService.findById(1L)).willReturn(dto);
+
+        // expected
+        mockMvc.perform(get("/api/v1/posts/detail/{postId}", "1")
+                        .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.txid").isNotEmpty())
+                .andExpect(jsonPath("$.status").value("200"))
+                .andDo(print());
+    }
+
 }
