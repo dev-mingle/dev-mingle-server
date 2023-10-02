@@ -2,13 +2,16 @@ package com.example.dm.controller;
 
 import com.example.dm.dto.chats.ChatCreateDto;
 import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.entity.LoginUser;
 import com.example.dm.service.ChatMessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,32 +22,20 @@ public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
 
-    public static final String SUBSCRIBE_URL = "/sub/api/v1/chats/";
-
-    @MessageMapping("/v1/chats/join")
-    public void enterUser(@Payload ChatCreateDto chatCreateDto, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("roomId", chatCreateDto.getRoomId());
-
-        chatCreateDto.setMessage(chatCreateDto.getSender() + " 님이 입장하셨습니다.");
-        processMessage(chatCreateDto);
-    }
+    @Value("${api.path.default}")
+    private String DEFAULT_URL;
 
     // todo: 보낸 회원 검증
-    @MessageMapping("/api/v1/chats/message")
-    public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto) {
-        processMessage(chatCreateDto);
+    @MessageMapping("${api.path.default}/chats/{roomId}/message")
+    public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto,
+                            @DestinationVariable Long roomId,
+                            @AuthenticationPrincipal LoginUser user) {
+        processMessage(chatCreateDto, roomId, user);
     }
 
-    @MessageMapping("/v1/chats/exit")
-    public void exitUser(@Payload ChatCreateDto chatCreateDto) {
-        chatCreateDto.setMessage(chatCreateDto.getSender() + " 님이 퇴장하셨습니다.");
-        processMessage(chatCreateDto);
-    }
-
-    private void processMessage(ChatCreateDto chatCreateDto) {
-        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto);
-        template.convertAndSend(SUBSCRIBE_URL + chatCreateDto.getRoomId(), chatMessageGetDto);
-
+    private void processMessage(ChatCreateDto chatCreateDto, Long roomId, LoginUser user) {
+        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId, user);
+        template.convertAndSend("/sub" + DEFAULT_URL + "/chats/" + roomId, chatMessageGetDto);
     }
 
     @MessageExceptionHandler(MethodArgumentNotValidException.class)

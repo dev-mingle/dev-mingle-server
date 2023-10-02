@@ -20,11 +20,11 @@ public class ChatMessages extends BaseTimeEntity {
 
     private String message;
 
-    public static ChatMessages from(ChatCreateDto chatCreateDto) {
+    public static ChatMessages from(ChatCreateDto chatCreateDto, Long roomId, LoginUser user) {
         return ChatMessages.builder()
                 .message(chatCreateDto.getMessage())
-                .sender(chatCreateDto.getSender())
-                .roomId(chatCreateDto.getRoomId())
+                .sender(user.getNickname())
+                .roomId(roomId)
                 .build();
     }
 }

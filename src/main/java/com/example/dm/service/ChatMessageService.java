@@ -34,8 +34,10 @@ public class ChatMessageService {
         return chatMessagesRepository.findByRoomId(roomId, Sort.by(Sort.Direction.ASC, "createdAt"));
     }
 
-    public ChatMessageGetDto saveMessage(ChatCreateDto chatCreateDto) {
-        ChatMessages chatMessages = ChatMessages.from(chatCreateDto);
+    public ChatMessageGetDto saveMessage(ChatCreateDto chatCreateDto,
+                                         Long roomId,
+                                         LoginUser user) {
+        ChatMessages chatMessages = ChatMessages.from(chatCreateDto, roomId, user);
 
         ChatMessages message = chatMessagesRepository.save(chatMessages);
         return ChatMessageGetDto.from(message);
