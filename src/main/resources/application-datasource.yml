@@ -12,3 +12,17 @@ spring:
     baseline-on-migrate: true
     user: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
+
+  redis:
+    host: ${REDIS_HOST:dev_mingle_redis}
+    port: 6379
+    password: ${REDIS_PASSWORD}
+    ssl: ${REDIS_SSL:false}
+    cache-database: ${REDIS_DATABASE:0}
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 8
+        max-wait: 5000
+        min-idle: 4
+    timeout: 5000
