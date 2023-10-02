@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = {"user_profiles_id", "chat_rooms_id"})})
 @Getter
 @Builder
 @NoArgsConstructor
