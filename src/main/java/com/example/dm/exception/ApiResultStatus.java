@@ -50,7 +50,8 @@ public enum ApiResultStatus {
 
     // 채팅 관련 에러
     ROOM_NOT_FOUND("40410", "채팅방이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
-    USER_NOT_EXIST_ROOM("40411", "채팅방에 존재하지 않은 유저입니다.", HttpStatus.NOT_FOUND);
+    USER_NOT_EXIST_ROOM("40411", "채팅방에 존재하지 않은 유저입니다.", HttpStatus.NOT_FOUND),
+    USER_ALREADY_EXIST_ROOM("40910", "이미 채팅방에 참여한 유저입니다.", HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;
