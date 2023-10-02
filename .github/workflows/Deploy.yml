@@ -1,0 +1,91 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: develop
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 1. Build Gradle & Test
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/develop' }} # main, develop 브랜치가 아닐때만 true
+
+      # 2. Docker Login
+      - name: Docker Login
+        uses: docker/login-action@v3.0.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Docker Build & Push
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.0.0
+
+      - name: Docker Build and push
+        uses: docker/build-push-action@v5.0.0
+        with:
+          build-args: ${{ secrets.SPRING_PROFILE }}
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api
+
+      # 4. Github Actions IP 를 AWS EC2 보안그룹에 추가
+      - name: Get Github Actions IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.EC2_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.EC2_SECRET_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Add Github Actions IP to Security group
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.EC2_SG_ID }} --protocol tcp --port ${{secrets.EC2_SSH_PORT}} --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+      # 5. EC2 SSH 접속 & set .env file & Docker Pull & Docker Run
+      - name: SSH Commands
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_SSH_HOST }}
+          username: ${{ secrets.EC2_SSH_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PEM_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          script_stop: true
+          script: |
+            echo "${{ secrets.ENV_FILE }}" | base64 --decode > .env
+            find .env
+            docker pull ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api:latest
+            sudo docker stop $(sudo docker ps -a -q)
+            docker run -d --restart=always --env-file=.env -p ${{ secrets.APPLICATION_PORT }}:${{ secrets.APPLICATION_PORT }} ${{ secrets.DOCKER_USERNAME }}/dev-mingle-api
+
+      # 6. Github Actions IP 를 EC2 보안그룹에서 삭제
+      - name: Remove Github Actions IP From Security Group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.EC2_SG_ID }} --protocol tcp --port ${{secrets.EC2_SSH_PORT}} --cidr ${{ steps.ip.outputs.ipv4 }}/32
