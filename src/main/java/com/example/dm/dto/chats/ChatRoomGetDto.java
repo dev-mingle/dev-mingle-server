@@ -16,12 +16,15 @@ public class ChatRoomGetDto {
 
     private int capacity;
 
+    private String thumbnailUrl;
+
     public static ChatRoomGetDto from(ChatRooms chatRooms) {
         return ChatRoomGetDto.builder()
                 .roomId(chatRooms.getId())
                 .name(chatRooms.getName())
                 .userCount(chatRooms.getUserCount())
                 .capacity(chatRooms.getCapacity())
+                .thumbnailUrl(chatRooms.getThumbnail() != null ? chatRooms.getThumbnail().getUrl() : null)
                 .build();
     }
 

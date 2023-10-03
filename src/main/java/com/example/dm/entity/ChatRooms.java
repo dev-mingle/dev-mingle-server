@@ -36,6 +36,10 @@ public class ChatRooms extends BaseTimeEntity {
     @OneToMany(mappedBy = "chatRooms", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMembers> chatMembers = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Images thumbnail;
+
     public void plusUserCount() {
         this.userCount++;
     }
@@ -53,12 +57,13 @@ public class ChatRooms extends BaseTimeEntity {
                 .removeIf(chatRoomUserProfiles -> chatRoomUserProfiles.getUserProfiles().getId().equals(userProfileId));
     }
 
-    public static ChatRooms from(ChatRoomCreateDto chatRoomCreateDto, UserProfiles userProfiles) {
+    public static ChatRooms from(ChatRoomCreateDto chatRoomCreateDto, UserProfiles userProfiles, Images images) {
         return ChatRooms.builder()
                 .name(chatRoomCreateDto.getName())
                 .adminUser(userProfiles)
                 .userCount(1)
                 .capacity(chatRoomCreateDto.getCapacity())
+                .thumbnail(images)
                 .build();
     }
 

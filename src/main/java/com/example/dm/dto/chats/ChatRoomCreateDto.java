@@ -15,4 +15,6 @@ public class ChatRoomCreateDto {
 
     @Positive(message = "채팅방 수용 인원은 1명 이상이어야 합니다.")
     private int capacity;
+
+    private String thumbnailUrl;
 }

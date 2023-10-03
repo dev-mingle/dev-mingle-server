@@ -4,10 +4,8 @@ import com.example.dm.dto.chats.ChatRoomCreateDto;
 import com.example.dm.dto.chats.ChatRoomDetailDto;
 import com.example.dm.dto.chats.ChatRoomGetDto;
 import com.example.dm.dto.chats.UserProfileGetDto;
-import com.example.dm.entity.ChatMembers;
-import com.example.dm.entity.ChatRooms;
-import com.example.dm.entity.LoginUser;
-import com.example.dm.entity.UserProfiles;
+import com.example.dm.entity.*;
+import com.example.dm.enums.ImageType;
 import com.example.dm.exception.ApiResultStatus;
 import com.example.dm.exception.BusinessException;
 import com.example.dm.repository.ChatRoomsRepository;
@@ -28,7 +26,8 @@ public class ChatRoomService {
 
     public ChatRoomGetDto createRoom(ChatRoomCreateDto chatRoomCreateDto, LoginUser user) {
         UserProfiles userProfiles = verifyUserProfile(user.getId());
-        ChatRooms chatRooms = ChatRooms.from(chatRoomCreateDto, userProfiles);
+        Images images = Images.create(chatRoomCreateDto.getThumbnailUrl(), ImageType.Chats, null);
+        ChatRooms chatRooms = ChatRooms.from(chatRoomCreateDto, userProfiles, images);
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
 
         chatRooms.addUser(chatMembers);
