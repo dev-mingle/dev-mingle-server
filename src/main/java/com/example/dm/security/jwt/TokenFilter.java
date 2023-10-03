@@ -95,7 +95,7 @@ public class TokenFilter extends OncePerRequestFilter {
     return null;
   }
 
-  public void setSecurityContextHolder(String token) {
+  private void setSecurityContextHolder(String token) {
     Authentication authentication = tokenProvider.getAuthentication(token);
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
