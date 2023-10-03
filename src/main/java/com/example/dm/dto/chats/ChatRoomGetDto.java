@@ -14,11 +14,14 @@ public class ChatRoomGetDto {
 
     private int userCount;
 
+    private int capacity;
+
     public static ChatRoomGetDto from(ChatRooms chatRooms) {
         return ChatRoomGetDto.builder()
                 .roomId(chatRooms.getId())
                 .name(chatRooms.getName())
                 .userCount(chatRooms.getUserCount())
+                .capacity(chatRooms.getCapacity())
                 .build();
     }
 

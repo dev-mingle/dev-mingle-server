@@ -25,6 +25,9 @@ public class ChatRooms extends BaseTimeEntity {
 
     private int userCount;
 
+    @Column
+    private int capacity;
+
     @ManyToOne
     @JoinColumn(name = "admin_user")
     private UserProfiles adminUser;
@@ -55,6 +58,7 @@ public class ChatRooms extends BaseTimeEntity {
                 .name(chatRoomCreateDto.getName())
                 .adminUser(userProfiles)
                 .userCount(1)
+                .capacity(chatRoomCreateDto.getCapacity())
                 .build();
     }
 

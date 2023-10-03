@@ -53,7 +53,6 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatRoomService.findRoomByUser(user.getId()), HttpStatus.OK);
     }
 
-    // todo: 권한 설정
     @GetMapping("/{roomId}")
     public ResponseEntity<ApiResponse> getRoomMessage(@PathVariable Long roomId,
                                                       @AuthenticationPrincipal LoginUser user) {

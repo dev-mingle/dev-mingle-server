@@ -53,6 +53,7 @@ public class ChatRoomService {
 
     public ChatRoomDetailDto enterRoomUser(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
+        if(chatRooms.getCapacity() == chatRooms.getUserCount()) throw new BusinessException(ApiResultStatus.ROOM_FULL);
         UserProfiles userProfiles = verifyUserProfile(user.getId());
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
 
