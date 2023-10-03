@@ -2,6 +2,7 @@ package com.example.dm.service;
 
 import com.example.dm.dto.chats.ChatCreateDto;
 import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.dto.chats.ChatPatchDto;
 import com.example.dm.entity.ChatMessages;
 import com.example.dm.entity.ChatRooms;
 import com.example.dm.entity.LoginUser;
@@ -34,10 +35,8 @@ public class ChatMessageService {
         return chatMessagesRepository.findByRoomId(roomId, Sort.by(Sort.Direction.ASC, "createdAt"));
     }
 
-    public ChatMessageGetDto saveMessage(ChatCreateDto chatCreateDto,
-                                         Long roomId,
-                                         LoginUser user) {
-        ChatMessages chatMessages = ChatMessages.from(chatCreateDto, roomId, user);
+    public ChatMessageGetDto saveMessage(ChatCreateDto chatCreateDto, Long roomId) {
+        ChatMessages chatMessages = ChatMessages.from(chatCreateDto, roomId);
 
         ChatMessages message = chatMessagesRepository.save(chatMessages);
         return ChatMessageGetDto.from(message);

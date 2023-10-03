@@ -13,6 +13,8 @@ public class ChatMessageGetDto {
 
     private String id;
 
+    private Long userProfileId;
+
     private String sender;
 
     private String message;
@@ -26,6 +28,7 @@ public class ChatMessageGetDto {
     public static ChatMessageGetDto from(ChatMessages chatMessages) {
         return ChatMessageGetDto.builder()
                 .id(chatMessages.getId())
+                .userProfileId(chatMessages.getUserProfileId())
                 .sender(chatMessages.getSender())
                 .message(chatMessages.getMessage())
                 .imageUrls(chatMessages.getImageUrls())

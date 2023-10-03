@@ -80,8 +80,8 @@ public class ChatRoomController extends BaseController {
     }
 
     private void processMessage(Long roomId, String message, LoginUser user) {
-        ChatCreateDto chatCreateDto = ChatCreateDto.from(message);
-        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId, user);
+        ChatCreateDto chatCreateDto = ChatCreateDto.from(message, user);
+        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId);
         template.convertAndSend("/sub" + DEFAULT_URL + "/chats/" + roomId, chatMessageGetDto);
     }
 }

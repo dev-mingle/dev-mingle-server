@@ -1,22 +1,29 @@
 package com.example.dm.controller;
 
+import com.example.dm.dto.ApiResponse;
 import com.example.dm.dto.chats.ChatCreateDto;
 import com.example.dm.dto.chats.ChatMessageGetDto;
+import com.example.dm.dto.chats.ChatPatchDto;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.service.ChatMessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ChatMessageController {
+public class ChatMessageController extends BaseController{
 
     private final SimpMessageSendingOperations template;
 
@@ -27,9 +34,8 @@ public class ChatMessageController {
 
     @MessageMapping("${api.path.default}/chats/{roomId}/message")
     public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto,
-                            @DestinationVariable Long roomId,
-                            @AuthenticationPrincipal LoginUser user) {
-        processMessage(chatCreateDto, roomId, user);
+                            @DestinationVariable Long roomId) {
+        processMessage(chatCreateDto, roomId);
     }
 
     @PatchMapping("${api.path.default}/chats/{roomId}/message")
