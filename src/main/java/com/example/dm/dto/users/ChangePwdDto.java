@@ -14,7 +14,7 @@ public class ChangePwdDto {
   @NotBlank
   private String resetPassword;
 
-  @NotBlank
+  @Password
   private String password;
 
 }
