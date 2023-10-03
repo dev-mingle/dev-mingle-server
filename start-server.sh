@@ -4,6 +4,10 @@
 if [[ -f .env ]]; then
   echo "Loading environment variables from .env file"
   source .env
+  export JWT_SECRET=$JWT_SECRET
+  export S3_ACCESS_KEY=$S3_ACCESS_KEY
+  export S3_SECRET_KEY=$S3_SECRET_KEY
+  export S3_BUCKET_NAME=$S3_BUCKET_NAME
 else
   echo "Error: .env file not found"
   exit 1

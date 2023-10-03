@@ -30,4 +30,11 @@ public class BusinessException extends RuntimeException {
         this.message = String.format(apiResultStatus.getMessage(), message);
     }
 
+    public BusinessException(ApiResultStatus apiResultStatus, String message, Throwable cause) {
+        super(cause);
+        this.code = apiResultStatus.getCode();
+        this.message = String.format(apiResultStatus.getMessage(), message);
+        this.httpStatus = apiResultStatus.getHttpStatus();
+        this.description = apiResultStatus.toString();
+    }
 }

@@ -89,3 +89,23 @@ jobs:
     - name: Remove Github Actions IP From Security Group
       run: |
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.EC2_SG_ID }} --protocol tcp --port ${{secrets.EC2_SSH_PORT}} --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+    env:
+      SPRING_PROFILE: ${{ secrets.SPRING_PROFILE }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_SSL: ${{ secrets.REDIS_SSL }}
+      REDIS_DATABASE: ${{ secrets.REDIS_DATABASE }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      MAIL_SECRET: ${{ secrets.MAIL_SECRET }}
+      COLUMN_ENCRYPT: ${{ secrets.COLUMN_ENCRYPT }}
+      S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
