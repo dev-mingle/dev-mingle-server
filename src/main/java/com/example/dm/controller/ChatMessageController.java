@@ -25,7 +25,6 @@ public class ChatMessageController {
     @Value("${api.path.default}")
     private String DEFAULT_URL;
 
-    // todo: 보낸 회원 검증
     @MessageMapping("${api.path.default}/chats/{roomId}/message")
     public void sendMessage(@Payload @Valid ChatCreateDto chatCreateDto,
                             @DestinationVariable Long roomId,

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document
 @Getter
 @Builder
@@ -20,11 +22,14 @@ public class ChatMessages extends BaseTimeEntity {
 
     private String message;
 
+    private List<String> imageUrls;
+
     public static ChatMessages from(ChatCreateDto chatCreateDto, Long roomId, LoginUser user) {
         return ChatMessages.builder()
                 .message(chatCreateDto.getMessage())
                 .sender(user.getNickname())
                 .roomId(roomId)
+                .imageUrls(chatCreateDto.getImageUrls())
                 .build();
     }
 }

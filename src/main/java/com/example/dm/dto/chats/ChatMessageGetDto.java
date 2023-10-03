@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -16,6 +17,8 @@ public class ChatMessageGetDto {
 
     private String message;
 
+    private List<String> imageUrls;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -25,6 +28,7 @@ public class ChatMessageGetDto {
                 .id(chatMessages.getId())
                 .sender(chatMessages.getSender())
                 .message(chatMessages.getMessage())
+                .imageUrls(chatMessages.getImageUrls())
                 .createdAt(chatMessages.getCreatedAt())
                 .updatedAt(chatMessages.getUpdatedAt())
                 .build();
