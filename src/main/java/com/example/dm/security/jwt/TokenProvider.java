@@ -48,8 +48,6 @@ public class TokenProvider {
   @Value("${jwt.refresh.header}")
   private String refreshHeader;
 
-  Map<String,Object> extraClaims;
-
   public TokenProvider(@Value("${jwt.secretKey}") String secretKey) {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -79,6 +77,7 @@ public class TokenProvider {
     Map<String,Object> extraClaims = new HashMap<>();
     Claims claims = parseClaims(token);
     extraClaims.put("id", extractClaim(token, (Function<Claims, String>) claims.get("id")));
+    extraClaims.put("userProfileId", extractClaim(token, (Function<Claims, String>) claims.get("userProfileId")));
     extraClaims.put("password", extractClaim(token, (Function<Claims, String>) claims.get("password")));
     extraClaims.put("role", extractClaim(token, (Function<Claims, String>) claims.get("role")));
     extraClaims.put("nickname", extractClaim(token, (Function<Claims, String>) claims.get("nickname")));
@@ -88,6 +87,7 @@ public class TokenProvider {
   public Map<String,Object> getExtraClaims(LoginUser loginUser){
     Map<String,Object> extraClaims = new HashMap<>();
     extraClaims.put("id", loginUser.getId());
+    extraClaims.put("userProfileId", loginUser.getUserProfileId());
     extraClaims.put("password", loginUser.getPassword());
     extraClaims.put("role", loginUser.getRole());
     extraClaims.put("nickname", loginUser.getNickname());
@@ -134,7 +134,8 @@ public class TokenProvider {
 
     // role 한 개로 적용
     LoginUser loginUser = LoginUser.create(
-        Long.parseLong(claims.get("id").toString()), claims.getSubject(), claims.get("password").toString(),
+        Long.parseLong(claims.get("id").toString()), Long.parseLong(claims.get("userProfileId").toString()),
+        claims.getSubject(), claims.get("password").toString(),
         claims.get("role").toString(), claims.get("nickname").toString());
     return new UsernamePasswordAuthenticationToken(loginUser, "", authorities);
   }
@@ -154,17 +155,17 @@ public class TokenProvider {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+      log.info("유효하지 않은 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("Invalid JWT Token", e);
     } catch (ExpiredJwtException e) {
+      log.info("만료된 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_DATE_EXPIRED);
-      //log.info("Expired JWT Token", e);
     } catch (UnsupportedJwtException e) {
+      log.info("지원하지 않는 JWT 토큰입니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("Unsupported JWT Token", e);
     } catch (IllegalArgumentException e) {
+      log.info("JWT 토큰 값(claims)가 없습니다.", e);
       throw new AuthException(ApiResultStatus.TOKEN_INVALID);
-      //log.info("JWT claims string is empty.", e);
     }
     return true;
   }
