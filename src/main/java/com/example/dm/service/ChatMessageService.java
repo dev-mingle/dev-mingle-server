@@ -43,6 +43,15 @@ public class ChatMessageService {
         return ChatMessageGetDto.from(message);
     }
 
+    public ChatMessageGetDto updateMessage(ChatPatchDto chatPatchDto, LoginUser user) {
+        ChatMessages chatMessages = chatMessagesRepository.findById(chatPatchDto.getMessageId()).orElseThrow(() -> new BusinessException(ApiResultStatus.MESSAGE_NOT_EXIST));
+        if(!chatMessages.getUserProfileId().equals(user.getId())) throw new BusinessException(ApiResultStatus.FORBIDDEN);
+
+        ChatMessages correctMessages = chatMessages.updateMessage(chatPatchDto);
+        ChatMessages savedMessages = chatMessagesRepository.save(correctMessages);
+        return ChatMessageGetDto.from(savedMessages);
+    }
+
     private ChatRooms verifyRoom(Long roomId) {
         return chatRoomsRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }

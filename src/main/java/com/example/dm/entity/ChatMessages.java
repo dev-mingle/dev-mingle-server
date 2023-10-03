@@ -1,6 +1,7 @@
 package com.example.dm.entity;
 
 import com.example.dm.dto.chats.ChatCreateDto;
+import com.example.dm.dto.chats.ChatPatchDto;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,18 +19,26 @@ public class ChatMessages extends BaseTimeEntity {
 
     private Long roomId;
 
+    private Long userProfileId;
+
     private String sender;
 
     private String message;
 
     private List<String> imageUrls;
 
-    public static ChatMessages from(ChatCreateDto chatCreateDto, Long roomId, LoginUser user) {
+    public static ChatMessages from(ChatCreateDto chatCreateDto, Long roomId) {
         return ChatMessages.builder()
                 .message(chatCreateDto.getMessage())
-                .sender(user.getNickname())
+                .userProfileId(chatCreateDto.getUserProfileId())
+                .sender(chatCreateDto.getSender())
                 .roomId(roomId)
                 .imageUrls(chatCreateDto.getImageUrls())
                 .build();
+    }
+
+    public ChatMessages updateMessage(ChatPatchDto chatPatchDto) {
+        this.message = chatPatchDto.getMessage();
+        return this;
     }
 }

@@ -32,8 +32,15 @@ public class ChatMessageController {
         processMessage(chatCreateDto, roomId, user);
     }
 
-    private void processMessage(ChatCreateDto chatCreateDto, Long roomId, LoginUser user) {
-        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId, user);
+    @PatchMapping("${api.path.default}/chats/{roomId}/message")
+    public ResponseEntity<ApiResponse> patchMessage(@PathVariable Long roomId,
+                                                    @RequestBody ChatPatchDto chatPatchDto,
+                                                    @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatMessageService.updateMessage(chatPatchDto, user), HttpStatus.CREATED);
+    }
+
+    private void processMessage(ChatCreateDto chatCreateDto, Long roomId) {
+        ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId);
         template.convertAndSend("/sub" + DEFAULT_URL + "/chats/" + roomId, chatMessageGetDto);
     }
 
