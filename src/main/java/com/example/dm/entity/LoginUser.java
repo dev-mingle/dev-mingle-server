@@ -2,7 +2,6 @@ package com.example.dm.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.AccessLevel;
@@ -20,14 +19,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class LoginUser implements UserDetails {
   @Id
   private Long id;
+  private Long userProfileId;
   private String email;
   private String password;
   private String role;
   private String nickname;
 
-  public static LoginUser create(Long id, String email, String password, String role, String nickname){
+  public static LoginUser create(Long id, Long userProfileId, String email, String password, String role, String nickname){
     LoginUser user = new LoginUser();
     user.setId(id);
+    user.setUserProfileId(userProfileId);
     user.setEmail(email);
     user.setPassword(password);
     user.setRole("ROLE_"+role);

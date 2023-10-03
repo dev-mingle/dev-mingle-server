@@ -55,7 +55,7 @@ public class UserController extends BaseController {
 
   /* 회원정보 수정 */
   @PutMapping("/profile")
-  public ResponseEntity<ApiResponse> getProfiles(@AuthenticationPrincipal LoginUser loginUser,
+  public ResponseEntity<ApiResponse> editProfiles(@AuthenticationPrincipal LoginUser loginUser,
                                                  @RequestBody MypageDto mypageDto,
                                                  HttpServletResponse response){
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(loginUser.getId()).orElseThrow(

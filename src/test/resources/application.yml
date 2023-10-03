@@ -6,7 +6,7 @@ api:
       default: "dm:"
 spring:
   profiles:
-    include: auth
+    include: auth, valid
   h2:
     console:
       enabled: true
