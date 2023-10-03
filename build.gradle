@@ -63,6 +63,9 @@ dependencies {
     // MimeType
     implementation group: 'org.apache.tika', name: 'tika-parsers', version: '1.28.3'
 
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka:2.9.10'
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
