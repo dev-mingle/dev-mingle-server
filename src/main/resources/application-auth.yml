@@ -54,3 +54,5 @@ url:
       - /users
       - /users/otp
       - /users/nickname
+      - /commons/pre-signed-url
+      - /kafka/test
