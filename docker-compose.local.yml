@@ -5,6 +5,14 @@ volumes:
     external: false
   redis-data:
     external: false
+  zookeeper-data:
+    external: false
+  kafka-data:
+    external: false
+
+networks:
+  kafka-net:
+    driver: bridge
 
 services:
   postgres:
@@ -36,11 +44,55 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     restart: always
 
+  zookeeper:
+    container_name: dev_mingle_zookeeper
+    image: zookeeper:3.9.0
+    ports:
+      - "2181:2181"
+    networks:
+      - kafka-net
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    volumes:
+      - zookeeper-data:/data
+    restart: always
+
+  kafka:
+    container_name: dev_mingle_kafka
+    image: bitnami/kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-net
+    hostname: dev_mingle_kafka
+    env_file: .env
+    environment:
+      # KRaft settings
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      # Listeners
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    restart: always
+
   api:
     container_name: dev_mingle_api
     depends_on:
       - postgres
       - redis
+      - kafka
     ports:
       - "8080:8080"
     build:
