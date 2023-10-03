@@ -1,10 +1,7 @@
 package com.example.dm.controller;
 
 import com.example.dm.dto.ApiResponse;
-import com.example.dm.dto.chats.ChatCreateDto;
-import com.example.dm.dto.chats.ChatMessageGetDto;
-import com.example.dm.dto.chats.ChatRoomCreateDto;
-import com.example.dm.dto.chats.ChatRoomDetailDto;
+import com.example.dm.dto.chats.*;
 import com.example.dm.entity.LoginUser;
 import com.example.dm.service.ChatMessageService;
 import com.example.dm.service.ChatRoomService;
@@ -69,9 +66,17 @@ public class ChatRoomController extends BaseController {
 
         return responseBuilder(chatRoomDetailDto, HttpStatus.OK);
     }
+
     @GetMapping("/{roomId}/userlist")
     public ResponseEntity<ApiResponse> getUserList(@PathVariable Long roomId) {
         return responseBuilder(chatRoomService.getRoomUserList(roomId), HttpStatus.OK);
+    }
+
+    @PatchMapping("/{roomId}")
+    public ResponseEntity<ApiResponse> patchRoom(@PathVariable Long roomId,
+                                                 @RequestBody ChatRoomPatchDto chatRoomPatchDto,
+                                                 @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatRoomService.updateRoom(roomId, chatRoomPatchDto, user), HttpStatus.CREATED);
     }
 
     private void processMessage(Long roomId, String message, LoginUser user) {

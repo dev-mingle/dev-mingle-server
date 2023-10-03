@@ -1,9 +1,6 @@
 package com.example.dm.service;
 
-import com.example.dm.dto.chats.ChatRoomCreateDto;
-import com.example.dm.dto.chats.ChatRoomDetailDto;
-import com.example.dm.dto.chats.ChatRoomGetDto;
-import com.example.dm.dto.chats.UserProfileGetDto;
+import com.example.dm.dto.chats.*;
 import com.example.dm.entity.*;
 import com.example.dm.enums.ImageType;
 import com.example.dm.exception.ApiResultStatus;
@@ -78,6 +75,15 @@ public class ChatRoomService {
         return chatRooms.getChatMembers().stream()
                 .map(chatRoomUserProfiles -> UserProfileGetDto.from(chatRoomUserProfiles.getUserProfiles()))
                 .toList();
+    }
+
+    public ChatRoomGetDto updateRoom(Long roomId, ChatRoomPatchDto chatRoomPatchDto, LoginUser user) {
+        ChatRooms chatRooms = verifyRoom(roomId);
+
+        if(!chatRooms.getAdminUser().getId().equals(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
+
+        chatRooms.updateRoom(chatRoomPatchDto);
+        return ChatRoomGetDto.from(chatRooms);
     }
 
     private ChatRooms verifyRoom(Long roomId) {

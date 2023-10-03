@@ -1,6 +1,10 @@
 package com.example.dm.entity;
 
 import com.example.dm.dto.chats.ChatRoomCreateDto;
+import com.example.dm.dto.chats.ChatRoomPatchDto;
+import com.example.dm.enums.ImageType;
+import com.example.dm.exception.ApiResultStatus;
+import com.example.dm.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,6 +69,13 @@ public class ChatRooms extends BaseTimeEntity {
                 .capacity(chatRoomCreateDto.getCapacity())
                 .thumbnail(images)
                 .build();
+    }
+
+    public void updateRoom(ChatRoomPatchDto chatRoomPatchDto) {
+        this.name = chatRoomPatchDto.getName();
+        this.thumbnail = Images.create(chatRoomPatchDto.getThumbnailUrl(), ImageType.Chats, null);
+        if(chatRoomPatchDto.getCapacity() < this.userCount) throw new BusinessException(ApiResultStatus.INVALID_CAPACITY);
+        this.capacity = chatRoomPatchDto.getCapacity();
     }
 
 }
