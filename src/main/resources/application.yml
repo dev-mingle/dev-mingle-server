@@ -4,6 +4,16 @@ server:
 spring:
   profiles:
     include: datasource, auth
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_HOST:dev_mingle_kafka}:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: ${KAFKA_HOST:dev_mingle_kafka}:9092
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
   output:
     ansi:
