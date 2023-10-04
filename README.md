@@ -25,6 +25,7 @@ DevMingle은 위치기반 개발자 커뮤니티 앱입니다. 개발자들은 D
 │   │       ├── application-dev.yml
 │   │       ├── application-local.yml
 │   │       ├── application-prod.yml
+│   │       ├── application-valid.yml
 │   │       ├── application.yml
 │   │       └── db
 │   │           └── migration
@@ -46,28 +47,87 @@ DevMingle은 위치기반 개발자 커뮤니티 앱입니다. 개발자들은 D
 │   │   │           └── devtalk
 │   │   │               ├── DevTalkApplication.java
 │   │   │               ├── controller
+│   │   │               │   ├── AuthController.java
 │   │   │               │   ├── BaseController.java
-│   │   │               │   └── CommonController.java
+│   │   │               │   ├── CommonController.java
+│   │   │               │   ├── PostController.java
+│   │   │               │   └── FollowController.java
 │   │   │               ├── dto
+│   │   │               │   ├── commons
+│   │   │               │   |   └── PreSignedUrlDto.java
+│   │   │               │   ├── follows
+│   │   │               │   |   ├── TargetUserInfoDto.java
+│   │   │               │   |   ├── FollowAddDto.java
+│   │   │               │   |   └── FollowInfoDto.java
+│   │   │               │   ├── posts
+│   │   │               │   |   ├── PostListDto.java
+│   │   │               │   |   └── PostListInfoDto.java
+│   │   │               │   ├── users
+│   │   │               │   |   ├── ChangePwdDto.java
+│   │   │               │   |   ├── LoginDto.java
+│   │   │               │   |   ├── MypageDto.java
+│   │   │               │   |   ├── SignupUserProfiles.java
+│   │   │               │   |   ├── SignupUserProfilesResponse.java
+│   │   │               │   |   └── UserProfilesResponse.java
 │   │   │               │   ├── ApiResponse.java
 │   │   │               │   └── ErrorResponse.java
 │   │   │               ├── entity
-│   │   │               │   └── BaseTimeEntity.java
+│   │   │               │   ├── BaseTimeEntity.java
+│   │   │               │   ├── Categories.java
+│   │   │               │   ├── DeletedEntity.java
+│   │   │               │   ├── Fllows.java
+│   │   │               │   ├── Images.java
+│   │   │               │   ├── LoginUser.java
+│   │   │               │   ├── Posts.java
+│   │   │               │   ├── UserProfiles.java
+│   │   │               │   └── Users.java
+│   │   │               ├── enums
+│   │   │               │   ├── ImageType.java
+│   │   │               │   └── OrderType.java
 │   │   │               ├── exception
 │   │   │               │   ├── ApiResultStatus.java
+│   │   │               │   ├── AuthException.java
+│   │   │               │   ├── BadApiRequestException.java
 │   │   │               │   ├── BadRequestException.java
 │   │   │               │   ├── BusinessException.java
+│   │   │               │   ├── CommonException.java
+│   │   │               │   ├── ForbiddenException.java
+│   │   │               │   ├── FollowException.java
 │   │   │               │   ├── ForbiddenException.java
 │   │   │               │   ├── GlobalExceptionHandler.java
 │   │   │               │   └── UnauthorizedException.java
 │   │   │               ├── repository
+│   │   │               │   ├── FollowRepository.java
+│   │   │               │   ├── PostsJpaRepository.java
+│   │   │               │   ├── PostsRepository.java
+│   │   │               │   ├── PostsRepositoryImpl.java
+│   │   │               │   ├── UserProfileRepository.java
+│   │   │               │   └── UsersRepository.java
 │   │   │               ├── security
 │   │   │               │   ├── CustomEntryPoint.java
 │   │   │               │   └── SecurityConfig.java
+│   │   │               ├── resolver
+│   │   │               │   └── ApiResponseResolver.java
+│   │   │               ├── security
+│   │   │               │   ├── jwt
+|   │   │               │   |   ├──TokenFilter.java
+|   │   │               │   |   └──TokenProvider.java
+│   │   │               │   ├── ColumnEncryptor.java
+│   │   │               │   └── PermitUrlProperties.java
 │   │   │               ├── service
+│   │   │               │   ├── AuthService.java
+│   │   │               │   ├── FollowService.java
+│   │   │               │   ├── PostService.java
+│   │   │               │   ├── PostServiceImpl.java
+│   │   │               │   ├── S3Service.java
+│   │   │               │   └── UserService.java
 │   │   │               └── util
+│   │   │                   ├── MailSender.java
+│   │   │                   ├── PasswordGenerator.java
+│   │   │                   ├── RedisUtil.java
 │   │   │                   └── TxidGenerator.java
 │   │   └── resources
+│   │       ├── application-auth.yml
 │   │       ├── application-datasource.yml
 │   │       ├── application-dev.yml
 │   │       ├── application-local.yml
