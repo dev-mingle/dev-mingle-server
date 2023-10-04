@@ -13,8 +13,8 @@ import java.lang.annotation.*;
 public @interface ApiResponseBody {
 
     @AliasFor(annotation = ResponseStatus.class)
-    HttpStatus value() default HttpStatus.INTERNAL_SERVER_ERROR;
+    HttpStatus value() default HttpStatus.OK;
 
     @AliasFor(annotation = ResponseStatus.class)
-    HttpStatus code() default HttpStatus.INTERNAL_SERVER_ERROR;
+    HttpStatus code() default HttpStatus.OK;
 }

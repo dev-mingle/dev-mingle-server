@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: datasource, auth
+    include: datasource, auth, valid
   kafka:
     producer:
       bootstrap-servers: ${KAFKA_HOST:dev_mingle_kafka}:9092
