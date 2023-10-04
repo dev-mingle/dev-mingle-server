@@ -54,21 +54,21 @@ DevMingle은 위치기반 개발자 커뮤니티 앱입니다. 개발자들은 D
 │   │   │               │   └── FollowController.java
 │   │   │               ├── dto
 │   │   │               │   ├── commons
-│   │   │               │   |   └── PreSignedUrlDto.java
+│   │   │               │   │   └── PreSignedUrlDto.java
 │   │   │               │   ├── follows
-│   │   │               │   |   ├── TargetUserInfoDto.java
-│   │   │               │   |   ├── FollowAddDto.java
-│   │   │               │   |   └── FollowInfoDto.java
+│   │   │               │   │   ├── TargetUserInfoDto.java
+│   │   │               │   │   ├── FollowAddDto.java
+│   │   │               │   │   └── FollowInfoDto.java
 │   │   │               │   ├── posts
-│   │   │               │   |   ├── PostListDto.java
-│   │   │               │   |   └── PostListInfoDto.java
+│   │   │               │   │   ├── PostListDto.java
+│   │   │               │   │   └── PostListInfoDto.java
 │   │   │               │   ├── users
-│   │   │               │   |   ├── ChangePwdDto.java
-│   │   │               │   |   ├── LoginDto.java
-│   │   │               │   |   ├── MypageDto.java
-│   │   │               │   |   ├── SignupUserProfiles.java
-│   │   │               │   |   ├── SignupUserProfilesResponse.java
-│   │   │               │   |   └── UserProfilesResponse.java
+│   │   │               │   │   ├── ChangePwdDto.java
+│   │   │               │   │   ├── LoginDto.java
+│   │   │               │   │   ├── MypageDto.java
+│   │   │               │   │   ├── SignupUserProfiles.java
+│   │   │               │   │   ├── SignupUserProfilesResponse.java
+│   │   │               │   │   └── UserProfilesResponse.java
 │   │   │               │   ├── ApiResponse.java
 │   │   │               │   └── ErrorResponse.java
 │   │   │               ├── entity
@@ -110,8 +110,8 @@ DevMingle은 위치기반 개발자 커뮤니티 앱입니다. 개발자들은 D
 │   │   │               │   └── ApiResponseResolver.java
 │   │   │               ├── security
 │   │   │               │   ├── jwt
-|   │   │               │   |   ├──TokenFilter.java
-|   │   │               │   |   └──TokenProvider.java
+│   │   │               │   │   ├──TokenFilter.java
+│   │   │               │   │   └──TokenProvider.java
 │   │   │               │   ├── ColumnEncryptor.java
 │   │   │               │   └── PermitUrlProperties.java
 │   │   │               ├── service
