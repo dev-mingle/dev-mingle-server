@@ -10,5 +10,5 @@ import java.util.List;
 public interface ImagesRepository extends JpaRepository<Images, Long> {
 
     @Query("select i from Images i where i.referenceId = :referenceId and i.type = :type")
-    List<Images> findImages(Long referenceId, ImageType type);
+    List<Images> findByReferenceIdAndType(Long referenceId, ImageType type);
 }

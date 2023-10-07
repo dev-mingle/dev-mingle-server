@@ -19,7 +19,7 @@ public class ImagesServiceImpl implements ImagesService{
     @Transactional(readOnly = true)
     @Override
     public List<Images> findByReferenceId(Long referenceId, ImageType imageType) {
-        return imagesRepository.findImages(referenceId, imageType);
+        return imagesRepository.findByReferenceIdAndType(referenceId, imageType);
     }
 
     @Override
