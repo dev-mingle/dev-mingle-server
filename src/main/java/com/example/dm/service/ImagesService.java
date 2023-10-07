@@ -10,5 +10,5 @@ public interface ImagesService {
 
     void saveAll(List<Images> imagesList);
 
-    void deleteAll(Long referenceId, ImageType imageType);
+    void deleteAll(List<Images> imagesList);
 }

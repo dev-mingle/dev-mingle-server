@@ -25,14 +25,16 @@ public class ImagesServiceImpl implements ImagesService{
     @Override
     public void saveAll(List<Images> imagesList) {
         if (imagesList == null || imagesList.isEmpty()) {
-            throw new BadApiRequestException("Image entities is a required value");
+            throw new BadApiRequestException("Image is a required value");
         }
         imagesRepository.saveAll(imagesList);
     }
 
     @Override
-    public void deleteAll(Long referenceId, ImageType imageType) {
-        List<Images> images = findByReferenceId(referenceId, imageType);
-        imagesRepository.deleteAll(images);
+    public void deleteAll(List<Images> imagesList) {
+        if (imagesList == null || imagesList.isEmpty()) {
+            throw new BadApiRequestException("Image is a required value");
+        }
+        imagesRepository.deleteAll(imagesList);
     }
 }
