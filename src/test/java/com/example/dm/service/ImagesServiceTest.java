@@ -22,7 +22,7 @@ class ImagesServiceTest {
         // expected
         Assertions.assertThatThrownBy(() -> imagesService.saveAll(null))
                 .isInstanceOf(BadApiRequestException.class)
-                .hasMessage("잘못된 요청입니다. [Image entities is a required value]");
+                .hasMessage("잘못된 요청입니다. [Image is a required value]");
 
     }
 
@@ -32,7 +32,27 @@ class ImagesServiceTest {
         // expected
         Assertions.assertThatThrownBy(() -> imagesService.saveAll(List.of()))
                 .isInstanceOf(BadApiRequestException.class)
-                .hasMessage("잘못된 요청입니다. [Image entities is a required value]");
+                .hasMessage("잘못된 요청입니다. [Image is a required value]");
+
+    }
+
+    @DisplayName("이미지 삭제할 때 엔티티 리스트가 널이면 예외 발생")
+    @Test
+    void deleteAll_images_null() {
+        // expected
+        Assertions.assertThatThrownBy(() -> imagesService.deleteAll(null))
+                .isInstanceOf(BadApiRequestException.class)
+                .hasMessage("잘못된 요청입니다. [Image is a required value]");
+
+    }
+
+    @DisplayName("이미지 삭제할 때 엔티티 리스트가 비어있이면 예외 발생")
+    @Test
+    void deleteAll_images_empty() {
+        // expected
+        Assertions.assertThatThrownBy(() -> imagesService.deleteAll(List.of()))
+                .isInstanceOf(BadApiRequestException.class)
+                .hasMessage("잘못된 요청입니다. [Image is a required value]");
 
     }
 }
