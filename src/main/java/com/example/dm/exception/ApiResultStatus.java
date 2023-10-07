@@ -52,7 +52,10 @@ public enum ApiResultStatus {
     ROOM_NOT_FOUND("40410", "채팅방이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     USER_NOT_EXIST_ROOM("40411", "채팅방에 존재하지 않은 유저입니다.", HttpStatus.NOT_FOUND),
     USER_ALREADY_EXIST_ROOM("40910", "이미 채팅방에 참여한 유저입니다.", HttpStatus.CONFLICT),
-    ROOM_FULL("42912", "채팅방 정원을 초과하였습니다.", HttpStatus.TOO_MANY_REQUESTS);
+    ROOM_FULL("42912", "채팅방 정원을 초과하였습니다.", HttpStatus.TOO_MANY_REQUESTS),
+    USER_NOT_ADMIN("40310", "채팅방 관리자 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    INVALID_CAPACITY("40010", "채팅방 정원은 현재 인원보다 같거나 많아야 합니다.", HttpStatus.BAD_REQUEST),
+    MESSAGE_NOT_EXIST("40412", "메시지가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;
     private final String message;
