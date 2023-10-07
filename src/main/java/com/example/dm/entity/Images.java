@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.List;
+
 @Entity
 @Table(name = "images")
 @Getter
@@ -29,5 +31,11 @@ public class Images extends DeletedEntity {
         images.setType(type);
         images.setReferenceId(referenceId);
         return images;
+    }
+
+    public static List<Images> create(List<String> urlList, ImageType type, Long referenceId) {
+        return urlList.stream()
+                .map(url -> create(url, type, referenceId))
+                .toList();
     }
 }

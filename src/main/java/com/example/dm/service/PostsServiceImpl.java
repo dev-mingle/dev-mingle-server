@@ -3,7 +3,7 @@ package com.example.dm.service;
 import com.example.dm.dto.posts.PostDetailInfoDto;
 import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
-import com.example.dm.repository.ImagesRepository;
+import com.example.dm.enums.ImageType;
 import com.example.dm.repository.PostsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import java.util.List;
 class PostsServiceImpl implements PostsService {
 
     private final PostsRepository postsRepository;
-    private final ImagesRepository imagesRepository;
+    private final ImagesService imagesService;
 
     // 0.01(degrees)는 약 1.11km(distance)
     private static final double DISTANCE = 0.03;
@@ -53,7 +53,7 @@ class PostsServiceImpl implements PostsService {
     @Override
     public PostDetailInfoDto findById(Long postsId) {
         Posts posts = postsRepository.getPosts(postsId);
-        List<Images> postsImages = imagesRepository.findPostsImages(postsId);
+        List<Images> postsImages = imagesService.findByReferenceId(postsId, ImageType.Posts);
         return PostDetailInfoDto.convertPostsImages(posts, postsImages);
     }
 }
