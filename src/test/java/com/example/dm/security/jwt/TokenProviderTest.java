@@ -43,6 +43,7 @@ class TokenProviderTest {
 
   private LoginUser loginUser;
   private final Long ID = 1L;
+  private final Long USERPROFILES_ID = 1L;
   private final String EMAIL = "token@test.com";
   private final String PASSWORD = "password";
   private final String ROLE = "USER";
@@ -50,7 +51,7 @@ class TokenProviderTest {
 
   @BeforeEach
   void setUp(){
-    loginUser = LoginUser.create(ID, EMAIL, PASSWORD, ROLE, NICKNAME);
+    loginUser = LoginUser.create(ID, USERPROFILES_ID,EMAIL, PASSWORD, ROLE, NICKNAME);
   }
 
   @Test
