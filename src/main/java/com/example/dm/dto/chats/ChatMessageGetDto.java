@@ -25,6 +25,8 @@ public class ChatMessageGetDto {
 
     private LocalDateTime updatedAt;
 
+    private boolean isDeleted;
+
     public static ChatMessageGetDto from(ChatMessages chatMessages) {
         return ChatMessageGetDto.builder()
                 .id(chatMessages.getId())
@@ -34,6 +36,7 @@ public class ChatMessageGetDto {
                 .imageUrls(chatMessages.getImageUrls())
                 .createdAt(chatMessages.getCreatedAt())
                 .updatedAt(chatMessages.getUpdatedAt())
+                .isDeleted(chatMessages.isDeleted())
                 .build();
     }
 }

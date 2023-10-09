@@ -12,7 +12,7 @@ import java.util.List;
 @Document
 @Getter
 @Builder
-public class ChatMessages extends BaseTimeEntity {
+public class ChatMessages extends DeletedEntity {
 
     @Id
     private String id;
@@ -44,5 +44,6 @@ public class ChatMessages extends BaseTimeEntity {
 
     public void deleteMessage() {
         this.message = "삭제된 메시지입니다.";
+        super.delete();
     }
 }
