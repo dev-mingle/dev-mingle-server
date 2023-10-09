@@ -41,4 +41,8 @@ public class ChatMessages extends BaseTimeEntity {
         this.message = chatPatchDto.getMessage();
         return this;
     }
+
+    public void deleteMessage() {
+        this.message = "삭제된 메시지입니다.";
+    }
 }

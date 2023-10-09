@@ -51,6 +51,15 @@ public class ChatMessageService {
         return ChatMessageGetDto.from(savedMessages);
     }
 
+    public ChatMessageGetDto deleteMessage(String messageId, LoginUser user) {
+        ChatMessages chatMessages = chatMessagesRepository.findById(messageId).orElseThrow(() -> new BusinessException(ApiResultStatus.MESSAGE_NOT_EXIST));
+        if(!chatMessages.getUserProfileId().equals(user.getId())) throw new BusinessException(ApiResultStatus.FORBIDDEN);
+
+        chatMessages.deleteMessage();
+        ChatMessages deleteMessage = chatMessagesRepository.save(chatMessages);
+        return ChatMessageGetDto.from(deleteMessage);
+    }
+
     private ChatRooms verifyRoom(Long roomId) {
         return chatRoomsRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }

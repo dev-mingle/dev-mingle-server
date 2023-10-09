@@ -16,10 +16,7 @@ import org.springframework.messaging.handler.annotation.support.MethodArgumentNo
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +40,13 @@ public class ChatMessageController extends BaseController{
                                                     @RequestBody ChatPatchDto chatPatchDto,
                                                     @AuthenticationPrincipal LoginUser user) {
         return responseBuilder(chatMessageService.updateMessage(chatPatchDto, user), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("${api.path.default}/chats/{roomId}/message/{messageId}")
+    public ResponseEntity<ApiResponse> deleteMessage(@PathVariable Long roomId,
+                                                     @PathVariable String messageId,
+                                                     @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatMessageService.deleteMessage(messageId, user), HttpStatus.NO_CONTENT);
     }
 
     private void processMessage(ChatCreateDto chatCreateDto, Long roomId) {
