@@ -79,7 +79,14 @@ public class ChatRoomController extends BaseController {
         return responseBuilder(chatRoomService.updateRoom(roomId, chatRoomPatchDto, user), HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<ApiResponse> deleteRoom(@PathVariable Long roomId,
+                                                  @AuthenticationPrincipal LoginUser user) {
+        return responseBuilder(chatRoomService.deleteRoom(roomId, user), HttpStatus.NO_CONTENT);
+    }
+
     private void processMessage(Long roomId, String message, LoginUser user) {
+
         ChatCreateDto chatCreateDto = ChatCreateDto.from(message, user);
         ChatMessageGetDto chatMessageGetDto = chatMessageService.saveMessage(chatCreateDto, roomId);
         template.convertAndSend("/sub" + DEFAULT_URL + "/chats/" + roomId, chatMessageGetDto);

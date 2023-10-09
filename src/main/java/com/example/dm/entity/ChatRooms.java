@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatRooms extends BaseTimeEntity {
+public class ChatRooms extends DeletedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -86,6 +86,15 @@ public class ChatRoomService {
         return ChatRoomGetDto.from(chatRooms);
     }
 
+    public ChatRoomGetDto deleteRoom(Long roomId, LoginUser user) {
+        ChatRooms chatRooms = verifyRoom(roomId);
+
+        if(!chatRooms.getAdminUser().getId().equals(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
+
+        chatRooms.delete();
+        return ChatRoomGetDto.from(chatRooms);
+    }
+
     private ChatRooms verifyRoom(Long roomId) {
         return chatRoomsRepository.findById(roomId).orElseThrow(() -> new BusinessException(ApiResultStatus.ROOM_NOT_FOUND));
     }

@@ -18,6 +18,8 @@ public class ChatRoomGetDto {
 
     private String thumbnailUrl;
 
+    private boolean isDeleted;
+
     public static ChatRoomGetDto from(ChatRooms chatRooms) {
         return ChatRoomGetDto.builder()
                 .roomId(chatRooms.getId())
@@ -25,6 +27,7 @@ public class ChatRoomGetDto {
                 .userCount(chatRooms.getUserCount())
                 .capacity(chatRooms.getCapacity())
                 .thumbnailUrl(chatRooms.getThumbnail() != null ? chatRooms.getThumbnail().getUrl() : null)
+                .isDeleted(chatRooms.isDeleted())
                 .build();
     }
 
