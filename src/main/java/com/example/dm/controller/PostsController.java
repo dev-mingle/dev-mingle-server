@@ -1,6 +1,7 @@
 package com.example.dm.controller;
 
 import com.example.dm.annotation.ApiResponseBody;
+import com.example.dm.dto.posts.PostDetailInfoDto;
 import com.example.dm.dto.posts.PostListDto;
 import com.example.dm.dto.posts.PostListInfoDto;
 import com.example.dm.service.PostsService;
@@ -25,5 +26,10 @@ class PostsController{
     Page<PostListInfoDto> findAll(@Validated PostListDto postListDto, Pageable pageable) {
         return postsService.findAll(postListDto.categoryId(), postListDto.search(), postListDto.conditions(), postListDto.location(), pageable)
                 .map(PostListInfoDto::convertPosts);
+    }
+
+    @GetMapping("/detail/{postsId}")
+    PostDetailInfoDto findById(@PathVariable Long postsId) {
+        return postsService.findById(postsId);
     }
 }

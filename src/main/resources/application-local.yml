@@ -12,6 +12,8 @@ spring:
         highlight_sql: true # 색 추가
         use_sql_comments: true # jpql 추가
         default_batch_fetch_size: 100
+        jdbc:
+          batch_size: 10
     generate-ddl: false
     open-in-view: false
 

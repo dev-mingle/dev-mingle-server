@@ -4,7 +4,6 @@ import com.example.dm.aspect.CustomEntryPoint;
 import com.example.dm.security.PermitUrlProperties;
 import com.example.dm.security.jwt.TokenFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -22,10 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Value("${api.path.default}")
-    private String API_URL_PREFIX;
-
     private final PermitUrlProperties urlProperties;
     private final CustomEntryPoint customEntryPoint;
     private final TokenFilter tokenFilter;

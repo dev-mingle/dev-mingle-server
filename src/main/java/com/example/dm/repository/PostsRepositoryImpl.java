@@ -1,6 +1,7 @@
 package com.example.dm.repository;
 
 import com.example.dm.entity.Posts;
+import com.example.dm.exception.BadApiRequestException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import java.util.List;
 class PostsRepositoryImpl implements PostsRepository{
 
     private final EntityManager em;
+
+    private final PostsJpaRepository postsJpaRepository;
 
     @Override
     public Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, double distance, Pageable pageable) {
@@ -103,5 +106,10 @@ class PostsRepositoryImpl implements PostsRepository{
                 .getResultList();
 
         return PageableExecutionUtils.getPage(posts, pageable, countQuery::getSingleResult);
+    }
+
+    @Override
+    public Posts getPosts(Long postsId) {
+        return postsJpaRepository.findById(postsId).orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
     }
 }

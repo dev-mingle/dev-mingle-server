@@ -25,7 +25,8 @@ public class AuthService implements UserDetailsService {
   public LoginUser loadUserByUsername(String username) throws UsernameNotFoundException {
     Users users = usersRepository.findByEmailAndIsDeletedIsFalse(username).orElseThrow();
     UserProfiles userProfiles = userProfileRepository.findByUsers_IdAndIsDeletedIsFalse(users.getId()).orElseThrow();
-    return LoginUser.create(users.getId(), users.getEmail(), users.getPassword(), users.getRole(), userProfiles.getNickname());
+    return LoginUser.create(users.getId(), userProfiles.getId(), users.getEmail(),
+        users.getPassword(), users.getRole(), userProfiles.getNickname());
   }
 
   /* token context 설정 (유저정보 변경시에도 적용) */
