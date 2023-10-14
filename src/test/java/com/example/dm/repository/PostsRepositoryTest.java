@@ -1,6 +1,7 @@
 package com.example.dm.repository;
 
 import com.example.dm.entity.Posts;
+import com.example.dm.exception.BadApiRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 @Sql("/sql/post/posts_test_data.sql")
 @Import(PostsRepositoryImpl.class)
-class PostsRepositoryImplTest {
+class PostsRepositoryTest {
 
     @Autowired
     private PostsRepository postsRepository;
@@ -114,5 +115,23 @@ class PostsRepositoryImplTest {
         // when
         assertThatThrownBy(() -> postsRepository.findAll(-1L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, pageRequest))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("게시물 조회시 id에 해당하는 게시물이 없으면 에러 발생")
+    @Test
+    void getPosts() {
+        // expected
+        assertThatThrownBy(() -> postsRepository.getPosts(100L))
+                .isInstanceOf(BadApiRequestException.class)
+                .hasMessage("잘못된 요청입니다. [100: This post doesn't exist]");
+    }
+
+    @DisplayName("게시물 조회(락)시 id에 해당하는 게시물이 없으면 에러 발생")
+    @Test
+    void getPostsWithOptimisticLock() {
+        // expected
+        assertThatThrownBy(() -> postsRepository.getPostsWithOptimisticLock(100L))
+                .isInstanceOf(BadApiRequestException.class)
+                .hasMessage("잘못된 요청입니다. [100: This post doesn't exist]");
     }
 }
