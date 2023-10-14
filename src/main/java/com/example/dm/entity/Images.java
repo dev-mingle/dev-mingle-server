@@ -10,7 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @Setter
 @DynamicInsert
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Images extends DeletedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

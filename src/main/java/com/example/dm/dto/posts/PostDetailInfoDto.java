@@ -1,9 +1,8 @@
 package com.example.dm.dto.posts;
 
-import com.example.dm.entity.Categories;
+import com.example.dm.dto.images.ImagesDto;
 import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
-import com.example.dm.entity.UserProfiles;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,9 +24,13 @@ public class PostDetailInfoDto {
     private boolean hasChat;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<String> images;
+    private List<ImagesDto> images;
 
-    public static PostDetailInfoDto convertPosts(Posts posts, List<String> images) {
+    public static PostDetailInfoDto convertPosts(Posts posts, List<Images> images) {
+        List<ImagesDto> imagesDtoList = images.stream()
+                .map(ImagesDto::convertFromImages)
+                .toList();
+
         return PostDetailInfoDto.builder()
                 .id(posts.getId())
                 .userProfileId(posts.getUserProfile().getId())
@@ -41,14 +44,7 @@ public class PostDetailInfoDto {
                 .hasChat(posts.isHasChat())
                 .createdAt(posts.getCreatedAt())
                 .updatedAt(posts.getUpdatedAt())
-                .images(images)
+                .images(imagesDtoList)
                 .build();
-    }
-
-    public static PostDetailInfoDto convertPostsImages(Posts posts, List<Images> images) {
-        List<String> imagesList = images.stream()
-                .map(Images::getUrl)
-                .toList();
-        return convertPosts(posts, imagesList);
     }
 }

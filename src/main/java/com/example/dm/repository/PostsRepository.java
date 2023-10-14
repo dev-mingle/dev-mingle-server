@@ -9,4 +9,6 @@ public interface PostsRepository {
     Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, double distance, Pageable pageable);
 
     Posts getPosts(Long postsId);
+
+    Posts getPostsWithOptimisticLock(Long postsId);
 }

@@ -1,5 +1,6 @@
 package com.example.dm.service;
 
+import com.example.dm.annotation.UpdateRetry;
 import com.example.dm.dto.posts.PostDetailInfoDto;
 import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
@@ -13,7 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,10 +51,20 @@ class PostsServiceImpl implements PostsService {
         return postsRepository.findAll(categoryId, search, conditions, location, DISTANCE, pageable);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PostDetailInfoDto findById(Long postsId) {
         Posts posts = postsRepository.getPosts(postsId);
-        List<Images> postsImages = imagesService.findByReferenceId(postsId, ImageType.Posts);
-        return PostDetailInfoDto.convertPostsImages(posts, postsImages);
+        List<Images> images = imagesService.findAllByReferenceIdAndType(postsId, ImageType.Posts);
+        return PostDetailInfoDto.convertPosts(posts, images);
+    }
+
+    @UpdateRetry
+    @Override
+    public Long update(Long postsId, Posts posts, List<Images> images) {
+        Posts findPosts = postsRepository.getPostsWithOptimisticLock(postsId);
+        findPosts.change(posts);
+        imagesService.update(postsId, ImageType.Posts, images);
+        return postsId;
     }
 }

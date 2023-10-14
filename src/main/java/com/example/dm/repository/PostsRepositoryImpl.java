@@ -110,6 +110,13 @@ class PostsRepositoryImpl implements PostsRepository{
 
     @Override
     public Posts getPosts(Long postsId) {
-        return postsJpaRepository.findById(postsId).orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
+        return postsJpaRepository.findByIdAndIsDeletedFalse(postsId)
+                .orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
+    }
+
+    @Override
+    public Posts getPostsWithOptimisticLock(Long postsId) {
+        return postsJpaRepository.findByIdWithOptimisticLock(postsId)
+                .orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
     }
 }
