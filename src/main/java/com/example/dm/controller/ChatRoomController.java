@@ -47,7 +47,7 @@ public class ChatRoomController extends BaseController {
 
     @GetMapping("/user/rooms")
     public ResponseEntity<ApiResponse> getRoomsByUserProfileId(@AuthenticationPrincipal LoginUser user) {
-        return responseBuilder(chatRoomService.findRoomByUser(user.getId()), HttpStatus.OK);
+        return responseBuilder(chatRoomService.findRoomByUser(user.getUserProfileId()), HttpStatus.OK);
     }
 
     @GetMapping("/{roomId}")

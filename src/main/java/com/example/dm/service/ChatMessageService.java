@@ -65,6 +65,6 @@ public class ChatMessageService {
     }
 
     private boolean verifyJoinUser(LoginUser user, ChatRooms chatRooms) {
-        return chatRooms.getChatMembers().stream().anyMatch(members -> members.getUserProfiles().getId().equals(user.getId()));
+        return chatRooms.getChatMembers().stream().anyMatch(members -> members.getUserProfiles().getId().equals(user.getUserProfileId()));
     }
 }

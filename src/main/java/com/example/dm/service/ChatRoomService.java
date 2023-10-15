@@ -22,7 +22,7 @@ public class ChatRoomService {
     private final UserProfileRepository userProfileRepository;
 
     public ChatRoomGetDto createRoom(ChatRoomCreateDto chatRoomCreateDto, LoginUser user) {
-        UserProfiles userProfiles = verifyUserProfile(user.getId());
+        UserProfiles userProfiles = verifyUserProfile(user.getUserProfileId());
         Images images = Images.create(chatRoomCreateDto.getThumbnailUrl(), ImageType.Chats, null);
         ChatRooms chatRooms = ChatRooms.from(chatRoomCreateDto, userProfiles, images);
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
@@ -50,7 +50,7 @@ public class ChatRoomService {
     public ChatRoomDetailDto enterRoomUser(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
         if(chatRooms.getCapacity() == chatRooms.getUserCount()) throw new BusinessException(ApiResultStatus.ROOM_FULL);
-        UserProfiles userProfiles = verifyUserProfile(user.getId());
+        UserProfiles userProfiles = verifyUserProfile(user.getUserProfileId());
         ChatMembers chatMembers = ChatMembers.from(chatRooms, userProfiles);
 
         chatRooms.addUser(chatMembers);
@@ -63,7 +63,7 @@ public class ChatRoomService {
     public ChatRoomDetailDto exitRoomUser(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
 
-        if(!chatRooms.removeUser(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
+        if(!chatRooms.removeUser(user.getUserProfileId())) throw new BusinessException(ApiResultStatus.USER_NOT_EXIST_ROOM);
         chatRooms.minusUserCount();
 
         return ChatRoomDetailDto.from(chatRooms, chatRooms.getAdminUser(), user);
@@ -80,7 +80,7 @@ public class ChatRoomService {
     public ChatRoomGetDto updateRoom(Long roomId, ChatRoomPatchDto chatRoomPatchDto, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
 
-        if(!chatRooms.getAdminUser().getId().equals(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
+        if(!chatRooms.getAdminUser().getId().equals(user.getUserProfileId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
 
         chatRooms.updateRoom(chatRoomPatchDto);
         return ChatRoomGetDto.from(chatRooms);
@@ -89,7 +89,7 @@ public class ChatRoomService {
     public ChatRoomGetDto deleteRoom(Long roomId, LoginUser user) {
         ChatRooms chatRooms = verifyRoom(roomId);
 
-        if(!chatRooms.getAdminUser().getId().equals(user.getId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
+        if(!chatRooms.getAdminUser().getId().equals(user.getUserProfileId())) throw new BusinessException(ApiResultStatus.USER_NOT_ADMIN);
 
         chatRooms.delete();
         return ChatRoomGetDto.from(chatRooms);
