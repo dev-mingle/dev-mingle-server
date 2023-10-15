@@ -9,6 +9,9 @@ spring:
     ansi:
       enabled: detect # 콘솔 로그 색상 출력
 
+main:
+    allow-bean-definition-overriding: true
+
 api:
   path:
     default: /api/v1

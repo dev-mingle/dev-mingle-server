@@ -46,9 +46,11 @@ url:
     get:
       - /
       - /actuator/health
+      - /ws-stomp
     prefixGet:
       - /categories
       - /posts/**
+      - /chats/*/userlist
     prefixPost:
       - /users/login
       - /users
