@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -55,6 +56,9 @@ public class UserProfiles extends DeletedEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "targetUserProfiles", cascade = CascadeType.ALL)
     private List<Follows> followsByTargetUsers;
+
+    @OneToMany(mappedBy = "userProfiles")
+    private List<ChatMembers> chatMembers = new ArrayList<>();
 
     public static UserProfiles create(Users users, SignupDto signupDto) {
         UserProfiles userProfiles = new UserProfiles();
