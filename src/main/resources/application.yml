@@ -9,7 +9,7 @@ spring:
     ansi:
       enabled: detect # 콘솔 로그 색상 출력
 
-main:
+  main:
     allow-bean-definition-overriding: true
 
 api:
