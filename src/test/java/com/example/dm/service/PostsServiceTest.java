@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -24,6 +26,7 @@ class PostsServiceTest {
     private PostsRepository postsRepository;
 
 
+    @DisplayName("게시글 목록 조회")
     @Test
     void findAll() {
         // given
@@ -31,21 +34,22 @@ class PostsServiceTest {
         postsService.findAll(
                 1L,
                 "search",
-                new String[]{"title, content"},
-                new double[]{1.0, 2.0},
+                List.of("title, content"),
+                1D,
+                2D,
                 PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
 
         // then
         then(postsRepository).should()
                 .findAll(1L,
                         "search",
-                        new String[]{"title, content"},
-                        new double[]{1.0, 2.0},
-                        0.03,
-                        PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
+                        List.of("title, content"),
+                        1D,
+                        2D,
+                        0.03, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
-    @DisplayName("기본 페이지 size = 100 number = 0 sort = createdAt,desc")
+    @DisplayName("게시글 목록 조회 default 페이지 size = 100 number = 0 sort = createdAt,desc")
     @Test
     void findAll_page_null() {
         // given
@@ -53,21 +57,22 @@ class PostsServiceTest {
         postsService.findAll(
                 1L,
                 "search",
-                new String[]{"title, content"},
-                new double[]{1.0, 2.0},
+                List.of("title, content"),
+                1D,
+                2D,
                 null);
 
         // then
         then(postsRepository).should()
                 .findAll(1L,
                         "search",
-                        new String[]{"title, content"},
-                        new double[]{1.0, 2.0},
-                        0.03,
-                        PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdAt")));
+                        List.of("title, content"),
+                        1D,
+                        2D,
+                        0.03, PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
-    @DisplayName("기본 정렬 sort = createdAt,desc")
+    @DisplayName("게시글 목록 조회 default 기본 정렬 sort = createdAt,desc")
     @Test
     void findAll_sort_null() {
         // given
@@ -75,21 +80,22 @@ class PostsServiceTest {
         postsService.findAll(
                 1L,
                 "search",
-                new String[]{"title, content"},
-                new double[]{1.0, 2.0},
+                List.of("title, content"),
+                1D,
+                2D,
                 PageRequest.of(0, 10));
 
         // then
         then(postsRepository).should()
                 .findAll(1L,
                         "search",
-                        new String[]{"title, content"},
-                        new double[]{1.0, 2.0},
-                        0.03,
-                        PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
+                        List.of("title, content"),
+                        1D,
+                        2D,
+                        0.03, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
-    @DisplayName("수정을 통해 기존에 존재하는 채팅방을 삭제 시도하면 예외 발생")
+    @DisplayName("게시글 수정을 통해 기존에 존재하는 채팅방을 삭제 시도하면 예외 발생")
     @Test
     void update_chat_delete() {
         // given

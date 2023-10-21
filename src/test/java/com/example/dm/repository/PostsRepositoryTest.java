@@ -35,11 +35,22 @@ class PostsRepositoryTest {
     void findAll() {
         // given
         // when
-        Page<Posts> postsPage = postsRepository.findAll(-1L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, PAGE);
+        Page<Posts> postsPage = postsRepository.findAll(-1L, null, null, 37.481445, 126.952688, DISTANCE, PAGE);
 
         // then
         List<String> titleList = postsPage.getContent().stream().map(Posts::getTitle).toList();
         assertThat(titleList).containsExactlyInAnyOrder("신림2", "낙성대");
+    }
+
+    @DisplayName("게시글 목록 전체 조회시 위도 경도 위치 범위에 존재하는 데이터가 없으면 빈 리스트 반환")
+    @Test
+    void findAll_location() {
+        // given
+        // when
+        Page<Posts> postsPage = postsRepository.findAll(-1L, null, null, 137.481445, 226.952688, DISTANCE, PAGE);
+
+        // then
+        assertThat(postsPage).isEmpty();
     }
 
     @DisplayName("제목이 '신'을 포함하는 데이터 조회")
@@ -47,7 +58,7 @@ class PostsRepositoryTest {
     void findAll_with_search_title() {
         // given
         // when
-        Page<Posts> postsPage = postsRepository.findAll(-1L, "신", new String[]{"title"}, new double[]{37.481445, 126.952688}, DISTANCE, PAGE);
+        Page<Posts> postsPage = postsRepository.findAll(-1L, "신", List.of("title"), 37.481445, 126.952688, DISTANCE, PAGE);
 
         // then
         List<String> titleList = postsPage.getContent().stream().map(Posts::getTitle).toList();
@@ -59,7 +70,7 @@ class PostsRepositoryTest {
     void findAll_with_search_content() {
         // given
         // when
-        Page<Posts> postsPage = postsRepository.findAll(-1L, "신", new String[]{"contents"}, new double[]{37.481445, 126.952688}, DISTANCE, PAGE);
+        Page<Posts> postsPage = postsRepository.findAll(-1L, "신", List.of("contents"), 37.481445, 126.952688, DISTANCE, PAGE);
 
         // then
         List<String> titleList = postsPage.getContent().stream().map(Posts::getTitle).toList();
@@ -71,7 +82,7 @@ class PostsRepositoryTest {
     void findAll_with_category() {
         // given
         // when
-        Page<Posts> postsPage = postsRepository.findAll(1L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, PAGE);
+        Page<Posts> postsPage = postsRepository.findAll(1L, null, null, 37.481445, 126.952688, DISTANCE, PAGE);
 
         // then
         List<String> titleList = postsPage.getContent().stream().map(Posts::getTitle).toList();
@@ -83,7 +94,7 @@ class PostsRepositoryTest {
     void findAll_categoryId() {
         // given
         // when
-        Page<Posts> postsPage = postsRepository.findAll(3L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, PAGE);
+        Page<Posts> postsPage = postsRepository.findAll(3L, null, null, 37.481445, 126.952688, DISTANCE, PAGE);
 
         // then
         assertThat(postsPage.getContent()).isEmpty();
@@ -99,7 +110,7 @@ class PostsRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 100, Sort.by(orders));
 
         // when
-        Page<Posts> postsPage = postsRepository.findAll(-1L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, pageRequest);
+        Page<Posts> postsPage = postsRepository.findAll(-1L, null, null, 37.481445, 126.952688, DISTANCE, pageRequest);
 
         // then
         List<String> titleList = postsPage.getContent().stream().map(Posts::getTitle).toList();
@@ -113,7 +124,7 @@ class PostsRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "created_at"));
 
         // when
-        assertThatThrownBy(() -> postsRepository.findAll(-1L, null, null, new double[]{37.481445, 126.952688}, DISTANCE, pageRequest))
+        assertThatThrownBy(() -> postsRepository.findAll(-1L, null, null, 37.481445, 126.952688, DISTANCE, pageRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
