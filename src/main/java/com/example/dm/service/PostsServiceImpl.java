@@ -24,10 +24,8 @@ class PostsServiceImpl implements PostsService {
     private final PostsRepository postsRepository;
     private final ImagesService imagesService;
 
-
     // 0.01(degrees)는 약 1.11km(distance)
     private static final double DISTANCE = 0.03;
-
     private static final int MAX_PAGE_SIZE = 100;
 
     private static final Pageable DEFAULT_PAGE = PageRequest.of(
