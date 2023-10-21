@@ -1,12 +1,11 @@
 package com.example.dm.dto.posts;
 
-import com.example.dm.dto.images.ImagesDto;
 import com.example.dm.entity.Categories;
-import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
-import com.example.dm.enums.ImageType;
-import jakarta.validation.Valid;
+import com.example.dm.entity.UserProfiles;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,33 +13,32 @@ import java.util.List;
 
 @Getter
 @Builder
-public class PostsUpdateDto {
+public class PostSaveDto {
+
     @NotBlank
     private final String category;
     @NotBlank
     private final String title;
     @NotBlank
     private final String contents;
+    @Min(0)
+    @NotNull
+    private final Double latitude;
+    @Min(0)
+    @NotNull
+    private final Double longitude;
     private final boolean hasChat;
-    @Valid
-    private final List<ImagesDto> images;
+    private final List<String> imageUrl;
 
-    public Posts convertPosts(Categories categories) {
+    public Posts convertToPosts(UserProfiles userProfiles, Categories categories) {
         return Posts.builder()
+                .userProfile(userProfiles)
                 .category(categories)
                 .title(title)
                 .contents(contents)
+                .latitude(latitude)
+                .longitude(longitude)
                 .hasChat(hasChat)
                 .build();
-    }
-
-    public List<Images> getImages(Long postsId) {
-        if (images == null) {
-            return null;
-        }
-
-        return images.stream()
-                .map(dto -> dto.convertToImages(ImageType.Posts, postsId))
-                .toList();
     }
 }

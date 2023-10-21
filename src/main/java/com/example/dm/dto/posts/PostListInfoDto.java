@@ -9,23 +9,22 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class PostListInfoDto {
+    private final Long id;
+    private final String nickname;
+    private final String category;
+    private final String title;
+    private final String contents;
+    private final int hits;
+    private final int likes;
+    private final boolean hasChat;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    private Long id;
-    private Long userProfileId;
-    private Long categoryId;
-    private String title;
-    private String contents;
-    private int hits;
-    private int likes;
-    private boolean hasChat;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    public static PostListInfoDto convertPosts(Posts posts) {
+    public static PostListInfoDto convertFromPosts(Posts posts, String category) {
         return PostListInfoDto.builder()
                 .id(posts.getId())
-                .userProfileId(posts.getUserProfile().getId())
-                .categoryId(posts.getCategory().getId())
+                .nickname(posts.getUserProfile().getNickname())
+                .category(category)
                 .title(posts.getTitle())
                 .contents(posts.getContents())
                 .hits(posts.getHits())

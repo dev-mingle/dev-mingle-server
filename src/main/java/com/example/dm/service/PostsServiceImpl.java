@@ -1,7 +1,7 @@
 package com.example.dm.service;
 
 import com.example.dm.annotation.UpdateRetry;
-import com.example.dm.dto.posts.PostDetailInfoDto;
+import com.example.dm.dto.posts.PostsAndImages;
 import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
 import com.example.dm.enums.ImageType;
@@ -24,6 +24,7 @@ class PostsServiceImpl implements PostsService {
     private final PostsRepository postsRepository;
     private final ImagesService imagesService;
 
+
     // 0.01(degrees)는 약 1.11km(distance)
     private static final double DISTANCE = 0.03;
 
@@ -37,7 +38,7 @@ class PostsServiceImpl implements PostsService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, Pageable pageable) {
+    public Page<Posts> findAll(Long categoryId, String search, List<String> conditions, double latitude, double longitude, Pageable pageable) {
         if (pageable == null) {
             pageable = DEFAULT_PAGE;
         } else if (pageable.getSort().isEmpty()) {
@@ -48,15 +49,25 @@ class PostsServiceImpl implements PostsService {
             pageable = PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, pageable.getSort());
         }
 
-        return postsRepository.findAll(categoryId, search, conditions, location, DISTANCE, pageable);
+        return postsRepository.findAll(categoryId, search, conditions, latitude, longitude, DISTANCE, pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PostDetailInfoDto findById(Long postsId) {
+    public PostsAndImages findById(Long postsId) {
         Posts posts = postsRepository.getPosts(postsId);
         List<Images> images = imagesService.findAllByReferenceIdAndType(postsId, ImageType.Posts);
-        return PostDetailInfoDto.convertPosts(posts, images);
+        return new PostsAndImages(posts, images);
+    }
+
+    @Override
+    public Long save(Posts posts, List<String> imagesUrlList) {
+        Long postId = postsRepository.save(posts);
+        List<Images> toSaveImages = imagesUrlList.stream()
+                .map(url -> Images.create(url, ImageType.Posts, postId))
+                .toList();
+        imagesService.saveAll(toSaveImages);
+        return postId;
     }
 
     @UpdateRetry
@@ -65,6 +76,15 @@ class PostsServiceImpl implements PostsService {
         Posts findPosts = postsRepository.getPostsWithOptimisticLock(postsId);
         findPosts.change(posts);
         imagesService.update(postsId, ImageType.Posts, images);
+        return postsId;
+    }
+
+    @UpdateRetry
+    @Override
+    public Long delete(Long postsId) {
+        Posts findPosts = postsRepository.getPostsWithOptimisticLock(postsId);
+        findPosts.delete();
+        imagesService.delete(postsId, ImageType.Posts);
         return postsId;
     }
 }
