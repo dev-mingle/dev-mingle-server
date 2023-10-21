@@ -52,7 +52,7 @@ class ImagesServiceTest {
 
     @DisplayName("업데이트 이미지 목록과 조회 이미지 목록이 일치한다면 삽입과 삭제가 일어나지 않음")
     @Test
-    void update() {
+    void update_nothing_happens() {
         // given
         List<Images> images = getImages(5, true);
         given(imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(1L, ImageType.Posts)).willReturn(images);
@@ -68,7 +68,7 @@ class ImagesServiceTest {
 
     @DisplayName("업데이트 이미지 목록에 id가 없는 이미지는 저장")
     @Test
-    void update_id_null() {
+    void update_images_save_if_id_null() {
         // given
         List<Images> toUpdateImages = getImages(2, false);
         given(imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(1L, ImageType.Posts)).willReturn(List.of());
@@ -83,7 +83,7 @@ class ImagesServiceTest {
 
     @DisplayName("업데이트 이미지 목록에 존재하지 않지만, 조회 이미지 목록에 존재한다면 delete 속성 true 변경")
     @Test
-    void update_delete_true() {
+    void update_delete_attribute_true() {
         // given
         List<Images> findImages = getImages(5, true);
         given(imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(1L, ImageType.Posts)).willReturn(findImages);
@@ -99,7 +99,7 @@ class ImagesServiceTest {
 
     @DisplayName("아이디가 없는 이미지는 저장하고, 조회 목록에만 존재하는 이미지는 삭제")
     @Test
-    void update_id_null_and_delete_true() {
+    void update_image_save_and_delete_true() {
         // given
         List<Images> findImages = getImages(5, true);
         List<Images> toUpdateImages = new ArrayList<>(findImages.subList(0, 3));
@@ -119,6 +119,21 @@ class ImagesServiceTest {
                 .filter(Images::isDeleted)
                 .map(Images::getId)
         ).containsExactly(3L, 4L);
+    }
+
+    @DisplayName("이미지 삭제는 이미지 업데이트 delete = true 호출")
+    @Test
+    void delete() {
+        // given
+        List<Images> images = getImages(5, true);
+        given(imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(1L, ImageType.Posts))
+                .willReturn(images);
+
+        // when
+        imagesService.delete(1L, ImageType.Posts);
+
+        // then
+        assertThat(images.stream().allMatch(Images::isDeleted)).isTrue();
     }
 
     private static List<Images> getImages(int n, boolean hasId) {
