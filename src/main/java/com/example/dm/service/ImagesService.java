@@ -11,4 +11,6 @@ public interface ImagesService {
     void saveAll(List<Images> imagesList);
 
     void update(Long referenceId, ImageType imageType, List<Images> imagesList);
+
+    void delete(Long postsId, ImageType posts);
 }

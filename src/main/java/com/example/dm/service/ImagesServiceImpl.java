@@ -55,4 +55,9 @@ public class ImagesServiceImpl implements ImagesService{
                 .filter(img -> !savedImageId.contains(img.getId()))
                 .forEach(Images::delete);
     }
+
+    @Override
+    public void delete(Long postsId, ImageType posts) {
+        update(postsId, posts, null);
+    }
 }
