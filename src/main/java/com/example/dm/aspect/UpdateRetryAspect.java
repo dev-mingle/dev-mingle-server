@@ -22,7 +22,8 @@ public class UpdateRetryAspect {
                 return joinPoint.proceed();
             } catch (ObjectOptimisticLockingFailureException ex) {
                 exception = ex;
-                if (cnt < 5) Thread.sleep(50);
+                // 5번 재시도 이후 50millis 딜레이
+                if (cnt > 4) Thread.sleep(50);
             }
         }
 
