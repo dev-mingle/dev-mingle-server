@@ -1,9 +1,8 @@
 package com.example.dm.dto.posts;
 
-import com.example.dm.entity.Categories;
+import com.example.dm.dto.images.ImagesDto;
 import com.example.dm.entity.Images;
 import com.example.dm.entity.Posts;
-import com.example.dm.entity.UserProfiles;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,25 +12,31 @@ import java.util.List;
 @Getter
 @Builder
 public class PostDetailInfoDto {
-    private Long id;
-    private Long userProfileId;
-    private Long categoryId;
-    private String title;
-    private String contents;
-    private double latitude;
-    private double longitude;
-    private int hits;
-    private int likes;
-    private boolean hasChat;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private List<String> images;
+    private final Long id;
+    private final String nickname;
+    private final String category;
+    private final String title;
+    private final String contents;
+    private final double latitude;
+    private final double longitude;
+    private final int hits;
+    private final int likes;
+    private final boolean hasChat;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final List<ImagesDto> images;
 
-    public static PostDetailInfoDto convertPosts(Posts posts, List<String> images) {
+    public static PostDetailInfoDto convertFromPostsAndImages(PostsAndImages postsAndImages, String category) {
+        Posts posts = postsAndImages.posts();
+        List<ImagesDto> imagesDtoList = postsAndImages.imagesList()
+                .stream()
+                .map(ImagesDto::convertFromImages)
+                .toList();
+
         return PostDetailInfoDto.builder()
                 .id(posts.getId())
-                .userProfileId(posts.getUserProfile().getId())
-                .categoryId(posts.getCategory().getId())
+                .nickname(posts.getUserProfile().getNickname())
+                .category(category)
                 .title(posts.getTitle())
                 .contents(posts.getContents())
                 .latitude(posts.getLatitude())
@@ -41,14 +46,7 @@ public class PostDetailInfoDto {
                 .hasChat(posts.isHasChat())
                 .createdAt(posts.getCreatedAt())
                 .updatedAt(posts.getUpdatedAt())
-                .images(images)
+                .images(imagesDtoList)
                 .build();
-    }
-
-    public static PostDetailInfoDto convertPostsImages(Posts posts, List<Images> images) {
-        List<String> imagesList = images.stream()
-                .map(Images::getUrl)
-                .toList();
-        return convertPosts(posts, imagesList);
     }
 }

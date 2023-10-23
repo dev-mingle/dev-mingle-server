@@ -2,13 +2,8 @@ package com.example.dm.entity;
 
 import com.example.dm.enums.ImageType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-
-import java.util.List;
 
 @Entity
 @Table(name = "images")
@@ -18,12 +13,20 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Images extends DeletedEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String url;
     @Enumerated(EnumType.STRING)
     private ImageType type;
     private Long referenceId;
+
+    @Builder
+    public Images(Long id, String url, ImageType type, Long referenceId) {
+        this.id = id;
+        this.url = url;
+        this.type = type;
+        this.referenceId = referenceId;
+    }
 
     public static Images create(String url, ImageType type, Long referenceId) {
         Images images = new Images();
@@ -31,11 +34,5 @@ public class Images extends DeletedEntity {
         images.setType(type);
         images.setReferenceId(referenceId);
         return images;
-    }
-
-    public static List<Images> create(List<String> urlList, ImageType type, Long referenceId) {
-        return urlList.stream()
-                .map(url -> create(url, type, referenceId))
-                .toList();
     }
 }

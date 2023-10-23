@@ -6,9 +6,11 @@ import com.example.dm.enums.ImageType;
 import java.util.List;
 
 public interface ImagesService {
-    List<Images> findByReferenceId(Long referenceId, ImageType imageType);
+    List<Images> findAllByReferenceIdAndType(Long referenceId, ImageType imageType);
 
     void saveAll(List<Images> imagesList);
 
-    void deleteAll(List<Images> imagesList);
+    void update(Long referenceId, ImageType imageType, List<Images> imagesList);
+
+    void delete(Long postsId, ImageType posts);
 }

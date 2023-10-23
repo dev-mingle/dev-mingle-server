@@ -25,9 +25,7 @@ class PostsRepositoryImpl implements PostsRepository{
     private final PostsJpaRepository postsJpaRepository;
 
     @Override
-    public Page<Posts> findAll(Long categoryId, String search, String[] conditions, double[] location, double distance, Pageable pageable) {
-        double latitude = location[0];
-        double longitude = location[1];
+    public Page<Posts> findAll(Long categoryId, String search, List<String> conditions, double latitude, double longitude, double distance, Pageable pageable) {
         boolean haveSearch = false;
         boolean hasCategory = categoryId >= 0;
 
@@ -110,6 +108,18 @@ class PostsRepositoryImpl implements PostsRepository{
 
     @Override
     public Posts getPosts(Long postsId) {
-        return postsJpaRepository.findById(postsId).orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
+        return postsJpaRepository.findByIdJoinUserProfile(postsId)
+                .orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
+    }
+
+    @Override
+    public Posts getPostsWithOptimisticLock(Long postsId) {
+        return postsJpaRepository.findByIdWithOptimisticLock(postsId)
+                .orElseThrow(() -> new BadApiRequestException(postsId + ": This post doesn't exist"));
+    }
+
+    @Override
+    public Long save(Posts posts) {
+        return postsJpaRepository.save(posts).getId();
     }
 }

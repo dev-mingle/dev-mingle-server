@@ -1,11 +1,14 @@
 package com.example.dm.entity;
 
+import com.example.dm.exception.BadApiRequestException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -40,8 +43,13 @@ public class Posts extends DeletedEntity {
     @Column(name = "has_chat")
     private boolean hasChat;
 
+    @Version
+    @ColumnDefault("0")
+    private Long version;
+
     @Builder
-    public Posts(Long id, UserProfiles userProfile, Categories category, String title, String contents, double latitude, double longitude, int hits, int likes, boolean hasChat) {
+    public Posts(boolean isDeleted, LocalDateTime deletedAt, Long id, UserProfiles userProfile, Categories category, String title, String contents, double latitude, double longitude, int hits, int likes, boolean hasChat) {
+        super(isDeleted, deletedAt);
         this.id = id;
         this.userProfile = userProfile;
         this.category = category;
@@ -52,5 +60,20 @@ public class Posts extends DeletedEntity {
         this.hits = hits;
         this.likes = likes;
         this.hasChat = hasChat;
+    }
+
+
+    public void change(Posts posts) {
+        validCheck(posts);
+        category = posts.getCategory();
+        title = posts.getTitle();
+        contents = posts.getContents();
+        hasChat = posts.isHasChat();
+    }
+
+    private void validCheck(Posts posts) {
+        if (hasChat && !posts.isHasChat()) {
+            throw new BadApiRequestException("채팅방 삭제는 불가능합니다.");
+        }
     }
 }

@@ -26,6 +26,7 @@ public enum ApiResultStatus {
     // 서버 에러
     INTERNAL_SERVER_ERROR("E9000", "서버에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     DATABASE_ACCESS_ERROR("E9100", "Database Access 중 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    RESPONSE_FAILED_ERROR("E9200", "응답에 실패하였습니다.[%s]", HttpStatus.GATEWAY_TIMEOUT),
 
     // 유저 관련 에러
     ALREADY_SIGNED_UP("E4090", "이미 가입된 이메일입니다.", HttpStatus.CONFLICT),

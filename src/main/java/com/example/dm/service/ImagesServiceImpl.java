@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @Service
@@ -18,8 +18,8 @@ public class ImagesServiceImpl implements ImagesService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<Images> findByReferenceId(Long referenceId, ImageType imageType) {
-        return imagesRepository.findByReferenceIdAndType(referenceId, imageType);
+    public List<Images> findAllByReferenceIdAndType(Long referenceId, ImageType imageType) {
+        return imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(referenceId, imageType);
     }
 
     @Override
@@ -31,10 +31,33 @@ public class ImagesServiceImpl implements ImagesService{
     }
 
     @Override
-    public void deleteAll(List<Images> imagesList) {
-        if (imagesList == null || imagesList.isEmpty()) {
-            throw new BadApiRequestException("Image is a required value");
+    public void update(Long referenceId, ImageType imageType, List<Images> imagesList) {
+        List<Images> findImages = imagesRepository.findAllByReferenceIdAndTypeAndIsDeletedFalse(referenceId, imageType);
+        List<Images> toSaveImage = new ArrayList<>();
+        Set<Long> savedImageId = new HashSet<>();
+
+        if (imagesList != null) {
+            for (Images images : imagesList) {
+                Long imagesId = images.getId();
+                if (imagesId == null) {
+                    toSaveImage.add(images);
+                } else {
+                    savedImageId.add(imagesId);
+                }
+            }
         }
-        imagesRepository.deleteAll(imagesList);
+
+        if (!toSaveImage.isEmpty()) {
+            saveAll(toSaveImage);
+        }
+
+        findImages.stream()
+                .filter(img -> !savedImageId.contains(img.getId()))
+                .forEach(Images::delete);
+    }
+
+    @Override
+    public void delete(Long postsId, ImageType posts) {
+        update(postsId, posts, null);
     }
 }
